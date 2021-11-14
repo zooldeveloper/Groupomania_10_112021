@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -14,6 +14,6 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', authRoutes);
 
 module.exports = app; 

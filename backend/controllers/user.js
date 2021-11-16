@@ -1,78 +1,73 @@
 /** @format */
-require('dotenv').config({ path: '../config/.env' });
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-db.connect(err => {
-	if (err) {
-		console.log(err);
+
+// Post request controller 
+exports.addDataToUserProfile = (req, res) => {
+	// Checks the body obj whether is empty or not
+	function isBodyEmpty(body) {
+		if (Object.keys(body).length !== 0) {
+			return true;
+		}
+		return false;
+    };
+	// Checks the file obj whether is empty or not
+	function isFileEmpty(file) {
+		if (file !== undefined) {
+			return true;
+		}
+		return false;
+    };
+
+	if (isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+		db.query(`INSERT INTO user_profile (bio, imageUrl) VALUES (?, ?)`,[`${req.body.bio}`, `${imageUrl}`],
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(201).json({ message: "Profile's data have been saved!" });
+			}
+		);
+    }
+    else if (isBodyEmpty(req.body) && !isFileEmpty(req.file)) {
+		db.query(`INSERT INTO user_profile (bio) VALUES (?)`,[`${req.body.bio}`],
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(201).json({ message: "Profile's bio has been saved!" });
+			}
+		);
+    }
+    else if (!isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+		db.query(`INSERT INTO user_profile (imageUrl) VALUES (?)`,[`${imageUrl}`],
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(201).json({ message: "User's profile image has been saved!" });
+			}
+		);
+    }
+    else {
+		return res.status(403).json({ message: 'Nothing has been sent!' });
 	}
-	console.log('MySql is connected...!');
-});
-
-exports.signup = (req, res, next) => {
-
-	bcrypt.hash(req.body.password, 8)
-        .then(hash => {
-            
-			bcrypt.hash(req.body.passwordConfirm, 8)
-                .then(hashConfirm => {
-                    
-					let firstName = req.body.firstName;
-					let lastName = req.body.lastName;
-					let email = req.body.email;
-					let password = hash;
-                    let passwordConfirm = hashConfirm;
-                    
-                    db.query('INSERT INTO user (firstName, lastName, email, password, passwordConfirm) VALUES (?, ?, ?, ?, ?)',
-                        [`${firstName}`,`${lastName}`,`${email}`,`${password}`,`${passwordConfirm}`],
-                        (err, result) => {
-                            if (err) {
-                                console.log(err);
-                                res.status(500).json({ err });
-                            } else {
-                                res.status(201).json({ message: 'User created!' });
-                            }
-                        }
-                    );
-                    
-				})
-				.catch(err => res.status(500).json({ error }));
-		})
-		.catch(err => res.status(500).json({ error }));
 };
 
 
-exports.login = (req, res, next) => {
+// Get request controller
+exports.getOneUser = (req, res) => {
 
-    db.query(`SELECT * FROM user WHERE id = ${req.params.id}`,
+    db.query(`SELECT IF EXIST firstName, lastName, email  FROM user WHERE id = ?`, [req.params.id],
         (err, result) => {
             if (err) {
-                console.log(err);
+                return res.status(500).json(err);
             }
-
-            result.forEach(user => {
-
-                if (req.body.email === user.email) {
-                    bcrypt.compare(req.body.password, user.password)
-                        .then(valid => {
-                            if (!valid) {
-                                return res.status(401).json({ Message: 'Password is incorrect!' })
-                            }
-                            res.status(200).json({
-                                userId: user.id,
-                                token: jwt.sign(
-                                    { userId: user.id },
-                                    'RANDOM_TOKEN_SECRET',
-                                    { expiresIn: '24' }
-                                )
-                            });
-                        })
-                        .catch(err => res.status(500).json({ err }))
-                }
-            });
+            return res.status(200).json(result);
         }
     );
-
 };

@@ -22,14 +22,14 @@ exports.signup = (req, res) => {
             let email = req.body.email;
             let password = hash;
 
-            db.query('SELECT email FROM user WHERE email = ?', [`${email}`], (err, resulat) => {
+            db.query('SELECT email FROM users WHERE email = ?', [`${email}`], (err, resulat) => {
                 if (err) {
                     return res.status(500).json(err);
                 }
                 if (resulat.length > 0) {
                     return res.status(409).json({ message: 'Email is already in use!' })
                 } else {
-                    db.query('INSERT INTO user (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
+                    db.query('INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
                         [`${firstName}`, `${lastName}`, `${email}`, `${password}`],
                         (err, result) => {
                             if (err) {
@@ -49,13 +49,12 @@ exports.signup = (req, res) => {
  
 exports.login = (req, res) => {
 
-    db.query(`SELECT * FROM user WHERE email = ?`, [`${req.body.email}`],
+    db.query(`SELECT * FROM users WHERE email = ?`, [`${req.body.email}`],
         (err, result) => {
             
             if (err) {
                 return res.status(500).json(err);
             }
-            console.log(result)
             if (result.length < 1) {
                return res.status(403).json('Email do not exist !')
             } else if (req.body.email === result[0].email) {

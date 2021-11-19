@@ -1,8 +1,7 @@
 /** @format */
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
+const fs = require('fs');
 
 // Post request controller 
 exports.addDataToUserProfile = (req, res) => { 
@@ -144,5 +143,39 @@ exports.modifiyOneUser = (req, res) => {
 			}
 		);
 	}
-
 };
+
+
+// Delete request controlller 
+exports.deleteOneUser = (req, res) => {
+	if (req.body.bioToDelete) {
+		db.query(`UPDATE users SET bio = NULL WHERE id = ${req.params.id}`,
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(200).json({ message: 'Your bio has been successfully deleted!' });
+			}
+		);
+	} else if (req.body.imageToDelete) {
+		db.query(`SELECT imageUrl FROM users WHERE id = ${req.params.id}`,
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				const filename = result[0].imageUrl.split('/images/')[1];
+				fs.unlink(`images/${filename}`, () => {
+					db.query(`UPDATE users SET imageUrl = NULL WHERE id = ${req.params.id}`,
+						(err, result) => {
+							if (err) {
+								return res.status(500).json(err);
+							}
+							return res.status(200).json({ message: 'Your profile image has been successfully deleted!' })
+						}
+					);
+				});
+			}
+		);
+	}
+};  
+  

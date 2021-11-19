@@ -6,6 +6,6 @@ const multer = require('../middleware/multer-config');
 
 router.post('/:id', multer, userCtrl.addDataToUserProfile);
 router.get('/:id', userCtrl.getOneUser);
-router.put('/:id', userCtrl.modifiyOneUser);
+router.patch('/:id', multer, userCtrl.modifiyOneUser);
 
 module.exports = router;

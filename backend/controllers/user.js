@@ -79,7 +79,7 @@ exports.modifiyOneUser = (req, res) => {
 	if (req.body.passwords) {
 		const ueserPasswords = {
 			...req.body.passwords,
-		}
+		};
 		db.query(`SELECT password FROM users WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -97,12 +97,50 @@ exports.modifiyOneUser = (req, res) => {
 									if (err) {
 										return res.status(500).json(err);
 									}
-									res.status(200).json({ message: 'Your password has been updated!'})
+									return res.status(200).json({ message: 'Your password has been updated!' });
 								})
 							})
 							.catch(err => res.status(500).json(err));
 					})
 					.catch(err => res.status(500).json(err));
+			}
+		);
+	} else if (req.body.newEmail) {
+		db.query(`SELECT email FROM users WHERE email = ${req.body.newEmail}`,
+			(err, resulat) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				if (resulat.length > 0) {
+					return res.status(409).json({ message: 'Email is already in use!' })
+				}
+				db.query(`UPDATE users SET email = '${req.body.newEmail}' WHERE id = ${req.params.id}`,
+					(err, result) => {
+						if (err) {
+							return res.status(500).json(err);
+						}
+						return res.status(200).json({ message: 'Your email has been updated!' });
+					}
+				);
+			}
+		);
+	} else if (req.body.bio) {
+		db.query(`UPDATE users SET bio = ${req.body.bio} WHERE id = ${req.params.id}`,
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(200).json({ message: 'Your bio has been updated!' });
+			}
+		);
+	} else if (req.file) {
+		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+		db.query(`UPDATE users SET imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(200).json({ message: 'Your profile image has been updated!' });
 			}
 		);
 	}

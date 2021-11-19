@@ -21,6 +21,7 @@ exports.addDataToUserProfile = (req, res) => {
     };
 
 	if (isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+		// Adds the bio and imageUrl to the database
 		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 		db.query(`UPDATE users SET bio = '${req.body.bio}', imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
 			(err, result) => {
@@ -31,7 +32,8 @@ exports.addDataToUserProfile = (req, res) => {
 			}
 		);
     }
-    else if (isBodyEmpty(req.body) && !isFileEmpty(req.file)) {
+	else if (isBodyEmpty(req.body) && !isFileEmpty(req.file)) {
+		// Adds only the bio to the database
 		db.query(`UPDATE users SET bio = '${req.body.bio}' WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -41,7 +43,8 @@ exports.addDataToUserProfile = (req, res) => {
 			}
 		);
     }
-    else if (!isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+	else if (!isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+		// Adds only the imageUrl to the database
 		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 		db.query(`UPDATE users SET imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
 			(err, result) => {
@@ -60,7 +63,7 @@ exports.addDataToUserProfile = (req, res) => {
 
 // Get request controller
 exports.getOneUser = (req, res) => {
-
+	// Selects user's data from the database and send them as a response
     db.query(`SELECT id, firstName, lastName, email, bio, imageUrl  FROM users WHERE id = ?`, [req.params.id],
         (err, result) => {
             if (err) {
@@ -74,8 +77,9 @@ exports.getOneUser = (req, res) => {
 
 // Put request controller
 exports.modifiyOneUser = (req, res) => {
-
+	
 	if (req.body.passwords) {
+		// Replaces the old user's password with new one
 		const ueserPasswords = {
 			...req.body.passwords,
 		};
@@ -84,20 +88,28 @@ exports.modifiyOneUser = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				bcrypt.compare(ueserPasswords.old_pw, result[0].password)
+				bcrypt
+					.compare(ueserPasswords.old_pw, result[0].password)
 					.then(valid => {
 						if (!valid) {
-							return res.status(401).json({ message: "Password is not correct!" })
+							return res
+								.status(401)
+								.json({ message: 'Password is not correct!' });
 						}
-						bcrypt.hash(ueserPasswords.new_pw, 8)
+						bcrypt
+							.hash(ueserPasswords.new_pw, 8)
 							.then(hash => {
-								db.query(`UPDATE users SET password = '${hash}' WHERE id = ${req.params.id}`,
+								db.query(
+									`UPDATE users SET password = '${hash}' WHERE id = ${req.params.id}`,
 									(err, result) => {
-									if (err) {
-										return res.status(500).json(err);
+										if (err) {
+											return res.status(500).json(err);
+										}
+										return res
+											.status(200)
+											.json({ message: 'Your password has been updated!' });
 									}
-									return res.status(200).json({ message: 'Your password has been updated!' });
-								})
+								);
 							})
 							.catch(err => res.status(500).json(err));
 					})
@@ -105,6 +117,7 @@ exports.modifiyOneUser = (req, res) => {
 			}
 		);
 	} else if (req.body.newEmail) {
+		// Changes the old user's email with the new one
 		db.query(`SELECT email FROM users WHERE email = ${req.body.newEmail}`,
 			(err, resulat) => {
 				if (err) {
@@ -124,6 +137,7 @@ exports.modifiyOneUser = (req, res) => {
 			}
 		);
 	} else if (req.body.bio) {
+		// Modifies the user's bio
 		db.query(`UPDATE users SET bio = ${req.body.bio} WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -133,6 +147,7 @@ exports.modifiyOneUser = (req, res) => {
 			}
 		);
 	} else if (req.file) {
+		// Replaces the user's profile image 
 		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 		db.query(`UPDATE users SET imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
 			(err, result) => {
@@ -148,6 +163,7 @@ exports.modifiyOneUser = (req, res) => {
 
 // Delete request controlller 
 exports.deleteOneUser = (req, res) => {
+	// Romves the bio from the database
 	if (req.body.bioToDelete) {
 		db.query(`UPDATE users SET bio = NULL WHERE id = ${req.params.id}`,
 			(err, result) => {
@@ -158,6 +174,7 @@ exports.deleteOneUser = (req, res) => {
 			}
 		);
 	} else if (req.body.imageToDelete) {
+		// Removes the image from the database and images directory
 		db.query(`SELECT imageUrl FROM users WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {

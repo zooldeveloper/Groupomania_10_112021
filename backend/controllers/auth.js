@@ -22,11 +22,14 @@ exports.signup = (req, res) => {
             let email = req.body.email;
             let password = hash;
 
-            db.query('SELECT email FROM users WHERE email = ?', [`${email}`], (err, resulat) => {
+            db.query('SELECT email FROM users WHERE email = ?', [`${email}`], (err, result) => {
                 if (err) {
                     return res.status(500).json(err);
                 }
-                if (resulat.length > 0) {
+                if (result.length > 0) {
+                    if (result[0].active === 'false') {
+                        return res.status(402).json({ message: 'This account has been disabled!'})
+                    }
                     return res.status(409).json({ message: 'Email is already in use!' })
                 } else {
                     db.query('INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
@@ -51,14 +54,14 @@ exports.login = (req, res) => {
 
     db.query(`SELECT * FROM users WHERE email = ?`, [`${req.body.email}`],
         (err, result) => {
-            
             if (err) {
                 return res.status(500).json(err);
             }
             if (result.length < 1) {
-               return res.status(403).json('Email do not exist !')
+               return res.status(403).json('Email do not exist!')
             } else if (req.body.email === result[0].email) {
-                bcrypt.compare(req.body.password, result[0].password)
+                if (result[0].active === 'true') {
+                    bcrypt.compare(req.body.password, result[0].password)
                     .then(valid => {
                         if (!valid) {
                             return res.status(401).json({ message: 'Password is incorrect!' });
@@ -67,13 +70,16 @@ exports.login = (req, res) => {
                             userId: result[0].id,
                             token: jwt.sign(
                                 { userId: result[0].id },
-                                'RANDOM_TOKEN_SECRET',
+                                'RANDOM_TOKEN_SECRET', 
                                 { expiresIn: '24' }
                             )
                         }); 
                     })
                     .catch(err => res.status(500).json(err));
-                } 
+                } else {
+                    return res.status(403).json({ message: "Your account has been deleted!" })
+                }
+            }
         }
     ); 
 };

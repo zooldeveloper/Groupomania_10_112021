@@ -11,17 +11,16 @@ db.connect(err => {
 	console.log('Connected to MySql...!' );
 });
 
-
+// A signup post request controller
 exports.signup = (req, res) => {
-
+    // Hashing and salting the password
 	bcrypt.hash(req.body.password, 8)
         .then(hash => {
-            
             let firstName = req.body.firstName;
             let lastName = req.body.lastName;
             let email = req.body.email;
             let password = hash;
-
+            // Selecting the corresponding email from the users table
             db.query('SELECT email FROM users WHERE email = ?', [`${email}`], (err, result) => {
                 if (err) {
                     return res.status(500).json(err);
@@ -32,6 +31,7 @@ exports.signup = (req, res) => {
                     }
                     return res.status(409).json({ message: 'Email is already in use!' })
                 } else {
+                    // Inserting the expected values to the users table
                     db.query('INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
                         [`${firstName}`, `${lastName}`, `${email}`, `${password}`],
                         (err, result) => {
@@ -50,16 +50,19 @@ exports.signup = (req, res) => {
 };
 
  
+// A login post request controller
 exports.login = (req, res) => {
-
+    // Selecting everything from users table where the email equal to corresponging email
     db.query(`SELECT * FROM users WHERE email = ?`, [`${req.body.email}`],
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);
             }
+            // Checks if the email is already exist or not
             if (result.length < 1) {
                return res.status(403).json('Email do not exist!')
             } else if (req.body.email === result[0].email) {
+                // Checks if the user's account is active or not
                 if (result[0].active === 'true') {
                     bcrypt.compare(req.body.password, result[0].password)
                     .then(valid => {

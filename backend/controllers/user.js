@@ -18,7 +18,7 @@ exports.addDataToUserProfile = (req, res) => {
 			return true;
 		}
 		return false;
-    };
+    }; 
 
 	if (isBodyEmpty(req.body) && isFileEmpty(req.file)) {
 		// Adds the bio and imageUrl to the database
@@ -64,7 +64,7 @@ exports.addDataToUserProfile = (req, res) => {
 // Get request controller
 exports.getOneUser = (req, res) => {
 	// Selects user's data from the database and send them as a response
-    db.query(`SELECT id, firstName, lastName, email, bio, imageUrl  FROM users WHERE id = ?`, [req.params.id],
+    db.query(`SELECT id, firstName, lastName, email, bio, imageUrl, active  FROM users WHERE id = ?`, [req.params.id],
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);
@@ -88,26 +88,19 @@ exports.modifiyOneUser = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				bcrypt
-					.compare(ueserPasswords.old_pw, result[0].password)
+				bcrypt.compare(ueserPasswords.old_pw, result[0].password)
 					.then(valid => {
 						if (!valid) {
-							return res
-								.status(401)
-								.json({ message: 'Password is not correct!' });
+							return res.status(401).json({ message: 'Password is not correct!' });
 						}
-						bcrypt
-							.hash(ueserPasswords.new_pw, 8)
+						bcrypt.hash(ueserPasswords.new_pw, 8)
 							.then(hash => {
-								db.query(
-									`UPDATE users SET password = '${hash}' WHERE id = ${req.params.id}`,
+								db.query(`UPDATE users SET password = '${hash}' WHERE id = ${req.params.id}`,
 									(err, result) => {
 										if (err) {
 											return res.status(500).json(err);
 										}
-										return res
-											.status(200)
-											.json({ message: 'Your password has been updated!' });
+										return res.status(200).json({ message: 'Your password has been updated!' });
 									}
 								);
 							})
@@ -118,7 +111,7 @@ exports.modifiyOneUser = (req, res) => {
 		);
 	} else if (req.body.newEmail) {
 		// Changes the old user's email with the new one
-		db.query(`SELECT email FROM users WHERE email = ${req.body.newEmail}`,
+		db.query(`SELECT email FROM users WHERE email = '${req.body.newEmail}'`,
 			(err, resulat) => {
 				if (err) {
 					return res.status(500).json(err);
@@ -138,7 +131,7 @@ exports.modifiyOneUser = (req, res) => {
 		);
 	} else if (req.body.bio) {
 		// Modifies the user's bio
-		db.query(`UPDATE users SET bio = ${req.body.bio} WHERE id = ${req.params.id}`,
+		db.query(`UPDATE users SET bio = '${req.body.bio}' WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
 					return res.status(500).json(err);
@@ -191,6 +184,16 @@ exports.deleteOneUser = (req, res) => {
 						}
 					);
 				});
+			}
+		);
+	} else if (req.body.accountToDelete) {
+		// Disables the user's account
+		db.query(`UPDATE users SET active = 'false' WHERE id = ${req.params.id}`,
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				res.status(200).json({ message: 'Your account has been permanently deleted!' });
 			}
 		);
 	}

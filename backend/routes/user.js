@@ -3,10 +3,11 @@ const router = express.Router();
 
 const userCtrl = require('../controllers/user');
 const multer = require('../middleware/multer-config');
+const upload = multer.single('profile_image');
 
-router.post('/:id', multer, userCtrl.addDataToUserProfile);
+router.post('/:id', upload, userCtrl.addDataToUserProfile);
+router.patch('/:id', upload, userCtrl.modifiyOneUser);
 router.get('/:id', userCtrl.getOneUser);
-router.patch('/:id', multer, userCtrl.modifiyOneUser);
 router.delete('/:id', userCtrl.deleteOneUser);
 
 module.exports = router;

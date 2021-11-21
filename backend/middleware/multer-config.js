@@ -10,7 +10,11 @@ const MIME_TYPES = {
 // It's a configration object that sets the file name and its extension
 const storage = multer.diskStorage({
 	destination: (req, file, callback) => {
-		callback(null, 'images');
+		if (file.fieldname === 'profile_image') {
+			callback(null, 'images/profiles');
+		} else {
+			callback(null, 'images/posts');
+		}
 	},
 	filename: (req, file, callback) => {
 		const name = file.originalname.split(' ').join('_');
@@ -19,4 +23,4 @@ const storage = multer.diskStorage({
 	},
 });
 
-module.exports = multer({ storage }).single('image');
+module.exports = multer({ storage });

@@ -6,5 +6,6 @@ const multer = require('../middleware/multer-config');
 const upload = multer.single('post_image');
 
 router.post('/:id', upload, postCtrl.creatPost);
+router.get('/', postCtrl.getAllPosts);
 
 module.exports = router;  

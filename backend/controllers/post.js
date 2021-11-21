@@ -16,8 +16,18 @@ exports.creatPost = (req, res) => {
                 return res.status(500).json(err);
             }
             res.status(201).json(result)
-            // console.log(result)
         }
     );
+};
 
-};   
+exports.getAllPosts = (req, res) => {
+
+    db.query(`SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE posts.user_id = 1`,
+        (err, result) => {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.status(200).json(result);
+        }
+    );
+};

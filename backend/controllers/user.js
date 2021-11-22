@@ -22,7 +22,7 @@ exports.addDataToUserProfile = (req, res) => {
 
 	if (isBodyEmpty(req.body) && isFileEmpty(req.file)) {
 		// Adds the bio and imageUrl to the database
-		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+		const imageUrl = `${req.protocol}://${req.get('host')}/images/profiles/${req.file.filename}`;
 		db.query(`UPDATE users SET bio = '${req.body.bio}', imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -45,7 +45,7 @@ exports.addDataToUserProfile = (req, res) => {
     }
 	else if (!isBodyEmpty(req.body) && isFileEmpty(req.file)) {
 		// Adds only the imageUrl to the database
-		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+		const imageUrl = `${req.protocol}://${req.get('host')}/images/profiles${req.file.filename}`;
 		db.query(`UPDATE users SET imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -141,7 +141,7 @@ exports.modifiyOneUser = (req, res) => {
 		);
 	} else if (req.file) {
 		// Replaces the user's profile image 
-		const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+		const imageUrl = `${req.protocol}://${req.get('host')}/images/profiles/${req.file.filename}`;
 		db.query(`UPDATE users SET imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -173,8 +173,8 @@ exports.deleteOneUser = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				const filename = result[0].imageUrl.split('/images/')[1];
-				fs.unlink(`images/${filename}`, () => {
+				const filename = result[0].imageUrl.split('/profiles/')[1];
+				fs.unlink(`images/profiles/${filename}`, () => {
 					db.query(`UPDATE users SET imageUrl = NULL WHERE id = ${req.params.id}`,
 						(err, result) => {
 							if (err) {
@@ -197,5 +197,5 @@ exports.deleteOneUser = (req, res) => {
 			}
 		);
 	}
-};  
+};   
   

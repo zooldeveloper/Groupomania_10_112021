@@ -22,12 +22,17 @@ exports.creatPost = (req, res) => {
 
 exports.getAllPosts = (req, res) => {
 
-    db.query(`SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE posts.user_id = 1`,
+    db.query(`SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE users.active = 'true'`,
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);
             }
-            res.status(200).json(result);
+            let postData = [];
+            for (let i = 0; i < result.length; i++ ) {
+                delete result[i].password;
+                postData.push(result[i]);
+            }
+           res.status(200).json(result);
         }
     );
 };

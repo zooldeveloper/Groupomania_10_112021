@@ -9,13 +9,7 @@ const MIME_TYPES = {
 };
 // It's a configration object that sets the file name and its extension
 const storage = multer.diskStorage({
-	destination: (req, file, callback) => {
-		if (file.fieldname === 'profile_image') {
-			callback(null, 'images/profiles');
-		} else {
-			callback(null, 'images/posts');
-		}
-	},
+	destination: (req, file, callback) => callback(null, file.fieldname === 'profile_image' ? 'images/profiles' : 'images/posts'),
 	filename: (req, file, callback) => {
 		const name = file.originalname.split(' ').join('_');
 		const extension = MIME_TYPES[file.mimetype];

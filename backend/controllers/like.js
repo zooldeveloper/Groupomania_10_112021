@@ -1,7 +1,7 @@
 const db = require('../config/database');
 
 
-// 
+// Create and update request controller 
 exports.createAndUpdateLikes = (req, res) => {
 
     const { like, post_id, user_id } = req.body;
@@ -68,8 +68,14 @@ exports.createAndUpdateLikes = (req, res) => {
 };
 
 
-// 
+// Get request controller 
 exports.getLikesAndDislikes = (req, res) => {
-    
-
+// Selects all the likes and dislikes of a specific post that matches the condtion
+    db.query('SELECT SUM(likes) AS likes, SUM(dislikes) AS dislikes FROM likes JOIN posts ON likes.post_id = posts.post_id WHERE posts.post_id = ?',
+        req.body.post_id, (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.status(200).send(result);
+    })
 };

@@ -77,5 +77,5 @@ exports.getLikesAndDislikes = (req, res) => {
                 return res.status(500).send(err);
             }
             res.status(200).send(result);
-    })
+        });
 };

@@ -1,5 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
+
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -16,7 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true })); // Parses the x-www-form.urlencoded
+app.use(express.json());// Parses the application/json
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);

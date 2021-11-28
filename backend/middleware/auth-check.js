@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-// Checks if the authentication matches u
+// Checks if the authentication matches 
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -11,7 +11,8 @@ module.exports = (req, res, next) => {
         } else {
             next();
         }
-    } catch (err) {
-        throw err;
+    } catch (err){
+        res.status(401).json({ message: err });
     }
 };
+  

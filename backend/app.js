@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 // const bodyParser = require('body-parser');
 
 
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(helmet()); // It helps secure the app by setting some http headers
 app.use(express.urlencoded({ extended: true })); // Parses the x-www-form.urlencoded
 app.use(express.json());// Parses the application/json
 

@@ -15,7 +15,7 @@ exports.creatPost = (req, res) => {
             if (err) {
                 return res.status(500).json(err);
             }
-            res.status(201).json(result)
+            res.status(201).json({ message: "Post has been saved!"})
         }
     );
 };
@@ -54,7 +54,7 @@ exports.modifiyPost = (req, res) => {
             if (err) {
                 return res.status(500).json(err);
             }
-            res.status(200).json(result);
+            res.status(200).json({ message: "Post has been modified!"});
         }
     );
 
@@ -89,7 +89,7 @@ exports.deletePost = (req, res) => {
                                 if (err) {
                                     return res.status(500).json(err);
                                 }
-                                res.status(200).json(result);
+                                res.status(200).json({ message: "Post has been deleted!" });
                             });
                     });
                 });

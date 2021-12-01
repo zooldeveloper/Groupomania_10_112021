@@ -4,15 +4,15 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 
 // Post request controller 
-exports.addDataToUserProfile = (req, res) => { 
+exports.addDataToUserProfile = (req, res) => {
 	// Checks the body obj whether is empty or not
-	function isBodyEmpty(body) {
-		if (Object.keys(body).length !== 0) {
+	function isBodyEmpty(bio) {
+		if (bio !== null) {
 			return true;
 		}
 		return false;
 	};
-	// Checks the file obj whether is empty or not
+	// // Checks the file obj whether is empty or not
 	function isFileEmpty(file) {
 		if (file !== undefined) {
 			return true;
@@ -20,7 +20,7 @@ exports.addDataToUserProfile = (req, res) => {
 		return false;
     }; 
 
-	if (isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+	if (req.body.bio && isFileEmpty(req.file)) {
 		// Adds the bio and imageUrl to the database
 		const imageUrl = `${req.protocol}://${req.get('host')}/images/profiles/${req.file.filename}`;
 		db.query(`UPDATE users SET bio = '${req.body.bio}', imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
@@ -32,7 +32,7 @@ exports.addDataToUserProfile = (req, res) => {
 			}
 		);
     }
-	else if (isBodyEmpty(req.body) && !isFileEmpty(req.file)) {
+	else if (req.body.bio && !isFileEmpty(req.file)) {
 		// Adds only the bio to the database
 		db.query(`UPDATE users SET bio = '${req.body.bio}' WHERE id = ${req.params.id}`,
 			(err, result) => {
@@ -43,7 +43,7 @@ exports.addDataToUserProfile = (req, res) => {
 			}
 		);
     }
-	else if (!isBodyEmpty(req.body) && isFileEmpty(req.file)) {
+	else if (!req.body.bio && isFileEmpty(req.file)) {
 		// Adds only the imageUrl to the database
 		const imageUrl = `${req.protocol}://${req.get('host')}/images/profiles${req.file.filename}`;
 		db.query(`UPDATE users SET imageUrl = '${imageUrl}' WHERE id = ${req.params.id}`,
@@ -75,9 +75,8 @@ exports.getOneUser = (req, res) => {
 };
 
 
-// Put request controller
+// Patch request controller
 exports.modifiyOneUser = (req, res) => {
-	
 	if (req.body.passwords) {
 		// Replaces the old user's password with new one
 		const ueserPasswords = {

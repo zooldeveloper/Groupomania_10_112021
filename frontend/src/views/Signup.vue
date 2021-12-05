@@ -5,9 +5,10 @@
           <h1>Because we care about your needs</h1>
         </div>
         <div id="signup">
-            <h2>Sign up</h2> 
+            <h2 v-if="mode === 'sign up'">Sign Up</h2>
+            <h2 v-else>Log In</h2> 
             <form action="" method="post">
-                <div class="form-group">
+                <div class="form-group" v-if="mode === 'sign up'">
                     <div class="fullname fullname__firstname">
                         <label for="firstname"><font-awesome-icon icon="user-circle" size="lx"/></label>
                         <input class="fullname__field" type="text" id="firstname" name="firstname" placeholder="Your First Name">
@@ -17,27 +18,29 @@
                         <input class="fullname__field" type="text" id="lastname" name="lastname" placeholder="Your Last Name">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" :class="[mode === 'log in' ? 'emailContainer' : '']">
                     <label for="email"><font-awesome-icon icon="envelope" size="lx"/></label>
                     <input type="text" id="email" name="email" placeholder="Email: example@gmail.com">
                 </div>
                 <div class="form-group">
-                    <div class="password password__first-field">
+                    <div class="password password__first-field" v-if="mode === 'sign up'">
                         <label for="password"><font-awesome-icon icon="unlock" size="lx"/></label>
                         <input class="password__field" type="password" id="password" name="password" placeholder="Enter a password">
                     </div>
                     <div  class="password">
                         <label for="passwordConfirm"><font-awesome-icon icon="lock" size="lx"/></label>
-                        <input class="password__field" type="password" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm your password">
+                        <input class="password__field" type="password" id="passwordConfirm" name="passwordConfirm" :placeholder="placeholderValue()">
                     </div>
                 </div>
-                <div class="form-input terms">
+                <div class="form-input terms" v-if="mode === 'sign up'">
                   <input type="checkbox" name="terms-of-use" id="terms" value="read and agreed">
                   <label for="terms">I have read and agree to the terms of use</label>
                 </div>
-                <button type="submit">Create account</button>
+                <button type="submit" v-if="mode === 'sign up'">Create account</button>
+                <button type="submit" v-else>Log in</button>
             </form>
-            <p>Already have an account ? Sign in</p>
+            <p v-if="mode === 'sign up'">Already have an account ? <span @click='switchToLogIn()'>Log In</span></p>
+            <p v-else>No account yet ? <span @click='switchToSignUp()'>Sign Up</span></p>
         </div>
     </div>
 </template>
@@ -46,6 +49,28 @@
 
 export default {
   name: 'Signup',
+  data() {
+    return {
+      mode: 'sign up',
+      placeholder: ''
+    }
+  },
+  computed: {},
+  methods: {
+      switchToLogIn() {
+        this.mode = 'log in'
+      },
+      switchToSignUp() {
+        this.mode = 'sign up'
+      },
+      placeholderValue() {
+        if(this.mode === 'sign up') {
+           return this.placeholder = 'Confirm your password';
+        } else {
+           return this.placeholder = 'Enter your password'
+        }
+      }
+    }
 
 }
 </script>
@@ -172,6 +197,14 @@ export default {
           border: none;
           color: #fff;
           font-size: 1.2rem;
+          cursor: pointer;
+        }
+      }
+      p {
+        span {
+          color: $primary_color;
+          text-decoration: underline;
+          cursor: pointer;
         }
       }
     }
@@ -185,9 +218,9 @@ export default {
     }
     @media screen and (max-width: 425px) {
       #signup {
-        height: 90vh;
+        height: 95vh;        
         h2 {
-          margin-top: 10px !important;
+          margin: 25px 0 0 !important;
           &::before {
             left: 10% !important;
           }
@@ -198,7 +231,6 @@ export default {
         .form-group  {
           flex-direction: column ;
           margin-bottom: 0px !important;
-        
           .fullname, .password {
             margin-bottom: 25px !important;
           }
@@ -208,6 +240,9 @@ export default {
           input {
             width: inherit !important;
           }
+        }
+        .emailContainer {
+            margin: 50px 0 25px 0 !important;
         }
       }
     }

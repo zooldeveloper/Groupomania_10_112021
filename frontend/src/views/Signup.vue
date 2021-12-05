@@ -31,7 +31,11 @@
                         <input class="password__field" type="password" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm your password">
                     </div>
                 </div>
-                <button type="submit">Submit</button>
+                <div class="form-input terms">
+                  <input type="checkbox" name="terms-of-use" id="terms" value="read and agreed">
+                  <label for="terms">I have read and agree to the terms of use</label>
+                </div>
+                <button type="submit">Create account</button>
             </form>
             <p>Already have an account ? Sign in</p>
         </div>
@@ -150,6 +154,15 @@ export default {
             border-radius: 10px;
             border: 2px solid darken($quaternary-color, $percentage3);
           }
+        }
+        .terms {
+            margin-bottom: 25px;
+            text-align: left;
+            input[type="checkbox"] {
+              margin-right: 10px; 
+              cursor: pointer;
+              // border: 2px solid $primary_color;
+            }
         }
         button {
           width: 100%;

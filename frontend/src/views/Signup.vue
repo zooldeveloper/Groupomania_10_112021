@@ -47,8 +47,10 @@
                     </div>
                 </div>
                 <div class="form-input terms" v-if="mode === 'sign up'">
-                  <input type="checkbox" name="terms-of-use" id="terms" value="read and agreed">
+                  <input @click="isBoxChecked" v-model="terms"
+                         type="checkbox" name="terms-of-use" id="terms" value="read and agreed">
                   <label for="terms">I have read and agree to the terms of use</label>
+                  <small v-if="!checkTerms" style="color: #ff8000; display:block">{{ errors.terms.errMsg }}</small>
                 </div>
                 <button type="submit" v-if="mode === 'sign up'">Create account</button>
                 <button type="submit" v-else>Log in</button>
@@ -73,6 +75,7 @@ export default {
       email: null,
       password: null,
       passwordConfirm: null,
+      terms: false,
 
       errors: {
         firstname: {
@@ -94,6 +97,10 @@ export default {
         passwordConfirm: {
             isNotValid: '',
             errMsg: null
+        },
+        terms: {
+          isChecked: '',
+          errMsg: null
         }
       },
     }
@@ -113,6 +120,9 @@ export default {
     },
     checkPasswordConfirm() {
       return this.errors.passwordConfirm.isNotValid
+    },
+    checkTerms() {
+      return this.errors.terms.isChecked
     }
   },
   methods: {
@@ -165,6 +175,13 @@ export default {
           this.errors.passwordConfirm.errMsg = null 
           this.errors.passwordConfirm.isNotValid = false
         }
+        if(this.terms === false) {
+          this.errors.terms.errMsg = 'You should accept the terms of use!'
+          this.errors.terms.isChecked = false
+        } else {
+          this.errors.terms.errMsg = null
+          this.errors.terms.isChecked = true
+        }
       },
       isUserValid(firstname) {
           return /[A-Za-zÀ-ÿ]{3,}/.test(firstname);
@@ -175,6 +192,10 @@ export default {
       isPasswordValid(password) {
         // This regex should be verified
           return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
+      },
+      isBoxChecked() {
+        this.errors.terms.errMsg = null
+        this.terms = !this.terms
       }
     }
 }
@@ -290,7 +311,7 @@ export default {
             left: 0;
             top: 50px;
             font-size: 0.7rem;
-            color: #ff8000;
+            color: #ff8000qq;
             text-align: start;
           }
           .success {

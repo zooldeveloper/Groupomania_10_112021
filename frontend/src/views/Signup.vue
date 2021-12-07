@@ -28,7 +28,7 @@
                     <label for="email"><font-awesome-icon icon="envelope" size="lx"/></label>
                     <input :class="{success : checkEmail === false, error: checkEmail === true}" 
                            type="text" id="email" name="email" v-model="email" placeholder="Email: example@gmail.com">
-                    <small v-if="checkEmail">{{ errors.password.errMsg }}</small>
+                    <small v-if="checkEmail">{{ errors.email.errMsg }}</small>
                 </div>
                 <div class="form-group">
                     <div class="password password__first-field" v-if="mode === 'sign up'">
@@ -156,9 +156,9 @@ export default {
           this.errors.password.isNotValid = true
         } else { 
           this.errors.password.errMsg = null 
-          this.errors.passowrd.isNotValid = false
+          this.errors.password.isNotValid = false
         }
-        if(this.passwordConfirm === null || !this.isPasswordValid(this.passwordCofirm)) {
+        if(this.passwordConfirm === null || !this.isPasswordValid(this.passwordConfirm)) {
           this.errors.passwordConfirm.errMsg = 'At least 1 digit & 1 uppercase & lowercase letter!'
           this.errors.passwordConfirm.isNotValid = true
         } else { 
@@ -182,7 +182,7 @@ export default {
 
 <style lang="scss" scoped>
 
-    @import '@/assets/sass/variables.scss';
+  @import '@/assets/sass/variables.scss';
 
   .container {
     width: 100%;

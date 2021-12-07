@@ -7,29 +7,43 @@
         <div id="signup">
             <h2 v-if="mode === 'sign up'">Sign Up</h2>
             <h2 v-else>Log In</h2> 
-            <form action="" method="post">
+            <form action="" method="post" v-on:submit.prevent="submitForm">
                 <div class="form-group" v-if="mode === 'sign up'">
                     <div class="fullname fullname__firstname">
                         <label for="firstname"><font-awesome-icon icon="user-circle" size="lx"/></label>
-                        <input class="fullname__field" type="text" id="firstname" name="firstname" placeholder="Your First Name">
+                        <input class="fullname__field" 
+                                :class="{success : checkFirstname === false , error: checkFirstname === true}" 
+                                type="text" id="firstname" name="firstname" v-model="firstname" placeholder="Your First Name">
+                        <small v-if="checkFirstname">{{ errors.firstname.errMsg }}</small>
                     </div>
                     <div class="fullname">
                         <label for="lastname"><font-awesome-icon icon="user-circle" size="lx"/></label>
-                        <input class="fullname__field" type="text" id="lastname" name="lastname" placeholder="Your Last Name">
+                        <input class="fullname__field" 
+                               :class="{success : checkLastname === false, error: checkLastname === true}" 
+                               type="text" id="lastname" name="lastname" v-model="lastname" placeholder="Your Last Name">
+                        <small v-if="checkLastname">{{ errors.lastname.errMsg }}</small>
                     </div>
                 </div>
                 <div class="form-group" :class="[mode === 'log in' ? 'emailContainer' : '']">
                     <label for="email"><font-awesome-icon icon="envelope" size="lx"/></label>
-                    <input type="text" id="email" name="email" placeholder="Email: example@gmail.com">
+                    <input :class="{success : checkEmail === false, error: checkEmail === true}" 
+                           type="text" id="email" name="email" v-model="email" placeholder="Email: example@gmail.com">
+                    <small v-if="checkEmail">{{ errors.password.errMsg }}</small>
                 </div>
                 <div class="form-group">
                     <div class="password password__first-field" v-if="mode === 'sign up'">
                         <label for="password"><font-awesome-icon icon="unlock" size="lx"/></label>
-                        <input class="password__field" type="password" id="password" name="password" placeholder="Enter a password">
+                        <input class="password__field" 
+                               :class="{success : checkPassword === false, error: checkPassword === true}" 
+                               type="password" id="password" name="password" v-model="password" placeholder="Enter a password">
+                        <small class="password__bottom" v-if="checkPassword">{{ errors.password.errMsg }}</small>
                     </div>
                     <div  class="password">
                         <label for="passwordConfirm"><font-awesome-icon icon="lock" size="lx"/></label>
-                        <input class="password__field" type="password" id="passwordConfirm" name="passwordConfirm" :placeholder="placeholderValue()">
+                        <input class="password__field" 
+                               :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" 
+                               type="password" id="passwordConfirm" name="passwordConfirm" v-model="passwordConfirm" :placeholder="placeholderValue()">
+                        <small class="password__bottom" v-if="checkPasswordConfirm">{{ errors.passwordConfirm.errMsg }}</small>
                     </div>
                 </div>
                 <div class="form-input terms" v-if="mode === 'sign up'">
@@ -52,10 +66,55 @@ export default {
   data() {
     return {
       mode: 'sign up',
-      placeholder: ''
+      placeholder: '',
+  
+      firstname: null,
+      lastname: null,
+      email: null,
+      password: null,
+      passwordConfirm: null,
+
+      errors: {
+        firstname: {
+            isNotValid: '',
+            errMsg: null
+        },
+        lastname: {
+            isNotValid: '',
+            errMsg: null
+        },
+        email: {
+            isNotValid: '',
+            errMsg: null
+        },
+        password: {
+            isNotValid: '',
+            errMsg: null
+        },
+        passwordConfirm: {
+            isNotValid: '',
+            errMsg: null
+        }
+      },
     }
   },
-  computed: {},
+  computed: {
+    checkFirstname() {
+      return this.errors.firstname.isNotValid
+    },
+    checkLastname() {
+      return this.errors.lastname.isNotValid
+    },
+    checkEmail() {
+      return this.errors.email.isNotValid
+    },
+    checkPassword() {
+      return this.errors.password.isNotValid
+    },
+    checkPasswordConfirm() {
+      return this.errors.passwordConfirm.isNotValid
+    }
+  },
   methods: {
       switchToLogIn() {
         this.mode = 'log in'
@@ -69,9 +128,55 @@ export default {
         } else {
            return this.placeholder = 'Enter your password'
         }
+      }, 
+      submitForm() {
+        if (this.firstname === null || !this.isUserValid(this.firstname)) {
+          this.errors.firstname.errMsg = 'At least 3 characters!'
+          this.errors.firstname.isNotValid = true
+        } else if(this.firstname !== null && this.isUserValid(this.firstname)) { 
+          this.errors.firstname.errMsg = null
+          this.errors.firstname.isNotValid = false
+          }
+        if (this.lastname === null || !this.isUserValid(this.lastname)) {
+          this.errors.lastname.errMsg = 'At least 3 characters!'
+          this.errors.lastname.isNotValid = true
+        } else { 
+          this.errors.lastname.errMsg = null 
+          this.errors.lastname.isNotValid = false
+        }
+        if(this.email === null || !this.isEmailValid(this.email)) {
+          this.errors.email.errMsg = 'Valid email required!'
+          this.errors.email.isNotValid = true
+        } else { 
+          this.errors.email.errMsg = null 
+          this.errors.email.isNotValid = false
+        }
+        if(this.password === null || !this.isPasswordValid(this.password)) {
+          this.errors.password.errMsg = 'At least 1 digit & 1 uppercase & lowercase letter!'
+          this.errors.password.isNotValid = true
+        } else { 
+          this.errors.password.errMsg = null 
+          this.errors.passowrd.isNotValid = false
+        }
+        if(this.passwordConfirm === null || !this.isPasswordValid(this.passwordCofirm)) {
+          this.errors.passwordConfirm.errMsg = 'At least 1 digit & 1 uppercase & lowercase letter!'
+          this.errors.passwordConfirm.isNotValid = true
+        } else { 
+          this.errors.passwordConfirm.errMsg = null 
+          this.errors.passwordConfirm.isNotValid = false
+        }
+      },
+      isUserValid(firstname) {
+          return /[A-Za-zÀ-ÿ]{3,}/.test(firstname);
+      },
+      isEmailValid(email) {
+          return /[a-zA-Z0-9-.]+@[a-z]+\.[a-z]{2,3}/.test(email);
+      },
+      isPasswordValid(password) {
+        // This regex should be verified
+          return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
       }
     }
-
 }
 </script>
 
@@ -177,7 +282,25 @@ export default {
             height: 40px;
             padding-left: 30px;
             border-radius: 10px;
+            outline: none;
             border: 2px solid darken($quaternary-color, $percentage3);
+          }
+          small {
+            position: absolute;
+            left: 0;
+            bottom: -20px;
+            font-size: 0.7rem;
+            color: #ff8000;
+            text-align: start;
+          }
+          .password__bottom {
+            bottom: -30px !important;
+          }
+          .success {
+            border: 2px solid #2ecc71;
+          }
+          .error {
+            border: 2px solid #ff8000;
           }
         }
         .terms {

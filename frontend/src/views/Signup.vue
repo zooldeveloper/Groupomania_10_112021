@@ -43,7 +43,7 @@
                         <input class="password__field" 
                                :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" 
                                type="password" id="passwordConfirm" name="passwordConfirm" v-model="passwordConfirm" :placeholder="placeholderValue()">
-                        <small class="password__bottom" v-if="checkPasswordConfirm">{{ errors.passwordConfirm.errMsg }}</small>
+                        <small v-if="checkPasswordConfirm">{{ errors.passwordConfirm.errMsg }}</small>
                     </div>
                 </div>
                 <div class="form-input terms" v-if="mode === 'sign up'">
@@ -288,13 +288,10 @@ export default {
           small {
             position: absolute;
             left: 0;
-            bottom: -20px;
+            top: 50px;
             font-size: 0.7rem;
             color: #ff8000;
             text-align: start;
-          }
-          .password__bottom {
-            bottom: -30px !important;
           }
           .success {
             border: 2px solid #2ecc71;
@@ -304,6 +301,7 @@ export default {
           }
         }
         .terms {
+          margin-top: 35px;
             margin-bottom: 25px;
             text-align: left;
             input[type="checkbox"] {

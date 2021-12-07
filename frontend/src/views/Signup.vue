@@ -141,14 +141,14 @@ export default {
       }, 
       submitForm() {
         if (this.firstname === null || !this.isUserValid(this.firstname)) {
-          this.errors.firstname.errMsg = 'At least 3 characters!'
+          this.errors.firstname.errMsg = 'Atleast 3 characters!'
           this.errors.firstname.isNotValid = true
         } else if(this.firstname !== null && this.isUserValid(this.firstname)) { 
           this.errors.firstname.errMsg = null
           this.errors.firstname.isNotValid = false
           }
         if (this.lastname === null || !this.isUserValid(this.lastname)) {
-          this.errors.lastname.errMsg = 'At least 3 characters!'
+          this.errors.lastname.errMsg = 'Atleast 3 characters!'
           this.errors.lastname.isNotValid = true
         } else { 
           this.errors.lastname.errMsg = null 
@@ -162,14 +162,17 @@ export default {
           this.errors.email.isNotValid = false
         }
         if(this.password === null || !this.isPasswordValid(this.password)) {
-          this.errors.password.errMsg = 'At least 1 digit & 1 uppercase & lowercase letter!'
+          this.errors.password.errMsg = 'Minimum 8 characters: atleast 1 digit, 1 uppercase & lowercase letter!'
           this.errors.password.isNotValid = true
         } else { 
           this.errors.password.errMsg = null 
           this.errors.password.isNotValid = false
         }
-        if(this.passwordConfirm === null || !this.isPasswordValid(this.passwordConfirm)) {
-          this.errors.passwordConfirm.errMsg = 'At least 1 digit & 1 uppercase & lowercase letter!'
+        if(this.passwordConfirm === null) {
+          this.errors.passwordConfirm.errMsg = 'Please re-enter your password here!'
+          this.errors.passwordConfirm.isNotValid = true
+        } else if(this.passwordConfirm !== null && this.passwordConfirm !== this.password) {
+          this.errors.passwordConfirm.errMsg = 'Passwords do not match!'
           this.errors.passwordConfirm.isNotValid = true
         } else { 
           this.errors.passwordConfirm.errMsg = null 
@@ -190,7 +193,6 @@ export default {
           return /[a-zA-Z0-9-.]+@[a-z]+\.[a-z]{2,3}/.test(email);
       },
       isPasswordValid(password) {
-        // This regex should be verified
           return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
       },
       isBoxChecked() {

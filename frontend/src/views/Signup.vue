@@ -38,7 +38,7 @@
                                type="password" id="password" name="password" v-model="password" placeholder="Enter a password">
                         <small class="password__bottom" v-if="checkPassword">{{ errors.password.errMsg }}</small>
                     </div>
-                    <div  class="password">
+                    <div  class="password" :class="[checkPasswordConfirm === true ? 'password__second-field' : '']">
                         <label for="passwordConfirm"><font-awesome-icon icon="lock" size="lx"/></label>
                         <input class="password__field" 
                                :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" 
@@ -324,7 +324,7 @@ export default {
           }
         }
         .terms {
-          margin-top: 35px;
+            margin-top: 45px;
             margin-bottom: 25px;
             text-align: left;
             input[type="checkbox"] {
@@ -380,6 +380,9 @@ export default {
           }
           .password__first-field{
               margin-top: 25px !important;
+          }
+          .password__second-field {
+            margin-top: 14px !important;
           }
           input {
             width: inherit !important;

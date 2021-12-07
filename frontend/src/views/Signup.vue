@@ -38,7 +38,7 @@
                                type="password" id="password" name="password" v-model="password" placeholder="Enter a password">
                         <small class="password__bottom" v-if="checkPassword">{{ errors.password.errMsg }}</small>
                     </div>
-                    <div  class="password" :class="[checkPasswordConfirm === true ? 'password__second-field' : '']">
+                    <div  class="password" :class="[checkPassword === true ? 'password__second-field' : '']">
                         <label for="passwordConfirm"><font-awesome-icon icon="lock" size="lx"/></label>
                         <input class="password__field" 
                                :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" 

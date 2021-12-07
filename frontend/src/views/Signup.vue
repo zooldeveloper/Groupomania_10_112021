@@ -311,14 +311,14 @@ export default {
             left: 0;
             top: 50px;
             font-size: 0.7rem;
-            color: #ff8000qq;
+            color: $error_color;
             text-align: start;
           }
           .success {
-            border: 2px solid #2ecc71;
+            border: 2px solid $success_color;
           }
           .error {
-            border: 2px solid #ff8000;
+            border: 2px solid $error_color;
           }
         }
         .terms {

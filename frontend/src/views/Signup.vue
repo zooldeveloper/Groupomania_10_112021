@@ -62,7 +62,7 @@
 </template>
 
 <script>
-
+// import { mapState } from 'vuex'
 export default {
   name: 'Signup',
   data() {
@@ -103,6 +103,7 @@ export default {
           errMsg: null
         }
       },
+      // ...mapState(['responseErrorMessage'])
     }
   },
   computed: {
@@ -157,6 +158,9 @@ export default {
         if(this.email === null || !this.isEmailValid(this.email)) {
           this.errors.email.errMsg = 'Valid email required!'
           this.errors.email.isNotValid = true
+        } else if(this.$store.state.responseErrorMessage !== null) {
+          this.errors.email.errMsg = this.$store.state.responseErrorMessage
+          this.errors.email.isNotValid = true
         } else { 
           this.errors.email.errMsg = null 
           this.errors.email.isNotValid = false
@@ -185,6 +189,20 @@ export default {
           this.errors.terms.errMsg = null
           this.errors.terms.isChecked = true
         }
+
+      if( this.errors.firstname.errMsg === null && 
+          this.errors.lastname.errMsg === null && 
+          this.errors.email.errMsg === null && 
+          this.errors.password.errMsg === null && 
+          this.errors.passwordConfirm.errMsg === null &&
+          this.errors.terms.errMsg === null) {
+            this.$store.dispatch('creatAccount', {
+              firstName: this.firstname, 
+              lastName: this.lastname,
+              email: this.email,
+              password: this.password
+            })
+          }
       },
       isUserValid(firstname) {
           return /[A-Za-zÀ-ÿ]{3,}/.test(firstname);

@@ -7,6 +7,7 @@
         <div id="signup">
             <h2 v-if="mode === 'sign up'">Sign Up</h2>
             <h2 v-else>Log In</h2> 
+            <div class="thisClassNameIsNotUsed"></div>
             <form action="" method="post" v-on:submit.prevent="submitForm">
                 <div class="form-group" v-if="mode === 'sign up'">
                     <div class="fullname fullname__firstname">
@@ -202,9 +203,11 @@ export default {
               email: this.email,
               password: this.password
             })
+            document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner')           
             setTimeout(() => {
               if(this.responseErrorMessage !== null) {
                 this.submitForm()
+                document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
               } else {
                 // console.log(this.responseSuccessMessageq)
               }
@@ -276,6 +279,7 @@ export default {
       border: 2px solid darken($quaternary-color, $percentage2);
       height: 80vh;
       background-color: #fff;
+      position: relative;
       h2 {
         margin-top: 70px;
         position: relative;
@@ -369,6 +373,33 @@ export default {
           cursor: pointer;
         }
       }
+      .spinner { 
+        width: 100%;
+        height: 38vh;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $quaternary-color;
+        opacity: 0.9;
+         z-index: 1;
+        &::after {
+          content: '';
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+          border: 5px solid transparent;
+          border-top-color: $primary_color;
+          border-bottom-color: $primary_color;
+          z-index: 2;
+          animation: spinner 3s linear forwards;
+        }
+
+        @keyframes spinner {
+          0% { transform: rotate(0turn); }
+          100% { transform: rotate(3turn); }
+        }
+      }
       p {
         span {
           color: $primary_color;
@@ -415,6 +446,9 @@ export default {
         }
         .emailContainer {
             margin: 50px 0 25px 0 !important;
+        }
+        .spinner {
+          height: 76vh;
         }
       }
     }

@@ -202,6 +202,9 @@ export default {
               email: this.email,
               password: this.password
             })
+            setTimeout(() => {
+              this.submitForm()
+              }, 2000)
           }
       },
       isUserValid(firstname) {

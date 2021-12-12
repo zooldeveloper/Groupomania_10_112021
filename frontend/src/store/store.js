@@ -16,9 +16,6 @@ export default createStore({
     },
     ERROR_MESSAGE(state, message) {
       state.responseErrorMessage = message
-      setTimeout(() => {
-        state.responseErrorMessage = null
-      }, 3000)
     }
   },
   actions: { 
@@ -36,8 +33,11 @@ export default createStore({
         }
       } catch (err) {
         if (err.response.status === 409) {
-          context, // Put this line to avoid eslint errors!
-          commit('ERROR_MESSAGE', err.response.data.message)
+            context, // Put this line to avoid eslint errors!
+            commit('ERROR_MESSAGE', err.response.data.message)
+            setTimeout(() => {
+              commit('ERROR_MESSAGE', null)
+            }, 3000)
         } else {
           console.log(err)
         }

@@ -62,7 +62,7 @@ exports.login = (req, res) => {
             }
             // Checks if the email is already exist or not
             if (result.length < 1) {
-               return res.status(403).json('Email do not exist!')
+                return res.status(403).json({ message: 'Email do not exist!'})
             } else if (email === result[0].email) {
                 // Checks if the user's account is active or not
                 if (result[0].active === 'true') {

@@ -18,6 +18,7 @@ export default createStore({
     },
     EMAIL_ERROR_MESSAGE(state, message) {
       state.emailResMsg = message
+      console.log(state.emailResMsg)
     },
     PASSWORD_ERROR_MESSAGE(state, message) {
       state.passwordResMsg = message
@@ -45,6 +46,32 @@ export default createStore({
             setTimeout(() => {
               commit('EMAIL_ERROR_MESSAGE', null)
             }, 3000)
+        } else {
+          console.log(err)
+        }
+      }
+    },
+    async logIn({ context, commit }, user) {
+      try {
+        let result = await instance.post('/auth/login', { 
+          user: JSON.stringify({
+              email: user.email,
+              password: user.password 
+           }) 
+        })
+        console.log(result)
+      } catch (err) {
+        if (err.response.status === 403) {
+          context,
+            commit('EMAIL_ERROR_MESSAGE', err.response.data.message)
+            setTimeout(() => {
+              commit('EMAIL_ERROR_MESSAGE', null)
+            }, 3000)
+        } else if(err.response.status === 401) {
+          commit('PASSWORD_ERROR_MESSAGE', err.response.data.message)
+          setTimeout(() => {
+            commit('PASSWORD_ERROR_MESSAGE', null)
+          }, 3000)
         } else {
           console.log(err)
         }

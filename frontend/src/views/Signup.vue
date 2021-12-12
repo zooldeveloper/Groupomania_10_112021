@@ -55,7 +55,7 @@
                   <small v-if="!checkTerms" style="color: #ff8000; display:block">{{ errors.terms.errMsg }}</small>
                 </div>
                 <button type="submit" v-if="mode === 'sign up'" @click.prevent="signUp">Create account</button>
-                <button type="submit" v-else>Log in</button>
+                <button type="submit" v-else @click.prevent="logIn">Log in</button>
             </form>
             <p v-if="mode === 'sign up'">Already have an account ? <span @click='switchToLogIn()'>Log In</span></p>
             <p v-else>No account yet ? <span @click='switchToSignUp()'>Sign Up</span></p>
@@ -214,6 +214,48 @@ export default {
               setTimeout(()=> alert(`Congrats 👏 ${this.successResMsg}`), 100)
             }
            document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
+          }, 2000)
+        }
+      },
+      logIn(){
+        if(this.email === null || !this.isEmailValid(this.email)) {
+          this.errors.email.errMsg = 'Valid email required!'
+          this.errors.email.isNotValid = true
+        } else {
+          this.errors.email.errMsg = null 
+          this.errors.email.isNotValid = false
+        }
+        if(this.passwordConfirm === null || !this.isPasswordValid(this.passwordConfirm)) {
+          this.errors.passwordConfirm.errMsg = 'Password should be atleast 8 characters!'
+          this.errors.passwordConfirm.isNotValid = true
+        } else { 
+          this.errors.passwordConfirm.errMsg = null 
+          this.errors.passwordConfirm.isNotValid = false
+        }
+        if(this.errors.email.errMsg === null && 
+          this.errors.passwordConfirm.errMsg === null) {
+            this.$store.dispatch('logIn', {
+              email: this.email,
+              password: this.passwordConfirm
+            })
+          document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner') 
+          setTimeout(() => { 
+            if(this.emailResMsg !== null ) {
+              this.errors.email.errMsg  = this.emailResMsg
+              this.errors.email.isNotValid = true
+              this.passwordConfirm = null
+              this.errors.passwordConfirm.isNotValid = true
+            } else {   
+              this.errors.email.errMsg = null
+              this.errors.email.isNotValid = false
+            }
+            if(this.passwordResMsg !== null) {
+              this.errors.passwordConfirm.errMsg = this.passwordResMsg
+              this.errors.passwordConfirm.isNotValid = true
+            } else {
+              this.errors.passwordConfirm.errMsg = null
+            }
+            document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
           }, 2000)
         }
       },

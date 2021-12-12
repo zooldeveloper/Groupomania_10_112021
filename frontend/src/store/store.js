@@ -8,15 +8,19 @@ const instance = axios.create({
 
 export default createStore({
   state: {
-    responseSuccessMessage: null,
-    responseErrorMessage: null
+    successResMsg: null,
+    emailResMsg: null,
+    passwordResMsg: null
   },
   mutations: {
-      SUCCESS_MESSAGE(state, message) {
-      state.responseSuccessMessage = message
+    SUCCESS_MESSAGE(state, message) {
+      state.successResMsg = message
     },
-    ERROR_MESSAGE(state, message) {
-      state.responseErrorMessage = message
+    EMAIL_ERROR_MESSAGE(state, message) {
+      state.emailResMsg = message
+    },
+    PASSWORD_ERROR_MESSAGE(state, message) {
+      state.passwordResMsg = message
     }
   },
   actions: { 
@@ -35,17 +39,17 @@ export default createStore({
           // state.responseSuccessMessage = result.data.message
         }
       } catch (err) {
-        if (err.response.status === 409) {
+        if (err.response.status === 402 || err.response.status === 409) {
             context, // Put this line to avoid eslint errors!
-            commit('ERROR_MESSAGE', err.response.data.message)
+            commit('EMAIL_ERROR_MESSAGE', err.response.data.message)
             setTimeout(() => {
-              commit('ERROR_MESSAGE', null)
+              commit('EMAIL_ERROR_MESSAGE', null)
             }, 3000)
         } else {
           console.log(err)
         }
       }
-    },
+    }
   },
   modules: {}
 })

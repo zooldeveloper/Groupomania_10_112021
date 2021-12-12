@@ -8,7 +8,7 @@
             <h2 v-if="mode === 'sign up'">Sign Up</h2>
             <h2 v-else>Log In</h2> 
             <div class="thisClassNameIsNotUsed"></div>
-            <form action="" method="post" v-on:submit.prevent="submitForm">
+            <form action="" method="post">
                 <div class="form-group" v-if="mode === 'sign up'">
                     <div class="fullname fullname__firstname">
                         <label for="firstname"><font-awesome-icon icon="user-circle" size="lx"/></label>
@@ -29,7 +29,8 @@
                     <label for="email"><font-awesome-icon icon="envelope" size="lx"/></label>
                     <input :class="{success : checkEmail === false, error: checkEmail === true}" 
                            type="text" id="email" name="email" v-model="email" placeholder="Email: example@gmail.com">
-                    <small v-if="checkEmail">{{ errors.email.errMsg }}</small>
+                    <small v-if="errors.email.errMsg !== null">{{ errors.email.errMsg }}</small>
+                    <small v-else-if="errors.email.reseErrMsg !== null">{{ errors.email.resErrMsg }}</small>
                 </div>
                 <div class="form-group">
                     <div class="password password__first-field" v-if="mode === 'sign up'">
@@ -53,7 +54,7 @@
                   <label for="terms">I have read and agree to the terms of use</label>
                   <small v-if="!checkTerms" style="color: #ff8000; display:block">{{ errors.terms.errMsg }}</small>
                 </div>
-                <button type="submit" v-if="mode === 'sign up'">Create account</button>
+                <button type="submit" v-if="mode === 'sign up'" @click.prevent="signUp">Create account</button>
                 <button type="submit" v-else>Log in</button>
             </form>
             <p v-if="mode === 'sign up'">Already have an account ? <span @click='switchToLogIn()'>Log In</span></p>
@@ -89,7 +90,8 @@ export default {
         },
         email: {
             isNotValid: '',
-            errMsg: null
+            errMsg: null,
+            resErrMsg: null
         },
         password: {
             isNotValid: '',
@@ -125,7 +127,7 @@ export default {
     checkTerms() {
       return this.errors.terms.isChecked
     },
-    ...mapState(['responseSuccessMessage','responseErrorMessage'])
+    ...mapState(['responseSuccessMessage','responseErrorMessage']),
   },
   methods: {
       switchToLogIn() {
@@ -141,7 +143,7 @@ export default {
            return this.placeholder = 'Enter your password'
         }
       }, 
-      submitForm() {
+      signUp () {
         if (this.firstname === null || !this.isUserValid(this.firstname)) {
           this.errors.firstname.errMsg = 'Atleast 3 characters!'
           this.errors.firstname.isNotValid = true
@@ -159,10 +161,7 @@ export default {
         if(this.email === null || !this.isEmailValid(this.email)) {
           this.errors.email.errMsg = 'Valid email required!'
           this.errors.email.isNotValid = true
-        } else if(this.responseErrorMessage !== null) {
-          this.errors.email.errMsg = this.responseErrorMessage
-          this.errors.email.isNotValid = true
-        } else { 
+        } else {
           this.errors.email.errMsg = null 
           this.errors.email.isNotValid = false
         }
@@ -190,8 +189,7 @@ export default {
           this.errors.terms.errMsg = null
           this.errors.terms.isChecked = true
         }
-
-      if( this.errors.firstname.errMsg === null && 
+        if(this.errors.firstname.errMsg === null && 
           this.errors.lastname.errMsg === null && 
           this.errors.email.errMsg === null && 
           this.errors.password.errMsg === null && 
@@ -203,16 +201,22 @@ export default {
               email: this.email,
               password: this.password
             })
-            document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner')           
-            setTimeout(() => {
-              if(this.responseErrorMessage !== null) {
-                this.submitForm()
-                document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
-              } else {
-                // console.log(this.responseSuccessMessageq)
-              }
-            }, 2000)
-          }
+          document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner') 
+          setTimeout(() => { 
+            console.log(this.responseErrorMessage)          
+            if(this.responseErrorMessage !== null ) {
+              document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
+              this.email = null
+              this.errors.email.resErrMsg = this.responseErrorMessage
+              this.errors.email.isNotValid = true
+            } else {
+              document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
+              this.errors.email.resErrMsg = null
+              this.errors.email.isNotValid = false
+              // console.log(this.responseSuccessMessageq)
+            }
+          }, 2000)
+        }
       },
       isUserValid(firstname) {
           return /[A-Za-zÀ-ÿ]{3,}/.test(firstname);
@@ -226,7 +230,7 @@ export default {
       isBoxChecked() {
         this.errors.terms.errMsg = null
         this.terms = !this.terms
-      }
+      },
     }
 }
 </script>

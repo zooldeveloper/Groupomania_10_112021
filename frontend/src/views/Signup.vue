@@ -127,7 +127,7 @@ export default {
     checkTerms() {
       return this.errors.terms.isChecked
     },
-    ...mapState(['responseSuccessMessage','responseErrorMessage']),
+    ...mapState(['successResMsg','emailResMsg', 'passwordResMsg']),
   },
   methods: {
       switchToLogIn() {
@@ -201,20 +201,19 @@ export default {
               email: this.email,
               password: this.password
             })
-          document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner') 
+          document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner')
           setTimeout(() => { 
-            console.log(this.responseErrorMessage)          
-            if(this.responseErrorMessage !== null ) {
-              document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
+            console.log(this.emailResMsg)
+            if(this.emailResMsg !== null ) {
               this.email = null
-              this.errors.email.resErrMsg = this.responseErrorMessage
+              this.errors.email.resErrMsg = this.emailResMsg
               this.errors.email.isNotValid = true
             } else {
-              document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
               this.errors.email.resErrMsg = null
               this.errors.email.isNotValid = false
-              // console.log(this.responseSuccessMessageq)
+              setTimeout(()=> alert(`Congrats 👏 ${this.successResMsg}`), 100)
             }
+           document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
           }, 2000)
         }
       },

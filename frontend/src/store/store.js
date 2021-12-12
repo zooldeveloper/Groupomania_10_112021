@@ -2,7 +2,8 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3001/api'
+  baseURL: 'http://localhost:3001/api',
+  headers: { 'Content-Type': 'application/json'}
 })
 
 export default createStore({
@@ -22,10 +23,12 @@ export default createStore({
     async creatAccount({ context, commit, }, user) {
       try {
         let result = await instance.post('/auth/signup', {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          password: user.password
+          user: JSON.stringify({
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              password: user.password
+          }) 
         })
         if (result.status === 201) {
           commit('SUCCESS_MESSAGE', result.data.message)
@@ -42,7 +45,7 @@ export default createStore({
           console.log(err)
         }
       }
-    }
+    },
   },
   modules: {}
 })

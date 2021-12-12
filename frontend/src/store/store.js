@@ -1,6 +1,10 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 
+const instance = axios.create({
+  baseURL: 'http://localhost:3001/api'
+})
+
 export default createStore({
   state: {
     responseSuccessMessage: null,
@@ -12,12 +16,15 @@ export default createStore({
     },
     ERROR_MESSAGE(state, message) {
       state.responseErrorMessage = message
+      setTimeout(() => {
+        state.responseErrorMessage = null
+      }, 3000)
     }
   },
-  actions: {
-    async creatAccount({ context, commit }, user) {
+  actions: { 
+    async creatAccount({ context, commit, }, user) {
       try {
-        let result = await axios.post('http://localhost:3001/api/auth/signup', {
+        let result = await instance.post('/auth/signup', {
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
@@ -25,6 +32,7 @@ export default createStore({
         })
         if (result.status === 201) {
           commit('SUCCESS_MESSAGE', result.data.message)
+          // state.responseSuccessMessage = result.data.message
         }
       } catch (err) {
         if (err.response.status === 409) {

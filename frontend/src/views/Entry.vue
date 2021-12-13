@@ -66,7 +66,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'Signup',
+  name: 'Entry',
   data() {
     return {
       mode: 'sign up',

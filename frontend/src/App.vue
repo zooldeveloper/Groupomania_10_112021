@@ -1,25 +1,22 @@
 <template>
-  <Signup/>
+  <div id="nav">
+    <router-link to="/"></router-link> 
+    <router-link to="/entry"></router-link>
+  </div>
+  <router-view/>
 </template>
 
-<script>
-import Signup from './components/Signup.vue'
 
+
+<script>
 export default {
   name: 'App',
-  components: {
-    Signup
+  component: {
+   
   }
 }
 </script>
 
-<style>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
+<style lang="scss">
+
 </style>

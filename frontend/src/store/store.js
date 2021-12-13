@@ -59,7 +59,9 @@ export default createStore({
               password: user.password 
            }) 
         })
-        console.log(result)
+        if (result.status == 200) {
+          document.cookie = JSON.stringify(`token=${result.data.token}`)
+        }
       } catch (err) {
         if (err.response.status === 403) {
           context,

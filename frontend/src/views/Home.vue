@@ -2,7 +2,7 @@
     <header>
         <nav>
             <div class="logo">
-              <a href=""><img src="../assets/images/icon-left-font-monochrome-black.svg" alt="company logo"></a>
+              <a href=""><img src="../assets/images/icon-left-font-monochrome-gray.svg" alt="company logo"></a>
             </div>
             <div class="navbar">
                 <ul>

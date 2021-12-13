@@ -212,6 +212,7 @@ export default {
               this.errors.email.resErrMsg = null
               this.errors.email.isNotValid = false
               setTimeout(()=> alert(`Congrats 👏 ${this.successResMsg}`), 100)
+              setTimeout(()=> this.switchToLogIn(), 3000)
             }
            document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
           }, 2000)
@@ -255,6 +256,7 @@ export default {
             } else {
               this.errors.passwordConfirm.errMsg = null
             }
+            this.$router.push({ name: 'Home' })
             document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
           }, 2000)
         }
@@ -271,7 +273,13 @@ export default {
       isBoxChecked() {
         this.errors.terms.errMsg = null
         this.terms = !this.terms
-      },
+      }
+    },
+  mounted() {
+      const token = document.cookie;
+      if (token) {
+        this.$router.push({ name: 'Home' })
+      }
     }
 }
 </script>

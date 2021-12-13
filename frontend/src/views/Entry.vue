@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div id="banner">
-          <img src="../assets/images/icon-left-font-monochrome-black.svg" alt="Groupomania icon">
+          <img src="../assets/images/icon-left-font-monochrome-white.svg" alt="Groupomania icon">
           <h1>Because we care about your needs</h1>
         </div>
         <div id="signup">

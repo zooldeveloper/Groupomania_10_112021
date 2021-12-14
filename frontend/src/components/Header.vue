@@ -65,9 +65,10 @@ export default {
             background: linear-gradient(to bottom left, lighten($primary_color, $percentage1), lighten($secondary_color, $percentage1));
             @include flexbox(space-around);
              position: relative;
+             padding-left: 20px;
             .logo {
                 img {
-                    width: 220px;
+                    width: 200px;
                 }   
             }
             #sidemenu {
@@ -76,14 +77,12 @@ export default {
                 .navbar {
                     width: 100%;
                 }
-
-                .sidemenu {
+               .sidemenu {
                     &__btn {
-                        display: none;
                         display: block;
                         width: 40px;
                         height: 40px;
-                        background: grey;
+                        background: $tertiary-color;
                         border: none;
                         position: absolute;
                         right: 25px;
@@ -127,15 +126,20 @@ export default {
                                 transform: rotate(45deg);
                             }
                         }
-
                     }
-
                     &__wrapper {
-                         width: inherit;
+                        width: inherit;
                     }
                     &__list {
+                        padding-top: 50px;
                         list-style:none;
-                            @include flexbox(space-between);
+                        padding: 0;
+                        margin: 0;
+                        @include flexbox(space-between);
+                    }
+                    &__item {
+                        cursor: pointer;
+                        transition: .4s ease;         
                     }
                     @media screen and (max-width: 768px) {
                         &__btn {
@@ -143,14 +147,28 @@ export default {
                         }
                         &__list {
                             position: absolute;
-                            height: 130px;
-                            top: 80px;
-                            right: 30px;
+                            height: 140px;
+                            top: 90px;
+                            right: 20px;
                             @include flexbox(space-between);
                             flex-direction: column;
+                            background: linear-gradient(to bottom left, lighten($primary_color, $percentage1), lighten($secondary_color, $percentage1));
+                            padding: 15px 10px;
                         }
                     }
                 }
+            }
+            .translateX-enter {
+                transform:translateX(110px);
+                opacity: 0;
+            }
+            .translateX-enter-active,.translateX-leave-active {
+                transform-origin: top right 0;
+                transition:.3s ease;
+            }
+            .translateX-leave-to {
+                transform: translateX(110px);
+                opacity: 0;
             }
         }
     }

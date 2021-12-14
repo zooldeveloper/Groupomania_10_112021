@@ -18,7 +18,6 @@ export default createStore({
     },
     EMAIL_ERROR_MESSAGE(state, message) {
       state.emailResMsg = message
-      console.log(state.emailResMsg)
     },
     PASSWORD_ERROR_MESSAGE(state, message) {
       state.passwordResMsg = message
@@ -37,7 +36,6 @@ export default createStore({
         })
         if (result.status === 201) {
           commit('SUCCESS_MESSAGE', result.data.message)
-          // state.responseSuccessMessage = result.data.message
         }
       } catch (err) {
         if (err.response.status === 402 || err.response.status === 409) {
@@ -64,7 +62,7 @@ export default createStore({
         }
       } catch (err) {
         if (err.response.status === 403) {
-          context,
+          context, // Put this line to avoid eslint errors!
             commit('EMAIL_ERROR_MESSAGE', err.response.data.message)
             setTimeout(() => {
               commit('EMAIL_ERROR_MESSAGE', null)

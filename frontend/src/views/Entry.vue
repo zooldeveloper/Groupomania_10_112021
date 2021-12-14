@@ -203,7 +203,6 @@ export default {
             })
           document.querySelector('.thisClassNameIsNotUsed').classList.add('spinner')
           setTimeout(() => { 
-            console.log(this.emailResMsg)
             if(this.emailResMsg !== null ) {
               this.email = null
               this.errors.email.resErrMsg = this.emailResMsg
@@ -256,7 +255,9 @@ export default {
             } else {
               this.errors.passwordConfirm.errMsg = null
             }
-            this.$router.push({ name: 'Home' })
+            if(this.emailResMsg === null && this.passwordResMsg === null) {
+              this.$router.push({ name: 'Home' })
+            }
             document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
           }, 2000)
         }

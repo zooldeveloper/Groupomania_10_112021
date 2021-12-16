@@ -1,6 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
-// const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 
 const authRoutes = require('./routes/auth');
@@ -9,7 +9,7 @@ const postRoutes = require('./routes/post');
 const likeRoutes = require('./routes/like');
 const commentRoutes = require('./routes/comment');
 
-const app = express();
+const app = express(); 
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,6 +21,7 @@ app.use((req, res, next) => {
 app.use(helmet()); // It helps secure the app by setting some http headers
 app.use(express.urlencoded({ extended: true })); // Parses the x-www-form.urlencoded
 app.use(express.json());// Parses the application/json
+app.use(cookieParser()) // Parse the cookies
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);

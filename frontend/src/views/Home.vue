@@ -77,6 +77,8 @@ export default {
           min-height: 60px;
           margin-left: 15px;
           border-color: $border-color;
+          padding: 7px;
+          outline: none;
         }
         label {
           cursor: pointer;
@@ -90,7 +92,8 @@ export default {
           cursor: pointer;
           background-color: transparent;
           font-size: 1.2rem;
-          // font-weight: 200 !important;
+          font-weight: 200;
+          font-family: sans-serif;
         }
       }
     }

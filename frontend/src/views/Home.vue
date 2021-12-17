@@ -17,6 +17,21 @@
                     </div>
                 </form>
             </section>
+            <section id="userpost">
+                <div class="userpost__wrapper">
+                    <div class="userpost__userinfo">
+                        <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
+                    <div class="userpost__username-postdate">
+                        <h2>Ayoub Ali</h2>
+                        <small>Posted on March 24, 2021 </small>
+                    </div>
+                    </div>
+                    <div class="userpost__post">
+                        <p>This is the first post of our new social platform !</p>
+                        <img class="userpost__imagepost" src="../assets/images/banner1.jpeg" alt="user image">
+                    </div>
+                </div>
+            </section>
         </main>
   </div>
     
@@ -41,20 +56,31 @@ export default {
 
 
 <style lang="scss" scoped>
-    @import '@/assets/sass/variables.scss';
-    @import '@/assets/sass/mixins.scss';
+  @import '@/assets/sass/variables.scss';
+  @import '@/assets/sass/mixins.scss';
 
+// Commun styles
+  section {
+    margin: 30px 0;
+    box-shadow: 0px 5px 15px $border-color;
+  }
+  img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+
+  // Main section
   main {
     max-width: 600px;
     margin: 0 auto;
     #makepost {
-      margin-top: 30px;
+      margin-bottom: 50px;        
       form {
         @include flexbox(space-between);
         flex-direction: column;
         padding: 20px 0;
         border-radius: 7px;
-        box-shadow: 0px 5px 15px $border-color;
         font-size: 1.2rem;
         div {
           width: 90%;
@@ -65,11 +91,6 @@ export default {
            padding-top: 20px;
            border-top: 1px solid $border-color;
            @include flexbox(space-around);
-        }
-        img {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
         }
         textarea {
           resize: vertical;
@@ -96,6 +117,40 @@ export default {
           font-family: sans-serif;
         }
       }
+    }
+
+   // Userpost section
+    #userpost {
+      .userpost {
+        &__wrapper {
+          padding: 20px;
+        } 
+        &__userinfo {
+            @include flexbox(flex-start);
+        }
+        &__userimage {
+          float: left;  
+        }
+        &__username-postdate {
+          margin-left: 15px;
+          h2 {
+            width: 110px;
+             margin: 0;
+          }
+        }
+        &__post {
+          margin-top: 30px;
+          p {
+            text-align: left;
+            font-size: 1.2rem;
+          }
+        }
+        &__imagepost {
+          width: 100%;
+          height: auto;
+          border-radius: 0%;
+        }
+      } 
     }
   }
   

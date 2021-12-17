@@ -2,6 +2,7 @@
     <div class="container">
         <Header/>
         <main>
+            <!-- Make post section -->
             <section id="makepost">
                 <form>
                     <div> 
@@ -17,6 +18,7 @@
                     </div>
                 </form>
             </section>
+            <!-- User post section -->
             <section id="userpost">
                 <div class="userpost__wrapper">
                     <div class="userpost__userinfo">
@@ -30,6 +32,40 @@
                         <p>This is the first post of our new social platform !</p>
                         <img class="userpost__imagepost" src="../assets/images/banner1.jpeg" alt="user image">
                     </div>
+                    <!-- Likes and comments section -->
+                    <div class="userpost__interation">
+                        <div class="userpost__likes">
+                            <span><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> 5</span>
+                            <span><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> 10</span>
+                        </div>
+                        <div class="comments">
+                            <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> 2</span>
+                        </div>
+                    </div>
+                    <div class="userpost__comments">
+                      <div class="userpost__userinfo">
+                          <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
+                      <div class="userpost__username-postdate">
+                          <h3>Teddy Jam</h3>
+                          <small>Posted on March 04, 2021 </small>
+                      </div>
+                      </div>
+                      <div class="userpost__comment">
+                        <p>This is my first comment !</p>
+                        <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
+                    </div>
+                    <div class="userpost__userinfo">
+                          <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
+                      <div class="userpost__username-postdate">
+                          <h3>Ayoub Ali</h3>
+                          <small>Posted on April 11, 2021 </small>
+                      </div>
+                      </div>
+                      <div class="userpost__comment">
+                        <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
+                        <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
+                    </div>
+                     </div>
                 </div>
             </section>
         </main>
@@ -63,6 +99,10 @@ export default {
   section {
     margin: 30px 0;
     box-shadow: 0px 5px 15px $border-color;
+  }
+  h2, h3 {
+    margin: 0;
+    width: 110px;
   }
   img {
     width: 60px;
@@ -133,10 +173,6 @@ export default {
         }
         &__username-postdate {
           margin-left: 15px;
-          h2 {
-            width: 110px;
-             margin: 0;
-          }
         }
         &__post {
           margin-top: 30px;
@@ -150,7 +186,34 @@ export default {
           height: auto;
           border-radius: 0%;
         }
-      } 
+
+        // Likes & comments interations
+        &__interation {
+          margin: 25px 0;
+          padding: 0 30px 7px;
+          border-bottom: 1px solid $border-color;
+          @include flexbox(space-between);
+        }
+        &__likes {
+          span {
+            margin-right: 13px;
+          }
+        }
+        &__comments {
+          .userpost__userimage {
+            width: 40px;
+            height: 40px;
+          }
+          p {
+            text-align: left;
+            margin-top: 0 !important;
+          }
+        }
+        &__comment {
+          margin: 7px;
+          @include flexbox(space-between, start);
+        }
+      }      
     }
   }
   

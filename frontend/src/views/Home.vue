@@ -69,7 +69,7 @@
                               <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
                               <textarea class="userpost__commenttextarea" name="" id="" placeholder="Your comment!"></textarea>
                               <button class="userpost__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
-                          </form>
+                          </form> 
                      </div>
                 </div>
             </section>
@@ -147,9 +147,6 @@ export default {
 
 
     // Main section
-    main {
-      max-width: 600px;
-      margin: 0 auto;
       #makepost {
         margin-bottom: 50px;
         .makepost {         
@@ -245,5 +242,4 @@ export default {
         }      
       }
     }
-  }
 </style>

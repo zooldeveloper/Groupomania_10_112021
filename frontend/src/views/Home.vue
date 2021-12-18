@@ -14,7 +14,7 @@
                                 <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
                                 <input type="file" id="myImage">
                           </label>
-                          <button type="submit">Post it  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                          <button class="makepost__btn" type="submit">Post it  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                     </div>
                 </form>
             </section>
@@ -23,17 +23,17 @@
                 <div class="userpost__wrapper">
                     <div class="userpost__userinfo">
                         <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
-                    <div class="userpost__username-postdate">
-                        <h2>Ayoub Ali</h2>
-                        <small>Posted on March 24, 2021 </small>
-                    </div>
+                        <div class="userpost__username-postdate">
+                            <h2>Ayoub Ali</h2>
+                            <small>Posted on March 24, 2021 </small>
+                        </div>
                     </div>
                     <div class="userpost__post">
                         <p>This is the first post of our new social platform !</p>
                         <img class="userpost__imagepost" src="../assets/images/banner1.jpeg" alt="user image">
                     </div>
                     <!-- Likes and comments section -->
-                    <div class="userpost__interation">
+                    <div class="userpost__interaction">
                         <div class="userpost__likes">
                             <span><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> 5</span>
                             <span><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> 10</span>
@@ -43,27 +43,27 @@
                         </div>
                     </div>
                     <div class="userpost__comments">
-                      <div class="userpost__userinfo">
-                          <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
-                      <div class="userpost__username-postdate">
-                          <h3>Teddy Jam</h3>
-                          <small>Posted on March 04, 2021 </small>
-                      </div>
-                      </div>
-                      <div class="userpost__comment">
-                        <p>This is my first comment !</p>
-                        <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
-                    </div>
-                    <div class="userpost__userinfo">
-                          <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
-                      <div class="userpost__username-postdate">
-                          <h3>Ayoub Ali</h3>
-                          <small>Posted on April 11, 2021 </small>
-                      </div>
-                      </div>
+                          <div class="userpost__userinfo">
+                                <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
+                                <div class="userpost__username-postdate">
+                                    <h3>Teddy Jam</h3>
+                                    <small>Posted on March 04, 2021 </small>
+                                </div>
+                          </div>
                           <div class="userpost__comment">
-                            <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
-                            <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
+                              <p>This is my first comment !</p>
+                              <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
+                          </div>
+                          <div class="userpost__userinfo">
+                                <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
+                                <div class="userpost__username-postdate">
+                                    <h3>Ayoub Ali</h3>
+                                    <small>Posted on April 11, 2021 </small>
+                                </div>
+                          </div>
+                          <div class="userpost__comment">
+                              <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
+                              <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
                           </div>
                           <form class="userpost__commentsform">
                               <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
@@ -100,9 +100,10 @@ export default {
   @import '@/assets/sass/variables.scss';
   @import '@/assets/sass/mixins.scss';
 
-// Commun styles
   .home {
     margin-top: 130px;
+
+    // Common rules
     section {
       margin: 30px 0;
       box-shadow: 0px 5px 15px $border-color;
@@ -129,14 +130,6 @@ export default {
       outline: none;
       font-family: Arial, Helvetica, sans-serif;
     }
-    button {
-      border: none;
-      cursor: pointer;
-      background-color: transparent;
-      font-size: 1.2rem;
-      font-weight: 200;
-      font-family: sans-serif;
-    }
     input {
       display: none;
       visibility: hidden;
@@ -144,7 +137,6 @@ export default {
     label {
       cursor: pointer;
     }
-
 
     // Main section
       #makepost {
@@ -168,6 +160,9 @@ export default {
             border-top: 1px solid $border-color;
             @include flexbox(space-around);
           }
+          &__btn {
+              @include btn(static);
+          }
         }   
       }
 
@@ -175,13 +170,14 @@ export default {
       #userpost {
         .userpost {
           &__wrapper {
-            padding: 20px;
+            padding: 35px;
           } 
           &__userinfo {
               @include flexbox(flex-start);
           }
           &__userimage {
-            float: left;  
+            float: left; 
+            margin-right: 7px; 
           }
           &__username-postdate {
             margin-left: 15px;
@@ -191,18 +187,20 @@ export default {
             p {
               text-align: left;
               font-size: 1.2rem;
+              margin-left: 40px;
             }
           }
           &__imagepost {
-            width: 100%;
-            height: auto;
+            width: 90%;
+            height: 250px;
             border-radius: 0%;
+            object-fit: cover;
           }
 
           // Likes & comments section
-          &__interation {
+          &__interaction {
             margin: 25px 0;
-            padding: 0 30px 7px;
+            padding: 0 40px 7px;
             border-bottom: 1px solid $border-color;
             @include flexbox(space-between);
           }
@@ -212,6 +210,7 @@ export default {
             }
           }
           &__comments {
+            margin: 0 40px;
             .userpost__userimage {
               width: 40px;
               height: 40px;
@@ -234,10 +233,17 @@ export default {
             padding: 10px 45px 0 10px;
             border-radius: 25px;
             resize: none;
+
           }
           &__btn {
-            position: absolute;
+            @include btn;
             right: 18px;
+          }
+          @media screen and (max-width: 768px) {
+            &__imagepost { width: 100%;}
+            &__post { p { margin-left: 0px;}}
+            &__interaction { padding-left: 30px !important}
+            &__comments { margin: 0;}
           }
         }      
       }

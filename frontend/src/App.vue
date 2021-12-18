@@ -28,7 +28,7 @@ export default {
     color: #2c3e50;
   }
   main {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
   }
 </style>

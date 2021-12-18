@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="home">
         <Header/>
         <main>
             <!-- Make post section -->
@@ -101,146 +101,149 @@ export default {
   @import '@/assets/sass/mixins.scss';
 
 // Commun styles
-  section {
-    margin: 30px 0;
-    box-shadow: 0px 5px 15px $border-color;
-  }
-  form {
-    @include flexbox(space-between);
-    flex-direction: column;
-    padding: 20px 0;
-    border-radius: 7px;
-    font-size: 1.2rem;
-    position: relative;
-  }
-  h2, h3 {
-    margin: 0;
-    width: 110px;
-  }
-  img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-  }
-  textarea {
-    border-color: $border-color;
-    outline: none;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  button {
-    border: none;
-    cursor: pointer;
-    background-color: transparent;
-    font-size: 1.2rem;
-    font-weight: 200;
-    font-family: sans-serif;
-  }
-  input {
-    display: none;
-    visibility: hidden;
-  }
-  label {
-    cursor: pointer;
-  }
-
-
-  // Main section
-  main {
-    max-width: 600px;
-    margin: 0 auto;
-    #makepost {
-      margin-bottom: 50px;
-      .makepost {         
-        &__div {
-          width: 90%;
-          @include flexbox(space-between);
-        }
-        &__posttextarea {
-          resize: vertical;
-          width: 85%;
-          min-height: 60px;
-          margin-left: 15px;
-          padding: 7px;
-        }
-        &__fileinput {
-           margin-top: 30px; 
-           padding-top: 20px;
-           border-top: 1px solid $border-color;
-           @include flexbox(space-around);
-        }
-      }   
+  .home {
+    margin-top: 130px;
+    section {
+      margin: 30px 0;
+      box-shadow: 0px 5px 15px $border-color;
+    }
+    form {
+      @include flexbox(space-between);
+      flex-direction: column;
+      padding: 20px 0;
+      border-radius: 7px;
+      font-size: 1.2rem;
+      position: relative;
+    }
+    h2, h3 {
+      margin: 0;
+      width: 110px;
+    }
+    img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+    textarea {
+      border-color: $border-color;
+      outline: none;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    button {
+      border: none;
+      cursor: pointer;
+      background-color: transparent;
+      font-size: 1.2rem;
+      font-weight: 200;
+      font-family: sans-serif;
+    }
+    input {
+      display: none;
+      visibility: hidden;
+    }
+    label {
+      cursor: pointer;
     }
 
-   // Userpost section
-    #userpost {
-      .userpost {
-        &__wrapper {
-          padding: 20px;
-        } 
-        &__userinfo {
-            @include flexbox(flex-start);
-        }
-        &__userimage {
-          float: left;  
-        }
-        &__username-postdate {
-          margin-left: 15px;
-        }
-        &__post {
-          margin-top: 30px;
-          p {
-            text-align: left;
-            font-size: 1.2rem;
-          }
-        }
-        &__imagepost {
-          width: 100%;
-          height: auto;
-          border-radius: 0%;
-        }
 
-        // Likes & comments section
-        &__interation {
-          margin: 25px 0;
-          padding: 0 30px 7px;
-          border-bottom: 1px solid $border-color;
-          @include flexbox(space-between);
-        }
-        &__likes {
-          span {
-            margin-right: 13px;
+    // Main section
+    main {
+      max-width: 600px;
+      margin: 0 auto;
+      #makepost {
+        margin-bottom: 50px;
+        .makepost {         
+          &__div {
+            width: 90%;
+            @include flexbox(space-between);
           }
-        }
-        &__comments {
-          .userpost__userimage {
-            width: 40px;
-            height: 40px;
+          &__posttextarea {
+            resize: vertical;
+            width: 85%;
+            min-height: 60px;
+            margin-left: 15px;
+            padding: 7px;
+            border-radius: 15px;
           }
-          p {
-            text-align: left;
-            margin-top: 0 !important;
+          &__fileinput {
+            margin-top: 30px; 
+            padding-top: 20px;
+            border-top: 1px solid $border-color;
+            @include flexbox(space-around);
           }
-        }
-        &__comment {
-          margin: 7px;
-          @include flexbox(space-between, start);
-        }
-        &__commentsform {
-          flex-direction: row;
-          justify-content: space-evenly;
-        }
-        &__commenttextarea {
-          width: 80%;
-          padding: 10px 45px 0 10px;
-          border-radius: 25px;
-          resize: none;
-        }
-        &__btn {
-          position: absolute;
-          right: 18px;
-        }
-      }      
+        }   
+      }
+
+    // Userpost section
+      #userpost {
+        .userpost {
+          &__wrapper {
+            padding: 20px;
+          } 
+          &__userinfo {
+              @include flexbox(flex-start);
+          }
+          &__userimage {
+            float: left;  
+          }
+          &__username-postdate {
+            margin-left: 15px;
+          }
+          &__post {
+            margin-top: 30px;
+            p {
+              text-align: left;
+              font-size: 1.2rem;
+            }
+          }
+          &__imagepost {
+            width: 100%;
+            height: auto;
+            border-radius: 0%;
+          }
+
+          // Likes & comments section
+          &__interation {
+            margin: 25px 0;
+            padding: 0 30px 7px;
+            border-bottom: 1px solid $border-color;
+            @include flexbox(space-between);
+          }
+          &__likes {
+            span {
+              margin-right: 13px;
+            }
+          }
+          &__comments {
+            .userpost__userimage {
+              width: 40px;
+              height: 40px;
+            }
+            p {
+              text-align: left;
+              margin-top: 0 !important;
+            }
+          }
+          &__comment {
+            margin: 7px;
+            @include flexbox(space-between, start);
+          }
+          &__commentsform {
+            flex-direction: row;
+            justify-content: space-evenly;
+          }
+          &__commenttextarea {
+            width: 80%;
+            padding: 10px 45px 0 10px;
+            border-radius: 25px;
+            resize: none;
+          }
+          &__btn {
+            position: absolute;
+            right: 18px;
+          }
+        }      
+      }
     }
   }
-  
 </style>

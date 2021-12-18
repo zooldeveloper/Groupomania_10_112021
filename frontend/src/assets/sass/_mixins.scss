@@ -4,12 +4,12 @@
 	align-items: $align-items;
 }
 
-@mixin  btn(){
+@mixin  btn($position: absolute){
 	border: none;
 	cursor: pointer;
 	background-color: transparent;
 	font-size: 1.2rem;
 	font-weight: 200;
 	font-family: sans-serif;
-	position: absolute;
+	position: $position;
 }

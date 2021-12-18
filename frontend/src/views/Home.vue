@@ -5,11 +5,11 @@
             <!-- Make post section -->
             <section id="makepost">
                 <form>
-                    <div> 
+                    <div class="makepost__div"> 
                         <img src="../assets/images/banner1.jpeg" alt="user image">
-                        <textarea name="" id="" placeholder="What would you like to share?"></textarea>
+                        <textarea class="makepost__posttextarea" name="" id="" placeholder="What would you like to share?"></textarea>
                     </div>
-                    <div class="makepost__fileinput">
+                    <div class="makepost__div makepost__fileinput">
                           <label for="myImage">Uplaod a file
                                 <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
                                 <input type="file" id="myImage">
@@ -61,10 +61,10 @@
                           <small>Posted on April 11, 2021 </small>
                       </div>
                       </div>
-                      <div class="userpost__comment">
-                        <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
-                        <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
-                    </div>
+                          <div class="userpost__comment">
+                            <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
+                            <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
+                          </div>
                      </div>
                 </div>
             </section>
@@ -100,6 +100,14 @@ export default {
     margin: 30px 0;
     box-shadow: 0px 5px 15px $border-color;
   }
+  form {
+    @include flexbox(space-between);
+    flex-direction: column;
+    padding: 20px 0;
+    border-radius: 7px;
+    font-size: 1.2rem;
+    position: relative;
+  }
   h2, h3 {
     margin: 0;
     width: 110px;
@@ -109,54 +117,53 @@ export default {
     height: 60px;
     border-radius: 50%;
   }
+  textarea {
+    border-color: $border-color;
+    outline: none;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  button {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    font-size: 1.2rem;
+    font-weight: 200;
+    font-family: sans-serif;
+  }
+  input {
+    display: none;
+    visibility: hidden;
+  }
+  label {
+    cursor: pointer;
+  }
+
 
   // Main section
   main {
     max-width: 600px;
     margin: 0 auto;
     #makepost {
-      margin-bottom: 50px;        
-      form {
-        @include flexbox(space-between);
-        flex-direction: column;
-        padding: 20px 0;
-        border-radius: 7px;
-        font-size: 1.2rem;
-        div {
+      margin-bottom: 50px;
+      .makepost {         
+        &__div {
           width: 90%;
           @include flexbox(space-between);
         }
-        .makepost__fileinput {
+        &__posttextarea {
+          resize: vertical;
+          width: 85%;
+          min-height: 60px;
+          margin-left: 15px;
+          padding: 7px;
+        }
+        &__fileinput {
            margin-top: 30px; 
            padding-top: 20px;
            border-top: 1px solid $border-color;
            @include flexbox(space-around);
         }
-        textarea {
-          resize: vertical;
-          width: 85%;
-          min-height: 60px;
-          margin-left: 15px;
-          border-color: $border-color;
-          padding: 7px;
-          outline: none;
-        }
-        label {
-          cursor: pointer;
-        }
-        input {
-          display: none;
-          visibility: hidden;
-        }
-        button {
-          border: none;
-          cursor: pointer;
-          background-color: transparent;
-          font-size: 1.2rem;
-          font-weight: 200;
-          font-family: sans-serif;
-        }
-      }
+      }   
     }
 
    // Userpost section
@@ -187,7 +194,7 @@ export default {
           border-radius: 0%;
         }
 
-        // Likes & comments interations
+        // Likes & comments section
         &__interation {
           margin: 25px 0;
           padding: 0 30px 7px;

@@ -3,3 +3,13 @@
 	justify-content: $justify-content;
 	align-items: $align-items;
 }
+
+@mixin  btn(){
+	border: none;
+	cursor: pointer;
+	background-color: transparent;
+	font-size: 1.2rem;
+	font-weight: 200;
+	font-family: sans-serif;
+	position: absolute;
+}

@@ -59,13 +59,17 @@ export default {
   @import '@/assets/sass/mixins.scss';
 
     header {
+        margin-top: 0;
+        position:  relative;
+        z-index: 1;
         nav {
             width: 100%;
             height: 80px;
+            padding-left: 20px;
+            position: fixed;
+            top: 0;
             background: linear-gradient(to bottom left, lighten($primary_color, $percentage1), lighten($secondary_color, $percentage1));
             @include flexbox(space-around);
-             position: relative;
-             padding-left: 20px;
             .logo {
                 img {
                     width: 200px;

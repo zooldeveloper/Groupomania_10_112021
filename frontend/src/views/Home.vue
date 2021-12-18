@@ -65,6 +65,11 @@
                             <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
                             <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
                           </div>
+                          <form class="userpost__commentsform">
+                              <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
+                              <textarea class="userpost__commenttextarea" name="" id="" placeholder="Your comment!"></textarea>
+                              <button class="userpost__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                          </form>
                      </div>
                 </div>
             </section>
@@ -219,6 +224,20 @@ export default {
         &__comment {
           margin: 7px;
           @include flexbox(space-between, start);
+        }
+        &__commentsform {
+          flex-direction: row;
+          justify-content: space-evenly;
+        }
+        &__commenttextarea {
+          width: 80%;
+          padding: 10px 45px 0 10px;
+          border-radius: 25px;
+          resize: none;
+        }
+        &__btn {
+          position: absolute;
+          right: 18px;
         }
       }      
     }

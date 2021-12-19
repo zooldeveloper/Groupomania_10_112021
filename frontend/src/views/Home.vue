@@ -19,17 +19,17 @@
                 </form>
             </section>
             <!-- User post section -->
-            <section id="userpost">
+            <section id="userpost" v-for="post in posts" v-bind:key="post.userId">
                 <div class="userpost__wrapper">
                     <div class="userpost__userinfo">
                         <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
                         <div class="userpost__username-postdate">
-                            <h2>Ayoub Ali</h2>
-                            <small>Posted on March 24, 2021 </small>
+                            <h2>{{ post.firstName}} {{ post.lastName}}</h2>
+                            <small>Posted on {{ post.creation_date}} </small>
                         </div>
                     </div>
                     <div class="userpost__post">
-                        <p>This is the first post of our new social platform !</p>
+                        <p>{{ post.textual_post}}</p>
                         <img class="userpost__imagepost" src="../assets/images/banner1.jpeg" alt="user image">
                     </div>
                     <!-- Likes and comments section -->
@@ -80,18 +80,24 @@
 
 <script>
 import Header from '../components/Header.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
   components: {
     Header,
   },
-  // mounted() {
-  //   const token = document.cookie;
-  //   if (!token) {
-  //     this.$router.push({ name: 'Entry' })
-  //   }
-  // }
+  computed: {
+    ...mapState(['posts'])
+  },
+  mounted() {
+    
+    // const token = document.cookie;
+    // if (!token) {
+    //   this.$router.push({ name: 'Entry' })
+    // }
+    this.$store.dispatch('getAllPosts')
+  }
 }
 </script>
 
@@ -118,7 +124,8 @@ export default {
     }
     h2, h3 {
       margin: 0;
-      width: 110px;
+      width: auto;
+      text-align: left;
     }
     img {
       width: 60px;

@@ -10,7 +10,8 @@ export default createStore({
   state: {
     successResMsg: null,
     emailResMsg: null,
-    passwordResMsg: null
+    passwordResMsg: null,
+    posts: {}
   },
   mutations: {
     SUCCESS_MESSAGE(state, message) {
@@ -21,9 +22,13 @@ export default createStore({
     },
     PASSWORD_ERROR_MESSAGE(state, message) {
       state.passwordResMsg = message
+    },
+    GET_ALL_POSTS(state, posts) {
+      state.posts = posts
     }
   },
-  actions: { 
+  actions: {
+    // Makes the post request of the user sign up
     async creatAccount({ context, commit, }, user) {
       try {
         let result = await instance.post('/auth/signup', {
@@ -49,6 +54,7 @@ export default createStore({
         }
       }
     },
+    // Makes the post request of the user login
     async logIn({ context, commit }, user) {
       try {
         let result = await instance.post('/auth/login', { 
@@ -58,7 +64,7 @@ export default createStore({
            }) 
         })
         if (result.status == 200) {
-          document.cookie = JSON.stringify(`token=${result.data.token}`)
+          // document.cookie = JSON.stringify(`token=${result.data.token}`)
         }
       } catch (err) {
         if (err.response.status === 403) {
@@ -75,6 +81,17 @@ export default createStore({
         } else {
           console.log(err)
         }
+      }
+    },
+    // // Makes the get request of all users posts
+    async getAllPosts({ commit }) {
+      try {
+        let result = await instance.get('/posts')
+        if (result.status === 200) {
+          commit('GET_ALL_POSTS', result.data)
+        }  
+      } catch (err) {
+        console.log(err)
       }
     }
   },

@@ -2,10 +2,11 @@
   <div class="about">
       <Header/>
       <main>
+          <h1>User's profile</h1>
           <section id="userinfo">
               <div class="userinfo__wrapper">
                   <div class="userinfo__user userinfo__user-border">
-                      <h1>User name</h1>
+                      <h2>User name</h2>
                       <img src="../assets/images/banner1.jpeg" alt="user image"/>
                       <p>E-email: mack@gmail.com</p>
                   </div>
@@ -27,11 +28,10 @@
 
 <script>
 import Header from '../components/Header.vue'
-import Form from '../components/Form.vue'
 export default {
   name: 'Home',
   components: {
-    Header, Form
+    Header
   },
 }
 </script>
@@ -39,9 +39,6 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/sass/variables.scss';
   @import '@/assets/sass/mixins.scss';
-
-
-
 
   .about {
     margin-top: 130px;

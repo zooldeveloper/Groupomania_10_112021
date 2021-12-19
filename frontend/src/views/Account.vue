@@ -3,8 +3,8 @@
       <Header/>
       <main>
           <h1>User's profile</h1>
-          <section id="userinfo">
-              <div class="userinfo__wrapper">
+          <div class="wrapper">
+              <section id="userinfo">
                   <div class="userinfo__user userinfo__user-border">
                       <h2>User name</h2>
                       <img src="../assets/images/banner1.jpeg" alt="user image"/>
@@ -18,9 +18,9 @@
                           <button class="userinfo__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                       </form>
                   </div>
-              </div>
-          </section>
-          <section></section>
+              </section>
+              <section></section>
+          </div>
       </main>
   </div>
 </template>
@@ -43,60 +43,54 @@ export default {
   .about {
     margin-top: 130px;
     
-    #userinfo {
-        padding: 30px 45px;
-        box-shadow: 0px 5px 15px $border-color;
-      .userinfo {
-        &__wrapper {
+    .wrapper {
+      padding: 30px 45px;
+      box-shadow: 0px 5px 15px $border-color;
+      // user info section
+      #userinfo {
           @include flexbox(center, start);
           border-top: 1px solid $border-color;
           border-bottom: 1px solid $border-color;
           text-align: left;
-        }
-        &__user {
-           @include flexbox(space-between);
+        .userinfo {   
+          &__user {
+            @include flexbox(space-between);
             flex-direction: column;
             width: 45%;
             img {
-            width: 180px;
-            height: 200px;
-            object-fit: cover;
-            text-align: left
+              width: 180px;
+              height: 200px;
+              object-fit: cover;
+              text-align: left
+            }
+          }
+          &__bioform {
+            position: relative;
+            margin-top: 10px;
+            width: 100%;
+          }
+          &__biotextarea {
+            width: 100%;
+            height: 50px;
+            padding: 10px 20px 0 10px;
+            border-radius: 25px;
+            resize: none;
+            box-sizing: border-box;
+          }
+          &__btn {
+            @include btn;
+            right: 15px;
+            top: 12px;
+          }
+          @media  screen and (max-width:768px) {
+            &__user { width: 75%; }
+            &__user-border { border-bottom: 1px solid $border-color; }
+            &__bioform { margin-bottom: 20px; }
           }
         }
-        &__bioform {
-          position: relative;
-          margin-top: 10px;
-          width: 100%;
-        }
-        &__biotextarea {
-          width: 100%;
-          height: 50px;
-          padding: 10px 20px 0 10px;
-          border-radius: 25px;
-          resize: none;
-          box-sizing: border-box;
-        }
-        &__btn {
-          @include btn;
-          right: 15px;
-          top: 12px;
-        }
-        @media  screen and (max-width:768px) {
-          &__wrapper {
-            flex-direction: column;
-            align-items: center;
-          }
-          &__user {
-             width: 75%;
-          }
-          &__user-border {
-            border-bottom: 1px solid $border-color;
-          }
-           &__bioform {
-             margin-bottom: 20px;
-           }
-        }
+      }
+      @media  screen and (max-width:768px) {
+        #userinfo { flex-direction: column; align-items: center; }
       }  
     }
   }

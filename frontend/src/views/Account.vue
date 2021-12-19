@@ -19,7 +19,28 @@
                       </form>
                   </div>
               </section>
-              <section></section>
+              <section id="usersetting">
+                  <div class="usersetting__setting">
+                      <h2>Change your password</h2>
+                      <form>
+                          <div class="usersetting__form-group">
+                              <label for="oldpassword"><font-awesome-icon color="#F08E8A" icon="lock" size="lx"/></label>
+                              <input type="password" name="" id="oldpassword" placeholder="Your old passwrd">
+                              <small></small>
+                          </div>
+                          <div class="usersetting__form-group">
+                              <label for="newpassword"><font-awesome-icon color="#F08E8A" icon="lock" size="lx"/></label>
+                              <input type="password" name="" id="newpassword" placeholder="Your new passwrd">
+                              <small></small>
+                          </div>
+                          <button class="usersetting__btn">Submit</button>
+                      </form>
+                  </div>
+                  <div class="usersetting__setting">
+                      <h2>Delete your account</h2>
+                      <button class="usersetting__btn usersetting__custom-btn">Delete</button>
+                  </div>
+              </section>
           </div>
       </main>
   </div>
@@ -41,11 +62,12 @@ export default {
   @import '@/assets/sass/mixins.scss';
 
   .about {
-    margin-top: 130px;
+    margin-top: 100px;
     
     .wrapper {
       padding: 30px 45px;
       box-shadow: 0px 5px 15px $border-color;
+      
       // user info section
       #userinfo {
           @include flexbox(center, start);
@@ -91,7 +113,60 @@ export default {
       }
       @media  screen and (max-width:768px) {
         #userinfo { flex-direction: column; align-items: center; }
-      }  
+      }
+
+     // user setting section
+     #usersetting {
+       @include flexbox(space-around, start);
+       border-bottom: 1px solid $border-color;
+       padding-bottom: 30px;
+     }
+     .usersetting {
+        &__setting {
+          h2 {
+            font-size: 1.2rem;
+          }
+        }
+        &__form-group {
+          position: relative;
+          margin-bottom: 10px;
+          text-align: left;
+          width: 100%;
+          label {
+            position: absolute;
+            top: 7px;
+            left: 7px;
+          }
+          input {
+            width: 100%;
+            padding: 10px 10px 10px 25px;
+            border-radius: 10px;
+            border: 1px solid $border-color;
+            outline: none;
+          }
+        }
+        &__btn {
+          width: 80px;
+          height: 30px;
+          border-radius: 10px;
+          border: none;
+          background-color: $primary-color;
+          color: $quaternary-color;
+          font-weight: bold;
+        }
+        &__custom-btn {
+          background-color: $secondary-color;
+        }
+        @media screen and (max-width:768px) {
+          &__setting { h2 { text-align: center; } }
+          &__form-group { width: 90%; input { width: inherit; } }
+          &__btn { width: 100px; }
+        }
+      }
+      @media screen and (max-width:768px) {
+        #usersetting { flex-direction: column; align-items: center; }
+        form { padding-bottom: 20px; border-bottom: 1px solid $border-color; }
+      }
     }
   }
       

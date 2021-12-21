@@ -7,12 +7,15 @@
                 <form>
                     <div class="makepost__div"> 
                         <img :src="userImage" alt="user image">
-                        <textarea class="makepost__posttextarea" placeholder="What would you like to share?"></textarea>
+                        <textarea class="makepost__posttextarea" v-model="myText" placeholder="What would you like to share?"></textarea>
+                    </div>
+                    <div v-if="myFile !== null" class="makepost__imagepreview">
+                        <img :src="myFile" alt="image preview">
                     </div>
                     <div class="makepost__div makepost__fileinput">
                           <label for="myImage">Uplaod a file
                                 <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
-                                <input type="file" id="myImage">
+                                <input type="file" id="myImage" @change="onFileChange">
                           </label>
                           <button class="makepost__btn" type="submit">Post it  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                     </div>
@@ -89,7 +92,9 @@ export default {
   },
   data() {
     return {
-        userImage: require("../assets/images/user-icon.png")
+        userImage: require("../assets/images/user-icon.png"),
+        myText: null,
+        myFile: null,
     }
   },
   computed: {
@@ -111,6 +116,14 @@ export default {
     setUserImage() {
       if (this.user[0].imageUrl !== undefined) {
         this.userImage = this.user[0].imageUrl
+      }
+    },
+    onFileChange(event) {
+      let image = event.target.files[0]
+      let reader = new FileReader()
+      reader.readAsDataURL(image)
+      reader.onload = (e) => {
+        this.myFile = e.target.result
       }
     },
   },
@@ -176,6 +189,21 @@ export default {
             margin-left: 15px;
             padding: 7px;
             border-radius: 15px;
+          }
+          &__imagepreview {
+            @include flexbox;
+             width: 50%;
+             height: 200px;
+             border: 1px solid $border-color;
+             margin-top: 20px;
+             font-weight: bold;
+             color: #ddd;
+             img {
+               width: 100%;
+               height: 100%;
+               border-radius: 0px;
+               object-fit: cover;
+             }
           }
           &__fileinput {
             margin-top: 30px; 

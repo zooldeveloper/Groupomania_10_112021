@@ -6,8 +6,8 @@
             <section id="makepost">
                 <form>
                     <div class="makepost__div"> 
-                        <img src="../assets/images/banner1.jpeg" alt="user image">
-                        <textarea class="makepost__posttextarea" name="" id="" placeholder="What would you like to share?"></textarea>
+                        <img :src="userImage" alt="user image">
+                        <textarea class="makepost__posttextarea" placeholder="What would you like to share?"></textarea>
                     </div>
                     <div class="makepost__div makepost__fileinput">
                           <label for="myImage">Uplaod a file
@@ -19,10 +19,10 @@
                 </form>
             </section>
             <!-- User post section -->
-            <section id="userpost" v-for="post in posts" v-bind:key="post.userId">
+            <section id="userpost" v-for="post in posts" :key="post.userId">
                 <div class="userpost__wrapper">
                     <div class="userpost__userinfo">
-                        <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
+                        <img class="userpost__userimage" :src="post.imageUrl !== null ? post.imageUrl : require('../assets/images/user-icon.png')" alt="image about the post">
                         <div class="userpost__username-postdate">
                             <h2>{{ post.firstName}} {{ post.lastName}}</h2>
                             <small>Posted on {{ post.creation_date}} </small>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="userpost__post">
                         <p>{{ post.textual_post}}</p>
-                        <img class="userpost__imagepost" src="../assets/images/banner1.jpeg" alt="user image">
+                        <img v-if="post.image_url !== 'undefined'" class="userpost__imagepost" :src="post.image_url" alt="post image">
                     </div>
                     <!-- Likes and comments section -->
                     <div class="userpost__interaction">
@@ -66,7 +66,7 @@
                               <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
                           </div>
                           <form class="userpost__commentsform">
-                              <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
+                              <img class="userpost__userimage"  :src="userImage" alt="user image">
                               <textarea class="userpost__commenttextarea" name="" id="" placeholder="Your comment!"></textarea>
                               <button class="userpost__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                           </form> 
@@ -87,8 +87,13 @@ export default {
   components: {
     Header,
   },
+  data() {
+    return {
+        userImage: require("../assets/images/user-icon.png")
+    }
+  },
   computed: {
-    ...mapState(['posts'])
+    ...mapState(['posts', 'user']),
   },
   mounted() {
     
@@ -96,8 +101,19 @@ export default {
     // if (!token) {
     //   this.$router.push({ name: 'Entry' })
     // }
+    this.$store.dispatch('getOneUser')
     this.$store.dispatch('getAllPosts')
-  }
+    setTimeout(() => {
+      this.setUserImage()
+    }, 500)
+  },
+  methods: {
+    setUserImage() {
+      if (this.user[0].imageUrl !== undefined) {
+        this.userImage = this.user[0].imageUrl
+      }
+    },
+  },
 }
 </script>
 
@@ -148,7 +164,7 @@ export default {
     // Main section
       #makepost {
         margin-bottom: 50px;
-        .makepost {         
+        .makepost {     
           &__div {
             width: 90%;
             @include flexbox(space-between);

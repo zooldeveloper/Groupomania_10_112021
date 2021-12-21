@@ -89,6 +89,17 @@ export default createStore({
         }
       }
     },
+    // Makes the get request of one user
+    async getOneUser({ commit }) {
+      try {
+        const result = await instance.get(`/user/${user.id}`)
+        if (result.status = 200) {
+          commit('GET_ONE_USER', result.data)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
     // // Makes the get request of all users posts
     async getAllPosts({ commit }) {
       try {

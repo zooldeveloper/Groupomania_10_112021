@@ -1,9 +1,10 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 
+const user = JSON.parse(localStorage.getItem('user'))
 const instance = axios.create({
   baseURL: 'http://localhost:3001/api',
-  headers: { 'Content-Type': 'application/json'}
+  headers: { 'Content-Type': 'application/json' }
 })
 
 export default createStore({
@@ -11,7 +12,8 @@ export default createStore({
     successResMsg: null,
     emailResMsg: null,
     passwordResMsg: null,
-    posts: {}
+    posts: {},
+    user: {},
   },
   mutations: {
     SUCCESS_MESSAGE(state, message) {
@@ -25,7 +27,10 @@ export default createStore({
     },
     GET_ALL_POSTS(state, posts) {
       state.posts = posts
-    }
+    },
+    GET_ONE_USER(state, user) {
+      state.user = user
+    },
   },
   actions: {
     // Makes the post request of the user sign up
@@ -64,7 +69,8 @@ export default createStore({
            }) 
         })
         if (result.status == 200) {
-          // document.cookie = JSON.stringify(`token=${result.data.token}`)
+          const user = result.data.user
+          localStorage.setItem('user', JSON.stringify(user));
         }
       } catch (err) {
         if (err.response.status === 403) {

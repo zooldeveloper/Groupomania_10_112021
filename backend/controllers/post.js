@@ -28,7 +28,7 @@ exports.creatPost = (req, res) => {
 // Get request controller for all posts
 exports.getAllPosts = (req, res) => {
     // Gets all the data from posts & users tables based on conditions
-    db.query(`SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE users.active = 'true'`,
+    db.query(`SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE users.active = 'true' ORDER BY posts.post_id DESC`,
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);

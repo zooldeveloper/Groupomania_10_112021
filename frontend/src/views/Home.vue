@@ -9,9 +9,10 @@
                         <img :src="userImage" alt="user image">
                         <textarea class="makepost__posttextarea" v-model="myText" placeholder="What would you like to share?"></textarea>
                     </div>
+                    <small :class="{'makepost__displaybloc': nothingAdded,'makepost__displaynone': !nothingAdded }">There is nothing added!</small>
                     <div v-if="myFile !== null" class="makepost__imagepreview">
                         <span @click="removeImagePreview"><font-awesome-icon icon='times' color='#F08E8A' size="lg"/></span>
-                        <img :src="myFile" alt="image preview">
+                        <img :src="imagePreview" alt="image preview">
                     </div>
                     <div class="makepost__div makepost__fileinput">
                           <label for="myImage">Uplaod a file
@@ -96,6 +97,8 @@ export default {
         userImage: require("../assets/images/user-icon.png"),
         myText: null,
         myFile: null,
+        imagePreview: null,
+        nothingAdded: false
     }
   },
   computed: {
@@ -120,27 +123,28 @@ export default {
       }
     },
     onFileChange(event) {
-      // this.myFile = event.target.files[0]
       let image = event.target.files[0]
       let reader = new FileReader()
       reader.readAsDataURL(image)
       reader.onload = (e) => {
-        this.myFile = e.target.result
+        this.imagePreview = e.target.result
       }
+      this.myFile = event.target.files[0]
     },
     removeImagePreview() {
       this.myFile = null
-    }
-    // onSubmitForm () {
-    //   if(this.myText === null && this.myFile === null) {
-    //     console.log('there is nothing')
-    //   }
-    //  else if(this.myText !== null || this.myfile !== null ) {
-    //     this.$store.dispatch('makePost', { 
-    //       textual_post: this.myText, image_post: this.myFile
-    //     })
-    //   } 
-    // },
+    },
+    onSubmitForm() {
+      if(this.myText === null && this.myFile === null) {
+        this.nothingAdded = true
+      }
+     else if(this.myText !== null || this.myfile !== null ) {
+       this.nothingAdded = false
+        this.$store.dispatch('makePost', { 
+          textual_post: this.myText, image_post: this.myFile
+        })
+      } 
+    },
   },
 }
 </script>
@@ -165,6 +169,12 @@ export default {
       border-radius: 7px;
       font-size: 1.2rem;
       position: relative;
+      small {
+        display: none;
+        margin-top: 7px;
+        text-align: left;
+        color: $error_color;
+      }
     }
     h2, h3 {
       margin: 0;
@@ -204,7 +214,13 @@ export default {
             margin-left: 15px;
             padding: 7px;
             border-radius: 15px;
-          }
+          } 
+          &__displaybloc {
+            display: block;
+          } 
+           &__displaynone {
+            display: none;
+          }  
           &__imagepreview {
             @include flexbox;
              width: 50%;

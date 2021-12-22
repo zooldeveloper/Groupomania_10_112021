@@ -10,6 +10,7 @@
                         <textarea class="makepost__posttextarea" v-model="myText" placeholder="What would you like to share?"></textarea>
                     </div>
                     <div v-if="myFile !== null" class="makepost__imagepreview">
+                        <span @click="removeImagePreview"><font-awesome-icon icon='times' color='#F08E8A' size="lg"/></span>
                         <img :src="myFile" alt="image preview">
                     </div>
                     <div class="makepost__div makepost__fileinput">
@@ -17,7 +18,7 @@
                                 <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
                                 <input type="file" id="myImage" @change="onFileChange">
                           </label>
-                          <button class="makepost__btn" type="submit">Post it  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                          <button class="makepost__btn" type="submit" @click.prevent="onSubmitForm">Post it  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                     </div>
                 </form>
             </section>
@@ -119,6 +120,7 @@ export default {
       }
     },
     onFileChange(event) {
+      // this.myFile = event.target.files[0]
       let image = event.target.files[0]
       let reader = new FileReader()
       reader.readAsDataURL(image)
@@ -126,6 +128,19 @@ export default {
         this.myFile = e.target.result
       }
     },
+    removeImagePreview() {
+      this.myFile = null
+    }
+    // onSubmitForm () {
+    //   if(this.myText === null && this.myFile === null) {
+    //     console.log('there is nothing')
+    //   }
+    //  else if(this.myText !== null || this.myfile !== null ) {
+    //     this.$store.dispatch('makePost', { 
+    //       textual_post: this.myText, image_post: this.myFile
+    //     })
+    //   } 
+    // },
   },
 }
 </script>
@@ -194,15 +209,18 @@ export default {
             @include flexbox;
              width: 50%;
              height: 200px;
-             border: 1px solid $border-color;
              margin-top: 20px;
-             font-weight: bold;
-             color: #ddd;
+             position: relative;
              img {
                width: 100%;
                height: 100%;
                border-radius: 0px;
                object-fit: cover;
+             }
+             span {
+               position: absolute;
+               top: -10px;
+               right: -10px;
              }
           }
           &__fileinput {

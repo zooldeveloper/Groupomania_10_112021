@@ -100,7 +100,24 @@ export default createStore({
         console.log(err)
       }
     },
-    // // Makes the get request of all users posts
+    // Makes the post request of all users posts
+    async makePost({ commit }, post) {
+      try {
+        const fd = new FormData()
+        fd.append('post_image', post.image_post,)
+        fd.append("textual_post", post.textual_post)
+
+        const result = await instance.post(`/posts/${user.id}`, fd, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        if (result.status = 201) {
+          // Do somthing...
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    //Makes the get request of all users posts
     async getAllPosts({ commit }) {
       try {
         let result = await instance.get('/posts')

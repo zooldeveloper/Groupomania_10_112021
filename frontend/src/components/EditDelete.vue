@@ -4,11 +4,11 @@
         <div class="userpost__edit-delete">
             <div class="userpost__edit">
                 <small>Edit</small>
-                <span><font-awesome-icon icon='edit' color='#76c8d3' size="lx"/></span>
+                <span @click="editPost"><font-awesome-icon icon='edit' color='#76c8d3' size="lx"/></span>
             </div>
             <div class="userpost__delete">
                 <small>Delete</small>
-                <span><font-awesome-icon icon='trash-alt' color='#F08E8A' size="lx"/></span>
+                <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#F08E8A' size="lx"/></span>
             </div>
         </div>
     </div>
@@ -18,6 +18,14 @@
 <script>
 export default {
     name: 'EditDelete',
+    methods: {
+        editPost() {
+            this.$emit('triger-edit-post')
+        },
+        deletePost() {
+            this.$emit('triger-delete-post')
+        },
+    },
 }
 </script>
 

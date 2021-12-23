@@ -34,7 +34,10 @@
                         </div>
                     </div>
                     <div class="userpost__post">
-                        <p>{{ post.textual_post}}</p>
+                        <div class="userpost__text-btn">
+                            <p>{{ post.textual_post}}</p>
+                            <EditDelete/>
+                        </div>
                         <img v-if="post.image_url !== 'undefined'" class="userpost__imagepost" :src="post.image_url" alt="post image">
                     </div>
                     <!-- Likes and comments section -->
@@ -85,12 +88,13 @@
 
 <script>
 import Header from '../components/Header.vue'
+import EditDelete from '../components/EditDelete.vue'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
   components: {
-    Header,
+    Header, EditDelete,
   },
   data() {
     return {
@@ -143,6 +147,7 @@ export default {
         this.$store.dispatch('makePost', { 
           textual_post: this.myText, image_post: this.myFile
         })
+        location.reload()
       } 
     },
   },
@@ -156,7 +161,7 @@ export default {
 
   .home {
     margin-top: 130px;
-
+    position: relative;
     // Common rules
     section {
       margin: 30px 0;
@@ -237,6 +242,7 @@ export default {
                position: absolute;
                top: -10px;
                right: -10px;
+               cursor: pointer;
              }
           }
           &__fileinput {
@@ -267,12 +273,14 @@ export default {
           &__username-postdate {
             margin-left: 15px;
           }
-          &__post {
-            margin-top: 30px;
+          &__text-btn {
+            margin: 30px 40px 0;
+            text-align: left;
+            @include flexbox(space-between, start);
             p {
-              text-align: left;
               font-size: 1.2rem;
-              margin-left: 40px;
+              margin-right: 20px;
+              margin-top: 0;
             }
           }
           &__imagepost {
@@ -326,7 +334,7 @@ export default {
           }
           @media screen and (max-width: 768px) {
             &__imagepost { width: 100%;}
-            &__post { p { margin-left: 0px;}}
+            &__text-btn { margin: 30px 0px !important;}
             &__interaction { padding-left: 30px !important}
             &__comments { margin: 0;}
           }

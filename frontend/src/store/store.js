@@ -106,12 +106,12 @@ export default createStore({
         const fd = new FormData()
         fd.append('post_image', post.image_post,)
         fd.append("textual_post", post.textual_post)
-
+        
         const result = await instance.post(`/posts/${user.id}`, fd, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         if (result.status = 201) {
-          // Do somthing...
+          commit('SUCCESS_MESSAGE', result.data.message)
         }
       } catch (err) {
         console.log(err)

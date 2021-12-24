@@ -20,10 +20,10 @@ export default {
     name: 'EditDelete',
     methods: {
         editPost() {
-            this.$emit('triger-edit-post')
+            this.$emit('trigger-edit-post')
         },
         deletePost() {
-            this.$emit('triger-delete-post')
+            this.$emit('trigger-delete-post')
         },
     },
 }
@@ -60,16 +60,16 @@ export default {
             box-shadow: 0px 5px 15px $border-color;
             background-color: #fff;
             div {
-                cursor: pointer;
                 position: relative;
                 height: 50%;
+                padding-top: 5px;
                 &:hover {
                     small {
                         display: block;
                         font-size: 0.7rem;
                         font-weight: bold;
                         position: absolute;
-                        top: 3px;
+                        top: 9px;
                         right: 40px;
                         padding: 1px 6px;
                         color: #fff;

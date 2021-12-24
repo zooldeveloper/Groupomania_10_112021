@@ -12,7 +12,7 @@
                     </div>
                     <small :class="{'makepost__displaybloc': nothingAdded,'makepost__displaynone': !nothingAdded }">There is nothing added!</small>
                     <div v-if="myFile !== null" class="makepost__imagepreview">
-                        <span @click="removeImagePreview"><font-awesome-icon icon='times' color='#F08E8A' size="lg"/></span>
+                        <CancelBtn @trigger-on-cancel="removeImagePreview"/>
                         <img :src="imagePreview" alt="image preview">
                     </div>
                     <div class="makepost__div makepost__fileinput">
@@ -44,6 +44,7 @@
                         </div>
                         <form v-if="postToUpdate" class="userpost_form-editpost">
                             <div class="userpost__form-group">
+                                <CancelBtn @trigger-on-cancel="cancelEdit"/>
                                 <textarea name="" :v-model="textToModify" :value="post.textual_post"></textarea>
                                 <button class="" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                             </div>
@@ -99,12 +100,13 @@
 <script>
 import Header from '../components/Header.vue'
 import EditDelete from '../components/EditDelete.vue'
+import CancelBtn from '../components/CancelBtn.vue'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
   components: {
-    Header, EditDelete,
+    Header, EditDelete, CancelBtn,
   },
   data() {
     return {
@@ -162,6 +164,9 @@ export default {
         })
         location.reload()
       } 
+    },
+    cancelEdit() {
+      this.postToUpdate = false
     },
     editPost() {
       this.postToUpdate = !this.postToUpdate

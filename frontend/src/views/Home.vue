@@ -48,8 +48,8 @@
                         <form class="userpost_form-editpost" v-if="post.post_id == postToUpdate">
                             <div class="userpost__form-group">
                                 <CancelBtn @trigger-on-cancel="cancelEditPost"/>
-                                <textarea :v-model="myText" :value="post.textual_post"></textarea>
-                                <button @click="onEditPost" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                                <textarea :value="post.textual_post" @input="textToEdit = $event.target.value"></textarea>
+                                <button type="submit" @click.prevent="onEditPost(post.post_id)"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                             </div>
                         </form>
                         <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
@@ -171,9 +171,16 @@ export default {
     },
     showEditPost(postId) {
       this.postToUpdate = postId
+      this.textToEdit = null
     },
-    onEditPost() {
-      // Do somthing
+    onEditPost(postId) {
+      if(this.textToEdit !== null) {
+        this.$store.dispatch('modifyOnePost', {
+          postId: postId,
+          textual_post: this.textToEdit
+        })
+        location.reload()
+      }
     },
     deletePost() {
     //   Do somthing

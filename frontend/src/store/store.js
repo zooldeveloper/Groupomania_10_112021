@@ -127,7 +127,19 @@ export default createStore({
       } catch (err) {
         console.log(err)
       }
-    }
+    },
+    async modifyOnePost({ commit }, post) {
+      try {
+        const result = await instance.patch(`/posts/${post.postId}`, 
+          JSON.stringify({ textual_post: post.textual_post })
+        )
+        if (result.status === 200) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
   },
   modules: {}
 })

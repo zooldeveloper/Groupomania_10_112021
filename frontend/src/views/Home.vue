@@ -405,6 +405,13 @@ export default {
             &__interaction { padding-left: 30px !important }
             &__comments { margin: 0; }
           }
+          @media screen and (max-width: 425px) {
+            &__form-group { 
+              flex-direction: column; 
+              textarea { width: 100%; margin-bottom: 10px; }
+              span { left: 98%; }
+            }
+          }
         }      
       }
     }

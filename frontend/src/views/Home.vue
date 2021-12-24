@@ -1,6 +1,7 @@
 <template>
     <div class="home">
         <Header/>
+        <!-- <p v-if="successResMsg !== null" class="server-response">{{ successResMsg state message will be displayed here! }}<font-awesome-icon icon='check-circle' color='#2ecc71' size="lg"/></p> -->
         <main>
             <!-- Make post section -->
             <section id="makepost">
@@ -34,11 +35,20 @@
                         </div>
                     </div>
                     <div class="userpost__post">
-                        <div class="userpost__text-btn">
+                        <div class="userpost__text-btn" v-if="!postToUpdate">
                             <p>{{ post.textual_post}}</p>
-                            <EditDelete/>
+                            <EditDelete 
+                                @trigger-edit-post="editPost"
+                                @trigger-delete-post="deletePost"
+                            />
                         </div>
-                        <img v-if="post.image_url !== 'undefined'" class="userpost__imagepost" :src="post.image_url" alt="post image">
+                        <form v-if="postToUpdate" class="userpost_form-editpost">
+                            <div class="userpost__form-group">
+                                <textarea name="" :v-model="textToModify" :value="post.textual_post"></textarea>
+                                <button class="" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                            </div>
+                        </form>
+                        <img v-if="post.image_url != undefined || postToUpdate === true" class="userpost__imagepost" :src="post.image_url" alt="post image">
                     </div>
                     <!-- Likes and comments section -->
                     <div class="userpost__interaction">
@@ -102,7 +112,10 @@ export default {
         myText: null,
         myFile: null,
         imagePreview: null,
-        nothingAdded: false
+        nothingAdded: false,
+
+        textToEdit: null,
+        postToUpdate: false,
     }
   },
   computed: {
@@ -150,6 +163,12 @@ export default {
         location.reload()
       } 
     },
+    editPost() {
+      this.postToUpdate = !this.postToUpdate
+    },
+    deletePost() {
+    //   Do somthing
+    },
   },
 }
 </script>
@@ -194,7 +213,10 @@ export default {
     textarea {
       border-color: $border-color;
       outline: none;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Avenir, Arial, Helvetica, sans-serif;
+      resize: vertical;
+      border-radius: 15px;
+      font-size: 1rem;
     }
     input {
       display: none;
@@ -204,7 +226,15 @@ export default {
       cursor: pointer;
     }
 
-    // Main section
+      // .server-response {
+      //   position: absolute;
+      //   top: -50px;
+      //   left: 0;
+      //   right: 0;
+        // text-align: center;
+      // }
+
+      // Main section
       #makepost {
         margin-bottom: 50px;
         .makepost {     
@@ -213,12 +243,10 @@ export default {
             @include flexbox(space-between);
           }
           &__posttextarea {
-            resize: vertical;
             width: 85%;
             min-height: 60px;
             margin-left: 15px;
             padding: 7px;
-            border-radius: 15px;
           } 
           &__displaybloc {
             display: block;
@@ -273,6 +301,39 @@ export default {
           &__username-postdate {
             margin-left: 15px;
           }
+
+          &__form-group {
+            @include flexbox(space-between);
+            width: 90%;
+            margin: 0 40px;
+            overflow:visible;
+            position: relative;
+            span {
+              position: absolute;
+              left: 86%;
+              top: -8px;
+              cursor: pointer;
+            }
+            textarea {
+              width: 85%;
+              height: 70px;
+              padding: 7px;
+              margin-right: 7px;
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+              &::-webkit-scrollbar {
+                display: none;
+              }
+            }
+            button {
+              @include btn(none);
+              padding: 10px 12px 10px 10px;
+              border: 1px solid $border-color;
+              border-radius: 50%;
+            }
+          }
+
+
           &__text-btn {
             margin: 30px 40px 0;
             text-align: left;
@@ -326,17 +387,18 @@ export default {
             padding: 10px 45px 0 10px;
             border-radius: 25px;
             resize: none;
-
           }
           &__btn {
             @include btn;
             right: 18px;
           }
           @media screen and (max-width: 768px) {
-            &__imagepost { width: 100%;}
-            &__text-btn { margin: 30px 0px !important;}
-            &__interaction { padding-left: 30px !important}
-            &__comments { margin: 0;}
+            &__imagepost { width: 100%; }
+            &__form-eidtpost { padding: 0 0 !important; }
+            &__form-group { margin: 0 0 !important; width: 100%; }
+            &__text-btn { margin: 30px 0px !important; }
+            &__interaction { padding-left: 30px !important }
+            &__comments { margin: 0; }
           }
         }      
       }

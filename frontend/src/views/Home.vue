@@ -35,19 +35,21 @@
                         </div>
                     </div>
                     <div class="userpost__post">
+                        <!-- Textual post and ellipsis btn -->
                         <div class="userpost__text-btn" v-if="post.post_id !== postToUpdate">
                             <p>{{ post.textual_post}}</p>
                             <EditDelete 
                                 v-if="post.id === user[0].id"
-                                @trigger-edit-post="editPost(post.post_id)"
+                                @trigger-edit-post="showEditPost(post.post_id)"
                                 @trigger-delete-post="deletePost"
                             />
                         </div>
+                        <!-- Edit form -->
                         <form class="userpost_form-editpost" v-if="post.post_id == postToUpdate">
                             <div class="userpost__form-group">
-                                <CancelBtn @trigger-on-cancel="cancelEdit"/>
-                                <textarea name="" :v-model="textToModify" :value="post.textual_post"></textarea>
-                                <button class="" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                                <CancelBtn @trigger-on-cancel="cancelEditPost"/>
+                                <textarea :v-model="myText" :value="post.textual_post"></textarea>
+                                <button @click="onEditPost" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                             </div>
                         </form>
                         <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
@@ -164,11 +166,14 @@ export default {
         location.reload()
       } 
     },
-    cancelEdit() {
+    cancelEditPost() {
       this.postToUpdate = null
     },
-    editPost(postId) {
+    showEditPost(postId) {
       this.postToUpdate = postId
+    },
+    onEditPost() {
+      // Do somthing
     },
     deletePost() {
     //   Do somthing

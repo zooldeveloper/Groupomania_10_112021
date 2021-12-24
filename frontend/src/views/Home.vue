@@ -35,21 +35,22 @@
                         </div>
                     </div>
                     <div class="userpost__post">
-                        <div class="userpost__text-btn" v-if="!postToUpdate">
+                        <div class="userpost__text-btn" v-if="post.post_id !== postToUpdate">
                             <p>{{ post.textual_post}}</p>
                             <EditDelete 
-                                @trigger-edit-post="editPost"
+                                v-if="post.id === user[0].id"
+                                @trigger-edit-post="editPost(post.post_id)"
                                 @trigger-delete-post="deletePost"
                             />
                         </div>
-                        <form v-if="postToUpdate" class="userpost_form-editpost">
+                        <form class="userpost_form-editpost" v-if="post.post_id == postToUpdate">
                             <div class="userpost__form-group">
                                 <CancelBtn @trigger-on-cancel="cancelEdit"/>
                                 <textarea name="" :v-model="textToModify" :value="post.textual_post"></textarea>
                                 <button class="" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                             </div>
                         </form>
-                        <img v-if="post.image_url != undefined || postToUpdate === true" class="userpost__imagepost" :src="post.image_url" alt="post image">
+                        <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
                     </div>
                     <!-- Likes and comments section -->
                     <div class="userpost__interaction">
@@ -111,13 +112,11 @@ export default {
   data() {
     return {
         userImage: require("../assets/images/user-icon.png"),
-        myText: null,
-        myFile: null,
+        myText: null, myFile: null,
         imagePreview: null,
         nothingAdded: false,
 
-        textToEdit: null,
-        postToUpdate: false,
+        textToEdit: null, postToUpdate: null,
     }
   },
   computed: {
@@ -166,10 +165,10 @@ export default {
       } 
     },
     cancelEdit() {
-      this.postToUpdate = false
+      this.postToUpdate = null
     },
-    editPost() {
-      this.postToUpdate = !this.postToUpdate
+    editPost(postId) {
+      this.postToUpdate = postId
     },
     deletePost() {
     //   Do somthing

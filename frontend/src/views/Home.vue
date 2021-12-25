@@ -41,11 +41,13 @@
                             <EditDelete 
                                 v-if="post.id === user[0].id"
                                 @trigger-edit-post="showEditPost(post.post_id)"
-                                @trigger-delete-post="deletePost"
+                                @trigger-delete-post="showDeleteConfirm(post.post_id)"
+                                :confirmDelete="postToDelete === post.post_id"
+                                :key="post.post_id"
                             />
                         </div>
                         <!-- Edit form -->
-                        <form class="userpost_form-editpost" v-if="post.post_id == postToUpdate">
+                        <form class="userpost_form-editpost" v-if="post.post_id === postToUpdate">
                             <div class="userpost__form-group">
                                 <CancelBtn @trigger-on-cancel="cancelEditPost"/>
                                 <textarea :value="post.textual_post" @input="textToEdit = $event.target.value"></textarea>
@@ -119,13 +121,13 @@ export default {
         nothingAdded: false,
 
         textToEdit: null, postToUpdate: null,
+        postToDelete: null,
     }
   },
   computed: {
     ...mapState(['posts', 'user']),
   },
   mounted() {
-    
     // const token = document.cookie;
     // if (!token) {
     //   this.$router.push({ name: 'Entry' })
@@ -182,8 +184,9 @@ export default {
         location.reload()
       }
     },
-    deletePost() {
-    //   Do somthing
+    showDeleteConfirm(postId) { 
+      this.postToDelete = postId
+      // console.log(this.deleteConfirmBtn)
     },
   },
 }

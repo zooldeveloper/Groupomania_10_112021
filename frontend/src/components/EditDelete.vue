@@ -6,18 +6,29 @@
                 <small>Edit</small>
                 <span @click="editPost"><font-awesome-icon icon='edit' color='#76c8d3' size="lx"/></span>
             </div>
-            <div class="userpost__delete">
+            <div class="userpost__wrapper">
                 <small>Delete</small>
                 <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#F08E8A' size="lx"/></span>
             </div>
         </div>
+        <DeleteConfirm :confirmDelete="confirmDelete"/>
     </div>
 </template>
 
 
 <script>
+import DeleteConfirm from './DeleteConfirm.vue'
+
 export default {
     name: 'EditDelete',
+    components: {
+        DeleteConfirm,
+    },
+    props: {
+        confirmDelete:{
+            type: Boolean,
+        } 
+    },
     methods: {
         editPost() {
             this.$emit('trigger-edit-post')
@@ -47,6 +58,9 @@ export default {
                 cursor: pointer;
             }
         } 
+        &__userpost__wrapper {
+            position: relative;
+        }
         &__edit-delete {
             display: none;
             margin-bottom: 10px;

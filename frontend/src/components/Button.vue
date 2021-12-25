@@ -15,7 +15,7 @@ export default {
             type: String,
             required: true,
         },
-    }
+    },
 }
 </script>
 
@@ -31,6 +31,7 @@ export default {
         background-color: $primary-color;
         color: $quaternary-color;
         font-weight: bold;
+        cursor: pointer;
     }
     .custom-btn {
         background-color: $secondary-color;

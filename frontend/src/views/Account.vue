@@ -33,12 +33,18 @@
                               <input type="password" name="" id="newpassword" placeholder="Your new passwrd">
                               <small></small>
                           </div>
-                          <button class="usersetting__btn">Submit</button>
+                          <Button
+                              name="Submit"
+                              classes="btn"
+                          />
                       </form>
                   </div>
                   <div class="usersetting__setting">
                       <h2>Delete your account</h2>
-                      <button class="usersetting__btn usersetting__custom-btn">Delete</button>
+                      <Button
+                          name="Delete"
+                          classes="btn custom-btn"
+                       />
                   </div>
               </section>
           </div>
@@ -49,10 +55,12 @@
 
 <script>
 import Header from '../components/Header.vue'
+import Button from '../components/Button.vue'
+
 export default {
   name: 'Home',
   components: {
-    Header
+    Header, Button,
   },
 }
 </script>
@@ -67,7 +75,7 @@ export default {
     .wrapper {
       padding: 30px 45px;
       box-shadow: 0px 5px 15px $border-color;
-      
+
       // user info section
       #userinfo {
           @include flexbox(center, start);
@@ -145,22 +153,9 @@ export default {
             outline: none;
           }
         }
-        &__btn {
-          width: 80px;
-          height: 30px;
-          border-radius: 10px;
-          border: none;
-          background-color: $primary-color;
-          color: $quaternary-color;
-          font-weight: bold;
-        }
-        &__custom-btn {
-          background-color: $secondary-color;
-        }
         @media screen and (max-width:768px) {
           &__setting { h2 { text-align: center; } }
           &__form-group { width: 90%; input { width: inherit; } }
-          &__btn { width: 100px; }
         }
       }
       @media screen and (max-width:768px) {

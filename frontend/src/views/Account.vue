@@ -62,6 +62,12 @@ export default {
   components: {
     Header, Button,
   },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      this.$router.push({ name: 'Entry' })
+    }
+  }
 }
 </script>
 

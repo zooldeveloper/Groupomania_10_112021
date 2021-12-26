@@ -257,6 +257,7 @@ export default {
             }
             if(this.emailResMsg === null && this.passwordResMsg === null) {
               this.$router.push({ name: 'Home' })
+              location.reload()
             }
             document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
           }, 2000)
@@ -277,8 +278,8 @@ export default {
       }
     },
   mounted() {
-      const token = document.cookie;
-      if (token) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) {
         this.$router.push({ name: 'Home' })
       }
     }

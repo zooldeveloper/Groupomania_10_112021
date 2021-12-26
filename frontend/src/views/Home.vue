@@ -130,10 +130,10 @@ export default {
     ...mapState(['posts', 'user']),
   },
   mounted() {
-    // const token = document.cookie;
-    // if (!token) {
-    //   this.$router.push({ name: 'Entry' })
-    // }
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      this.$router.push({ name: 'Entry' })
+    }
     this.$store.dispatch('getOneUser')
     this.$store.dispatch('getAllPosts')
     setTimeout(() => {

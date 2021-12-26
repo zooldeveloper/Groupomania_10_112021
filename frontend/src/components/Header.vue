@@ -17,7 +17,7 @@
                                 <li class="sidemenu__item"><router-link to="/"> <font-awesome-icon icon='home' color='#71838F' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/notif"> <font-awesome-icon icon='bell' color='#71838F' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/account"> <font-awesome-icon icon='user-alt' color='#71838F' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><button><font-awesome-icon icon='power-off'/></button></li>
+                                <li class="sidemenu__item"><button @click="logOut"><font-awesome-icon icon='power-off'/></button></li>
                             </ul> 
                         </div>
                     </div>
@@ -48,6 +48,10 @@ export default {
         handleResize() {
             this.width = window.innerWidth;
             this.width > 768 ? this.navOpen = false : this.navOpen = true
+        },
+        logOut() {
+            localStorage.clear()
+            this.$router.push({ name: 'Entry' })
         }
     }
 }
@@ -143,7 +147,10 @@ export default {
                     }
                     &__item {
                         cursor: pointer;
-                        transition: .4s ease;         
+                        transition: .4s ease;  
+                        button {
+                            cursor: pointer;
+                        }       
                     }
                     @media screen and (max-width: 768px) {
                         &__btn {

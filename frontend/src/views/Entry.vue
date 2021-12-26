@@ -65,11 +65,12 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   name: 'Entry',
   data() {
     return {
-      mode: 'sign up',
+      mode: 'log in',
       placeholder: '',
   
       firstname: null,

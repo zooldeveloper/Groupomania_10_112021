@@ -1,5 +1,5 @@
 <template>
-    <button :class="classes">{{ name }}</button>
+    <button :class="classes" @click="triggerFunction">{{ name }}</button>
 </template>
 
 
@@ -14,6 +14,11 @@ export default {
         classes: {
             type: String,
             required: true,
+        },
+    },
+    methods: {
+        triggerFunction() {
+            this.$emit('trigger-function')
         },
     },
 }

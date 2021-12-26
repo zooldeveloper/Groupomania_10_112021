@@ -11,7 +11,11 @@
                 <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#F08E8A' size="lx"/></span>
             </div>
         </div>
-        <DeleteConfirm :confirmDelete="confirmDelete"/>
+        <DeleteConfirm 
+            :showConfirmDelete="showConfirmDelete"
+            @trigger-cancel-delete="cancelDelete"
+            @trigger-confirm-delete="confirmDelete"
+        />
     </div>
 </template>
 
@@ -25,7 +29,7 @@ export default {
         DeleteConfirm,
     },
     props: {
-        confirmDelete:{
+        showConfirmDelete:{
             type: Boolean,
         } 
     },
@@ -36,6 +40,12 @@ export default {
         deletePost() {
             this.$emit('trigger-delete-post')
         },
+        cancelDelete() {
+             this.$emit('trigger-cancel-delete')
+         },
+         confirmDelete() {
+             this.$emit('trigger-confirm-delete')
+         },
     },
 }
 </script>

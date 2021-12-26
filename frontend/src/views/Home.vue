@@ -42,7 +42,9 @@
                                 v-if="post.id === user[0].id"
                                 @trigger-edit-post="showEditPost(post.post_id)"
                                 @trigger-delete-post="showDeleteConfirm(post.post_id)"
-                                :confirmDelete="postToDelete === post.post_id"
+                                @trigger-cancel-delete="cancelDelete"
+                                @trigger-confirm-delete="confirmDelete"
+                                :showConfirmDelete="postId === post.post_id"
                                 :key="post.post_id"
                             />
                         </div>
@@ -51,7 +53,7 @@
                             <div class="userpost__form-group">
                                 <CancelBtn @trigger-on-cancel="cancelEditPost"/>
                                 <textarea :value="post.textual_post" @input="textToEdit = $event.target.value"></textarea>
-                                <button type="submit" @click.prevent="onEditPost(post.post_id)"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                                <button type="submit" @click.prevent="onEditPost"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                             </div>
                         </form>
                         <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
@@ -121,7 +123,7 @@ export default {
         nothingAdded: false,
 
         textToEdit: null, postToUpdate: null,
-        postToDelete: null,
+        postId: null,
     }
   },
   computed: {
@@ -175,18 +177,23 @@ export default {
       this.postToUpdate = postId
       this.textToEdit = null
     },
-    onEditPost(postId) {
+    onEditPost() {
       if(this.textToEdit !== null) {
         this.$store.dispatch('modifyOnePost', {
-          postId: postId,
+          postId: this.postToUpdate,
           textual_post: this.textToEdit
         })
         location.reload()
       }
     },
     showDeleteConfirm(postId) { 
-      this.postToDelete = postId
-      // console.log(this.deleteConfirmBtn)
+      this.postId = postId
+    },
+    cancelDelete() {
+      this.postId = null
+    },
+    confirmDelete() {
+      // Do somthingq
     },
   },
 }

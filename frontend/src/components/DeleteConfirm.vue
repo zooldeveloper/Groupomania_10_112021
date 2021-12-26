@@ -1,9 +1,9 @@
 <template>
-    <div class="delete" v-if="confirmDelete">
+    <div class="delete" v-if="showConfirmDelete">
         <p>Delete post</p>
         <div class="delete__cancel-confirm">
-             <Button name="Cancel" classes="btn"/>
-             <Button name="Confirm" classes="btn custom-btn"/>
+             <Button @trigger-function="cancelDelete" name="Cancel" classes="btn"/>
+             <Button @trigger-function="confirmDelete" name="Confirm" classes="btn custom-btn"/>
         </div>
     </div>
 </template>
@@ -18,9 +18,17 @@ export default {
         Button,
     },
     props: {
-        confirmDelete:{
+        showConfirmDelete:{
             type: Boolean,
         } 
+    },
+    methods: {
+         cancelDelete() {
+             this.$emit('trigger-cancel-delete')
+         },
+         confirmDelete() {
+             this.$emit('trigger-confirm-delete')
+         },
     },
 }
 </script>

@@ -193,7 +193,11 @@ export default {
       this.postId = null
     },
     confirmDelete() {
-      // Do somthingq
+      if(this.postId !== null) {
+        this.$store.dispatch('deleteOnePost', this.postId)
+        this.postId = null
+      }
+      location.reload()
     },
   },
 }

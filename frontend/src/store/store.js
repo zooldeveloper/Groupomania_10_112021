@@ -36,7 +36,7 @@ export default createStore({
     // Makes the post request of the user sign up
     async creatAccount({ context, commit, }, user) {
       try {
-        let result = await instance.post('/auth/signup', {
+        const result = await instance.post('/auth/signup', {
           user: JSON.stringify({
               firstName: user.firstName,
               lastName: user.lastName,
@@ -62,7 +62,7 @@ export default createStore({
     // Makes the post request of the user login
     async logIn({ context, commit }, user) {
       try {
-        let result = await instance.post('/auth/login', { 
+        const result = await instance.post('/auth/login', { 
           user: JSON.stringify({
               email: user.email,
               password: user.password 
@@ -128,11 +128,24 @@ export default createStore({
         console.log(err)
       }
     },
+     // Sends the update request of the user's post
     async modifyOnePost({ commit }, post) {
       try {
         const result = await instance.patch(`/posts/${post.postId}`, 
           JSON.stringify({ textual_post: post.textual_post })
         )
+        if (result.status === 200) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // Sends the delete request of the user's post
+    async deleteOnePost({ commit }, postId) {
+      console.log(postId)
+      try {
+        const result = await instance.delete(`/posts/${postId}`)
         if (result.status === 200) {
           commit('SUCCESS_MESSAGE', result.data.message)
         }

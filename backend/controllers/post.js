@@ -1,9 +1,6 @@
 const db = require('../config/database');
 const fs = require('fs');
 
-const event = new Date(Date.now());
-const options = { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'short', day: 'numeric' };
-const timestamp = event.toLocaleDateString('en-FR', options)
 // Post request controller
 exports.creatPost = (req, res) => {
     const body = req.file ?
@@ -12,6 +9,9 @@ exports.creatPost = (req, res) => {
             image_url: `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`,
         } : { ...req.body };
 
+    const event = new Date(Date.now());
+    const options = { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'short', day: 'numeric' };
+    const timestamp = event.toLocaleDateString('en-FR', options);
     // Inserrs data into the posts table
     db.query(`INSERT INTO posts (textual_post, image_url, creation_date, user_id) VALUES (?, ?, ?, ?)`,
         [body.textual_post, body.image_url, timestamp, req.params.id],
@@ -51,6 +51,9 @@ exports.modifiyPost = (req, res) => {
     //         ...req.body,
     //         image_url: `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`,
     //     } : { ...req.body };
+    const event = new Date(Date.now());
+    const options = { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'short', day: 'numeric' };
+    const timestamp = event.toLocaleDateString('en-FR', options);
     // Updates posts table content
     db.query(`UPDATE posts SET textual_post = ?, creation_date = ? WHERE post_id = ?`,
         [`${req.body.textual_post}`,  timestamp, `${req.params.id}`],
@@ -68,7 +71,7 @@ exports.modifiyPost = (req, res) => {
 // Delete request controller
 exports.deletePost = (req, res) => {
     
-        // Selects all the data from the posts table whose id is equal to the id sent by the request
+    // Selects all the data from the posts table whose id is equal to the id sent by the request
     db.query(`SELECT * FROM posts WHERE post_id = ?`, req.params.id,
         (err, postResult) => {
             if (err) {
@@ -85,17 +88,29 @@ exports.deletePost = (req, res) => {
                     if (err) {
                         return console.log(err);
                     };
-                    const filename = postResult[0].image_url.split('/posts/')[1];
-                    fs.unlink(`images/posts/${filename}`, () => {
-                        // Removes all the data from posts table where the id is equal to the id sent by the request
+                    if(postResult[0].image_ur != null ) {
+                        const filename = postResult[0].image_url.split('/posts/')[1];
+                        fs.unlink(`images/posts/${filename}`, () => {
+                            // Removes all the data from posts table where the id is equal to the id sent by the request
+                            db.query(`DELETE FROM posts WHERE post_id = ?`, req.params.id,
+                                (err, result) => {
+                                    if (err) {
+                                        return res.status(500).json(err);
+                                    }
+                                    res.status(200).json({ message: "Post has been deleted!" });
+                                }
+                            );
+                        });
+                    } else {
                         db.query(`DELETE FROM posts WHERE post_id = ?`, req.params.id,
                             (err, result) => {
                                 if (err) {
                                     return res.status(500).json(err);
                                 }
                                 res.status(200).json({ message: "Post has been deleted!" });
-                            });
-                    });
+                            }
+                        );
+                    }   
                 });
         });
 }; 

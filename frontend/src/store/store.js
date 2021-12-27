@@ -14,6 +14,7 @@ export default createStore({
     passwordResMsg: null,
     posts: {},
     user: {},
+    likes: {},
   },
   mutations: {
     SUCCESS_MESSAGE(state, message) {
@@ -31,6 +32,9 @@ export default createStore({
     GET_ONE_USER(state, user) {
       state.user = user
     },
+    GET_ALL_LIKES(state, likes) {
+      state.likes = likes
+    }
   },
   actions: {
     // Makes the post request of the user sign up
@@ -143,7 +147,6 @@ export default createStore({
     },
     // Sends the delete request of the user's post
     async deleteOnePost({ commit }, postId) {
-      console.log(postId)
       try {
         const result = await instance.delete(`/posts/${postId}`)
         if (result.status === 200) {
@@ -153,6 +156,17 @@ export default createStore({
         console.log(err)
       }
     },
+    // Makes the get request of all likes & dislikes
+    async getLikesAndDislikes({ commit }) {
+      try {
+        const result = await instance.get('likes')
+        if (result.status === 200) {
+          commit('GET_ALL_LIKES', result.data)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
   },
   modules: {}
 })

@@ -105,9 +105,6 @@ export default {
         this.userImage = this.user[0].imageUrl
       }
     },
-    onSubmit() {
-      console.log('onSubmit')
-    },
     onFileChange(event) {
       let image = event.target.files[0]
       let reader = new FileReader()
@@ -119,6 +116,12 @@ export default {
     },
     removeImagePreview() {
       this.myFile = null
+    },
+    onSubmit() {
+      if(this.myFile != null ) {
+       this.$store.dispatch('updateOneUser', { file: this.myFile })
+      }
+      location.reload()
     },
   },
 }

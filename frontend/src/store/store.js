@@ -104,6 +104,25 @@ export default createStore({
         console.log(err)
       }
     },
+    // Makes the update request of the user's profile data
+    async updateOneUser({ commit }, userData) {
+      try {
+        const fd = new FormData()
+        fd.append("bio", userData.bio)
+        fd.append("newEmail", userData.newEmail)
+        fd.append('profile_image', userData.file,)
+        fd.append("passwords", JSON.stringify(userData.passwords))
+        
+        const result = await instance.patch(`/user/${user.id}`, fd, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        if (result.status = 200) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
     // Makes the post request of all users posts
     async makePost({ commit }, post) {
       try {

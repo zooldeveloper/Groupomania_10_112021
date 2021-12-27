@@ -1,5 +1,5 @@
 <template>
-    <div class="imagepreview">
+    <div class="imagepreview" :class="customClasses">
         <CancelBtn @trigger-on-cancel="removeImagePreview"/>
         <img :src="imagePreview" alt="image preview">
     </div>
@@ -18,7 +18,10 @@ export default {
         imagePreview: {
             type: String,
             required: true
-        }
+        },
+        customClasses: {
+           type: String
+        },
     },
     methods: {
         removeImagePreview() {
@@ -50,5 +53,9 @@ export default {
             right: -10px;
             cursor: pointer;
         }
+    }
+    .imagepreview-user-profile {
+        margin-top: 0 !important;
+        width: 180px;
     }
 </style>

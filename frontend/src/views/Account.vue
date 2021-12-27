@@ -7,7 +7,23 @@
               <section id="userinfo">
                   <div class="userinfo__user userinfo__user-border">
                       <h2>{{ user[0].firstName }} {{ user[0].lastName }}</h2>
-                      <img :src="userImage" alt="user image"/>
+                      <img :src="userImage" alt="user image" v-if="myFile == null"/>
+                      <label for="userimage" v-if="myFile == null">Change your photo
+                            <input id="userimage" type="file"  @change="onFileChange">
+                      </label>
+                      <ImagePreview
+                          v-if="myFile !== null"
+                          :imagePreview="imagePreview"
+                          customClasses="imagepreview-user-profile"
+                          @trigger-on-cancel="removeImagePreview"
+                      />
+                      <Button 
+                          v-if="myFile !== null"
+                          name="Send It"
+                          class="user-profile-image-btn"
+                          @click="onSubmit"
+                      />
+                          
                       <p>{{ user[0].email }}</p>
                   </div>
                   <div class="userinfo__user">
@@ -56,13 +72,14 @@
 <script>
 import Header from '../components/Header.vue'
 import Button from '../components/Button.vue'
+import ImagePreview from '../components/ImagePreview.vue'
 import { mapState } from 'vuex'
 
 
 export default {
   name: 'Home',
   components: {
-    Header, Button,
+    Header, Button, ImagePreview
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -76,6 +93,7 @@ export default {
   data() {
     return {
       userImage: require("../assets/images/user-icon.png"),
+      myFile: null,  imagePreview: null,
     }
   },
   computed: {
@@ -86,6 +104,21 @@ export default {
       if (this.user[0].imageUrl != undefined ) {
         this.userImage = this.user[0].imageUrl
       }
+    },
+    onSubmit() {
+      console.log('onSubmit')
+    },
+    onFileChange(event) {
+      let image = event.target.files[0]
+      let reader = new FileReader()
+      reader.readAsDataURL(image)
+      reader.onload = (e) => {
+        this.imagePreview = e.target.result
+      }
+      this.myFile = event.target.files[0]
+    },
+    removeImagePreview() {
+      this.myFile = null
     },
   },
 }
@@ -112,12 +145,30 @@ export default {
           &__user {
             @include flexbox(space-between);
             flex-direction: column;
+            position: relative;
             width: 45%;
             img {
               width: 180px;
               height: 200px;
               object-fit: cover;
               text-align: left
+            }
+            label, .user-profile-image-btn {
+              width: 165px !important;
+              height: 30px;
+              position: absolute;
+              bottom: 53px;
+              border-radius: 15px !important;
+              border: none ;
+              color: $quaternary-color;
+              font-weight: bold;
+              font-size: 1rem;
+              cursor: pointer;
+              background-color: rgb(118, 200, 211, .7);
+              @include flexbox;
+            }
+            input {
+              display: none;
             }
           }
           &__bioform {

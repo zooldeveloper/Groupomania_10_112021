@@ -6,13 +6,13 @@
           <div class="wrapper">
               <section id="userinfo">
                   <div class="userinfo__user userinfo__user-border">
-                      <h2>User name</h2>
-                      <img src="../assets/images/banner1.jpeg" alt="user image"/>
-                      <p>E-email: mack@gmail.com</p>
+                      <h2>{{ user[0].firstName }} {{ user[0].lastName }}</h2>
+                      <img :src="userImage" alt="user image"/>
+                      <p>{{ user[0].email }}</p>
                   </div>
                   <div class="userinfo__user">
                       <h2>Bio :</h2>
-                      <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
+                      <p>{{ user[0].bio }}</p>
                       <form class="userinfo__bioform">
                           <textarea class="userinfo__biotextarea" name="" id="" placeholder="Your bio!"></textarea>
                           <button class="userinfo__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
@@ -56,6 +56,8 @@
 <script>
 import Header from '../components/Header.vue'
 import Button from '../components/Button.vue'
+import { mapState } from 'vuex'
+
 
 export default {
   name: 'Home',
@@ -67,7 +69,25 @@ export default {
     if (!user) {
       this.$router.push({ name: 'Entry' })
     }
-  }
+    setTimeout(() => {
+      this.setUserImage()
+    }, 100)
+  },
+  data() {
+    return {
+      userImage: require("../assets/images/user-icon.png"),
+    }
+  },
+  computed: {
+    ...mapState(['user'])
+  },
+  methods: {
+    setUserImage() {
+      if (this.user[0].imageUrl != undefined ) {
+        this.userImage = this.user[0].imageUrl
+      }
+    },
+  },
 }
 </script>
 

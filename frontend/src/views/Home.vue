@@ -11,10 +11,11 @@
                         <textarea class="makepost__posttextarea" v-model="myText" placeholder="What would you like to share?"></textarea>
                     </div>
                     <small :class="{'makepost__displaybloc': nothingAdded,'makepost__displaynone': !nothingAdded }">There is nothing added!</small>
-                    <div v-if="myFile !== null" class="makepost__imagepreview">
-                        <CancelBtn @trigger-on-cancel="removeImagePreview"/>
-                        <img :src="imagePreview" alt="image preview">
-                    </div>
+                    <ImagePreview
+                      v-if="myFile !== null"
+                      @trigger-on-cancel="removeImagePreview"
+                      :imagePreview="imagePreview"
+                    />
                     <div class="makepost__div makepost__fileinput">
                           <label for="myImage">Uplaod a file
                                 <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
@@ -107,13 +108,14 @@
 <script>
 import Header from '../components/Header.vue'
 import EditDelete from '../components/EditDelete.vue'
-import CancelBtn from '../components/CancelBtn.vue'
+import ImagePreview from '../components/ImagePreview.vue'
+
 import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
   components: {
-    Header, EditDelete, CancelBtn,
+    Header, EditDelete, ImagePreview,
   },
   data() {
     return {
@@ -127,7 +129,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['posts', 'user']),
+    ...mapState(['posts', 'user', 'likes']),
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -136,13 +138,15 @@ export default {
     }
     this.$store.dispatch('getOneUser')
     this.$store.dispatch('getAllPosts')
+    this.$store.dispatch('getLikesAndDislikes')
     setTimeout(() => {
       this.setUserImage()
-    }, 500)
+    }, 100)
+    
   },
   methods: {
     setUserImage() {
-      if (this.user[0].imageUrl !== undefined) {
+      if (this.user[0].imageUrl != undefined ) {
         this.userImage = this.user[0].imageUrl
       }
     },
@@ -284,25 +288,6 @@ export default {
            &__displaynone {
             display: none;
           }  
-          &__imagepreview {
-            @include flexbox;
-             width: 50%;
-             height: 200px;
-             margin-top: 20px;
-             position: relative;
-             img {
-               width: 100%;
-               height: 100%;
-               border-radius: 0px;
-               object-fit: cover;
-             }
-             span {
-               position: absolute;
-               top: -10px;
-               right: -10px;
-               cursor: pointer;
-             }
-          }
           &__fileinput {
             margin-top: 30px; 
             padding-top: 20px;

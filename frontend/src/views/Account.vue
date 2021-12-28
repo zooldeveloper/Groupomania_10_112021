@@ -104,6 +104,7 @@ import ImagePreview from '../components/ImagePreview.vue'
 import { mapState } from 'vuex'
 
 
+
 export default {
   name: 'Home',
   components: {
@@ -129,11 +130,23 @@ export default {
       myFile: null,  imagePreview: null,
       oldPassword: null, newPassword: null,
       bioToSave: null, newEmail: null,
-      userData: null
+    }
+  },
+  watch: {
+    successResMsg: function() {
+      this.$store.dispatch('getOneUser')
+      setTimeout(() => {
+        this.setUser()
+        this.myFile = null
+        this.newEmail = null
+        this.bioToSave = null
+        this.oldPassword = null
+        this.newPassword = null
+      }, 200)
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user', 'successResMsg']),
   },
   methods: {
     setUser() {
@@ -159,11 +172,9 @@ export default {
     onSubmit() {
       if(this.myFile != null ) {
        this.$store.dispatch('updateOneUser', { file: this.myFile })
-       location.reload()
       }
       else if(this.bioToSave != null ) {
         this.$store.dispatch('updateOneUser', { bio: this.bioToSave })
-        location.reload()
       }
       else if(this.oldPassword != null && this.newPassword != null) {
         this.$store.dispatch('updateOneUser', { 
@@ -172,7 +183,6 @@ export default {
             newPassword: this.newPassword 
           }
         })
-        // location.reload()
       }
     },
   },

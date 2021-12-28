@@ -6,10 +6,16 @@
           <div class="wrapper">
               <section id="userinfo">
                   <div class="userinfo__user userinfo__user-border">
-                      <h2>{{ user[0].firstName }} {{ user[0].lastName }}</h2>
-                      <img :src="userImage" alt="user image" v-if="myFile == null"/>
+                      <h2>{{ firstName }} {{ lastName }}</h2>
+                      <img 
+                          :src="userImage" 
+                          alt="user image" 
+                          v-if="myFile == null"/>
                       <label for="userimage" v-if="myFile == null">Change your photo
-                            <input id="userimage" type="file"  @change="onFileChange">
+                            <input 
+                              id="userimage" 
+                              type="file"  
+                              @change="onFileChange">
                       </label>
                       <ImagePreview
                           v-if="myFile !== null"
@@ -24,29 +30,51 @@
                           @click="onSubmit"
                       />
                           
-                      <p>{{ user[0].email }}</p>
+                      <p>{{ email }}</p>
                   </div>
                   <div class="userinfo__user">
                       <h2>Bio :</h2>
-                      <p>{{ user[0].bio }}</p>
-                      <form class="userinfo__bioform">
-                          <textarea class="userinfo__biotextarea" name="" id="" placeholder="Your bio!"></textarea>
-                          <button class="userinfo__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                      <p>{{ bio }}</p>
+                      <form 
+                          class="userinfo__bioform" 
+                          @submit.prevent="onSubmit">
+                          <textarea 
+                              class="userinfo__biotextarea" 
+                              placeholder="Your bio!"
+                              v-model="bioToSave">
+                          </textarea>
+                          <button 
+                              class="userinfo__btn" 
+                              type="submit">
+                              <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/>
+                          </button>
                       </form>
                   </div>
               </section>
               <section id="usersetting">
                   <div class="usersetting__setting">
                       <h2>Change your password</h2>
-                      <form>
+                      <form @submit.prevent="onSubmit">
                           <div class="usersetting__form-group">
-                              <label for="oldpassword"><font-awesome-icon color="#F08E8A" icon="lock" size="lx"/></label>
-                              <input type="password" name="" id="oldpassword" placeholder="Your old passwrd">
+                              <label for="oldpassword">
+                                    <font-awesome-icon color="#F08E8A" icon="lock" size="lx"/>
+                                </label>
+                              <input 
+                                  type="password"
+                                  id="oldpassword" 
+                                  placeholder="Your old passwrd"
+                                  v-model="oldPassword">
                               <small></small>
                           </div>
                           <div class="usersetting__form-group">
-                              <label for="newpassword"><font-awesome-icon color="#F08E8A" icon="lock" size="lx"/></label>
-                              <input type="password" name="" id="newpassword" placeholder="Your new passwrd">
+                              <label for="newpassword">
+                                  <font-awesome-icon color="#F08E8A" icon="lock" size="lx"/>
+                              </label>
+                              <input 
+                                  type="password" 
+                                  id="newpassword" 
+                                  placeholder="Your new passwrd"
+                                  v-model="newPassword">
                               <small></small>
                           </div>
                           <Button
@@ -86,23 +114,34 @@ export default {
     if (!user) {
       this.$router.push({ name: 'Entry' })
     }
+    this.$store.dispatch('getOneUser')
     setTimeout(() => {
-      this.setUserImage()
+      this.setUser()
     }, 100)
   },
   data() {
     return {
+      // User data to display
       userImage: require("../assets/images/user-icon.png"),
+      firstName: null, lastName: null,
+      email: null, bio: null,
+      // User data to send
       myFile: null,  imagePreview: null,
+      oldPassword: null, newPassword: null,
+      bioToSave: null, newEmail: null,
+      userData: null
     }
   },
   computed: {
     ...mapState(['user'])
   },
   methods: {
-    setUserImage() {
-      if (this.user[0].imageUrl != undefined ) {
+    setUser() {
+      if (this.user[0] != undefined ) {
+        this.firstName = this.user[0].firstName
+        this.lastName = this.user[0].lastName
         this.userImage = this.user[0].imageUrl
+        this.bio = this.user[0].bio
       }
     },
     onFileChange(event) {
@@ -120,8 +159,21 @@ export default {
     onSubmit() {
       if(this.myFile != null ) {
        this.$store.dispatch('updateOneUser', { file: this.myFile })
+       location.reload()
       }
-      location.reload()
+      else if(this.bioToSave != null ) {
+        this.$store.dispatch('updateOneUser', { bio: this.bioToSave })
+        location.reload()
+      }
+      else if(this.oldPassword != null && this.newPassword != null) {
+        this.$store.dispatch('updateOneUser', { 
+          passwords: {
+            oldPassword: this.oldPassword,
+            newPassword: this.newPassword 
+          }
+        })
+        // location.reload()
+      }
     },
   },
 }

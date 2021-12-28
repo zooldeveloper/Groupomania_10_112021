@@ -120,6 +120,9 @@ export default createStore({
           commit('SUCCESS_MESSAGE', result.data.message)
         }
       } catch (err) {
+        if (err.response.status = 401) {
+          commit('PASSWORD_ERROR_MESSAGE', err.response.data.message)
+        }
         console.log(err)
       }
     },

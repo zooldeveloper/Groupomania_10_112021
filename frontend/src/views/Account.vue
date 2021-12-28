@@ -64,7 +64,7 @@
                                   id="oldpassword" 
                                   placeholder="Your old passwrd"
                                   v-model="oldPassword">
-                              <small></small>
+                              <small v-if="checkOldPassword">{{ oldPasswordError }}</small>
                           </div>
                           <div class="usersetting__form-group">
                               <label for="newpassword">
@@ -75,7 +75,7 @@
                                   id="newpassword" 
                                   placeholder="Your new passwrd"
                                   v-model="newPassword">
-                              <small></small>
+                              <small v-if="checkNewPassword">{{ newPasswordError }}</small>
                           </div>
                           <Button
                               name="Submit"
@@ -130,6 +130,10 @@ export default {
       myFile: null,  imagePreview: null,
       oldPassword: null, newPassword: null,
       bioToSave: null, newEmail: null,
+      // Properties to hold errors
+      oldPasswordError: null, isOldPasswordNotValid: false,
+      newPasswordError: null, isNewPasswordNotValid: false
+      
     }
   },
   watch: {
@@ -143,10 +147,20 @@ export default {
         this.oldPassword = null
         this.newPassword = null
       }, 200)
+    },
+    passwordResMsg: function() {
+      this.oldPasswordError = this.passwordResMsg
+      this.isOldPasswordNotValid = true
     }
   },
   computed: {
-    ...mapState(['user', 'successResMsg']),
+    ...mapState(['user', 'successResMsg', 'passwordResMsg']),
+    checkOldPassword() {
+      return this.isOldPasswordNotValid
+    },
+    checkNewPassword() {
+      return this.isNewPasswordNotValid
+    },
   },
   methods: {
     setUser() {
@@ -173,17 +187,38 @@ export default {
       if(this.myFile != null ) {
        this.$store.dispatch('updateOneUser', { file: this.myFile })
       }
-      else if(this.bioToSave != null ) {
+      else if(this.bioToSave !== null ) {
         this.$store.dispatch('updateOneUser', { bio: this.bioToSave })
       }
-      else if(this.oldPassword != null && this.newPassword != null) {
+      else if(this.oldPassword !== null && this.newPassword === null) {
+        this.newPasswordError = 'Your new password is required!'
+        this.isNewPasswordNotValid = true
+        this.isOldPasswordNotValid = false
+      }
+      else if(this.oldPassword !== null && !this.isNewPasswordValid(this.newPassword)) {
+        this.newPasswordError = ' Atleast 8 characters!'
+        this.isNewPasswordNotValid = true
+        this.isOldPasswordNotValid = false
+      }
+      else if(this.oldPassword === null && this.newPassword !== null) {
+        this.oldPasswordError = 'Your old password is required!'
+        this.isOldPasswordNotValid = true
+        this.isNewPasswordNotValid = false
+      }
+      else if(this.oldPassword !== null &&  this.isNewPasswordValid(this.newPassword)) {
         this.$store.dispatch('updateOneUser', { 
           passwords: {
             oldPassword: this.oldPassword,
             newPassword: this.newPassword 
           }
         })
+        this.isOldPasswordNotValid = false
+        this.isNewPasswordNotValid = false
       }
+      
+    },
+    isNewPasswordValid(password) {
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
     },
   },
 }
@@ -222,7 +257,7 @@ export default {
               width: 165px !important;
               height: 30px;
               position: absolute;
-              bottom: 53px;
+              bottom: 34px;
               border-radius: 15px !important;
               border: none ;
               color: $quaternary-color;
@@ -279,7 +314,7 @@ export default {
         }
         &__form-group {
           position: relative;
-          margin-bottom: 10px;
+          margin-bottom: 20px;
           text-align: left;
           width: 100%;
           label {
@@ -293,6 +328,11 @@ export default {
             border-radius: 10px;
             border: 1px solid $border-color;
             outline: none;
+          }
+          small {
+            position: absolute;
+            width: 300px !important;
+            color: $error_color;
           }
         }
         @media screen and (max-width:768px) {

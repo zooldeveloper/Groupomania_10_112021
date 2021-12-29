@@ -28,14 +28,22 @@ exports.creatPost = (req, res) => {
 // Get request controller for all posts
 exports.getAllPosts = (req, res) => {
     // Gets all the data from posts & users tables based on conditions
-    db.query(`SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE users.active = 'true' ORDER BY posts.creation_date DESC`,
+           
+    db.query(`SELECT users.id, users.firstName, users.lastName, users.imageUrl, isAdmin,
+                posts.post_id, posts.textual_post, posts.image_url, posts.creation_date,
+                COUNT(CASE likes_dislikes.likes WHEN posts.post_id = likes_dislikes.post_id THEN 0 END) AS likes,
+                COUNT(CASE likes_dislikes.dislikes WHEN posts.post_id = likes_dislikes.post_id THEN 0 END) AS dislikes FROM users
+                JOIN posts ON users.id = posts.user_id 
+                JOIN likes_dislikes 
+                WHERE users.active = 'true'
+                GROUP BY posts.post_id
+                ORDER BY posts.creation_date DESC`,
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);
             }
             let postData = [];
             for (let i = 0; i < result.length; i++ ) {
-                delete result[i].password;
                 postData.push(result[i]);
             }
            res.status(200).json(result);
@@ -46,6 +54,7 @@ exports.getAllPosts = (req, res) => {
 
 // Put request controller
 exports.modifiyPost = (req, res) => {
+// The commented lines below are not used for now!
     // const body = req.file ?
     //     {
     //         ...req.body,

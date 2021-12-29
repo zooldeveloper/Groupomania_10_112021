@@ -176,8 +176,10 @@ export default {
       if (this.user[0] != undefined ) {
         this.firstName = this.user[0].firstName
         this.lastName = this.user[0].lastName
-        this.userImage = this.user[0].imageUrl
         this.bio = this.user[0].bio
+        if (this.user[0].imageUrl != undefined ) {
+          this.userImage = this.user[0].imageUrl
+        }
       }
     },
     onFileChange(event) {

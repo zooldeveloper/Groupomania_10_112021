@@ -51,7 +51,7 @@
                       </form>
                   </div>
               </section>
-              <section id="usersetting">
+              <section id="usersetting" :class="[deleteAccount ? 'usersetting-margin': '']">
                   <div class="usersetting__setting">
                       <h2>Change your password</h2>
                       <form @submit.prevent="onSubmit">
@@ -88,6 +88,13 @@
                       <Button
                           name="Delete"
                           classes="btn custom-btn"
+                          @click="onDeleteAccount"
+                       />
+                       <Button
+                          name="I confirm"
+                          classes="btn custom-btn"
+                          :class="[deleteAccount ? 'show-delete-confirm-btn': 'hide-delete-confirm-btn']"
+                          @click="onDeleteAccount"
                        />
                   </div>
               </section>
@@ -130,9 +137,11 @@ export default {
       myFile: null,  imagePreview: null,
       oldPassword: null, newPassword: null,
       bioToSave: null, newEmail: null,
-      // Properties to hold errors
+      // Properties related to errors
       oldPasswordError: null, isOldPasswordNotValid: false,
-      newPasswordError: null, isNewPasswordNotValid: false
+      newPasswordError: null, isNewPasswordNotValid: false,
+      // Properties related to the data deletion
+      deleteAccount: false
       
     }
   },
@@ -220,6 +229,15 @@ export default {
     isNewPasswordValid(password) {
         return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
     },
+    onDeleteAccount() {
+      if(this.deleteAccount === false) {
+        this.deleteAccount = true
+      } else {
+        this.$store.dispatch('deleteOneUser', 'deleteAccount')
+        localStorage.removeItem('user')
+        this.$router.push({ name: 'Entry' })
+      }   
+    }
   },
 }
 </script>
@@ -308,8 +326,21 @@ export default {
      }
      .usersetting {
         &__setting {
+          position: relative;
           h2 {
             font-size: 1.2rem;
+          }
+          .hide-delete-confirm-btn {
+            display: none;
+          }
+          .show-delete-confirm-btn {
+            display: block!important;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100px;
+            margin: auto;
+            background-color: darken($secondary-color, $percentage1);
           }
         }
         &__form-group {
@@ -342,6 +373,7 @@ export default {
       }
       @media screen and (max-width:768px) {
         #usersetting { flex-direction: column; align-items: center; }
+        .usersetting-margin { padding-bottom: 60px !important; }
         form { padding-bottom: 20px; border-bottom: 1px solid $border-color; }
       }
     }

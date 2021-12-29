@@ -126,6 +126,20 @@ export default createStore({
         console.log(err)
       }
     },
+    // Makes the delete request of one users 
+    async deleteOneUser({ commit }, whatToDelete) {
+      console.log(whatToDelete)
+      try {
+        if (whatToDelete === 'deleteAccount') {
+          const result = await instance.delete(`/user/${user.id}`)
+          if (result.status = 200) {
+            commit('SUCCESS_MESSAGE', result.data.message)
+          }
+        }    
+      } catch (err) {
+        console.log(err)
+      }
+    },
     // Makes the post request of all users posts
     async makePost({ commit }, post) {
       try {

@@ -77,22 +77,22 @@ exports.getOneUser = (req, res) => {
 
 // Patch request controller
 exports.modifiyOneUser = (req, res) => {
-	if (req.body.passwords) {
+	
+	if (req.body.passwords != 'undefined') {
+		const { newPassword, oldPassword  } = JSON.parse(req.body.passwords);
+		
 		// Replaces the old user's password with new one
-		const ueserPasswords = {
-			...req.body.passwords,
-		};
 		db.query(`SELECT password FROM users WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				bcrypt.compare(ueserPasswords.old_pw, result[0].password)
+				bcrypt.compare(oldPassword, result[0].password)
 					.then(valid => {
 						if (!valid) {
 							return res.status(401).json({ message: 'Password is not correct!' });
 						}
-						bcrypt.hash(ueserPasswords.new_pw, 8)
+						bcrypt.hash(newPassword, 8)
 							.then(hash => {
 								db.query(`UPDATE users SET password = '${hash}' WHERE id = ${req.params.id}`,
 									(err, result) => {
@@ -108,9 +108,10 @@ exports.modifiyOneUser = (req, res) => {
 					.catch(err => res.status(500).json(err));
 			}
 		);
-	} else if (req.body.newEmail) {
+	} else if (req.body.newEmail != 'undefined') {
+		const { newEmail } = JSON.parse(req.body);
 		// Changes the old user's email with the new one
-		db.query(`SELECT email FROM users WHERE email = '${req.body.newEmail}'`,
+		db.query(`SELECT email FROM users WHERE email = '${newEmail}'`,
 			(err, resulat) => {
 				if (err) {
 					return res.status(500).json(err);
@@ -118,7 +119,7 @@ exports.modifiyOneUser = (req, res) => {
 				if (resulat.length > 0) {
 					return res.status(409).json({ message: 'Email is already in use!' })
 				}
-				db.query(`UPDATE users SET email = '${req.body.newEmail}' WHERE id = ${req.params.id}`,
+				db.query(`UPDATE users SET email = '${newEmail}' WHERE id = ${req.params.id}`,
 					(err, result) => {
 						if (err) {
 							return res.status(500).json(err);
@@ -128,7 +129,7 @@ exports.modifiyOneUser = (req, res) => {
 				);
 			}
 		);
-	} else if (req.body.bio) {
+	} else if (req.body.bio != 'undefined') {
 		// Modifies the user's bio
 		db.query(`UPDATE users SET bio = '${req.body.bio}' WHERE id = ${req.params.id}`,
 			(err, result) => {
@@ -155,38 +156,41 @@ exports.modifiyOneUser = (req, res) => {
 
 // Delete request controlller 
 exports.deleteOneUser = (req, res) => {
+
+// The commented lines below are not used for now!
+
 	// Romves the bio from the database
-	if (req.body.bioToDelete) {
-		db.query(`UPDATE users SET bio = NULL WHERE id = ${req.params.id}`,
-			(err, result) => {
-				if (err) {
-					return res.status(500).json(err);
-				}
-				return res.status(200).json({ message: 'Your bio has been successfully deleted!' });
-			}
-		);
-	} else if (req.body.imageToDelete) {
-		// Removes the image from the database and images directory
-		db.query(`SELECT imageUrl FROM users WHERE id = ${req.params.id}`,
-			(err, result) => {
-				if (err) {
-					return res.status(500).json(err);
-				}
-				const filename = result[0].imageUrl.split('/profiles/')[1];
-				fs.unlink(`images/profiles/${filename}`, () => {
-					db.query(`UPDATE users SET imageUrl = NULL WHERE id = ${req.params.id}`,
-						(err, result) => {
-							if (err) {
-								return res.status(500).json(err);
-							}
-							return res.status(200).json({ message: 'Your profile image has been successfully deleted!' })
-						}
-					);
-				});
-			}
-		);
-	} else if (req.body.accountToDelete) {
-		// Disables the user's account
+	// if (req.body.bioToDelete) {
+	// 	db.query(`UPDATE users SET bio = NULL WHERE id = ${req.params.id}`,
+	// 		(err, result) => {
+	// 			if (err) {
+	// 				return res.status(500).json(err);
+	// 			}
+	// 			return res.status(200).json({ message: 'Your bio has been successfully deleted!' });
+	// 		}
+	// 	);
+	// } else if (req.body.imageToDelete) {
+	// 	// Removes the image from the database and images directory
+	// 	db.query(`SELECT imageUrl FROM users WHERE id = ${req.params.id}`,
+	// 		(err, result) => {
+	// 			if (err) {
+	// 				return res.status(500).json(err);
+	// 			}
+	// 			const filename = result[0].imageUrl.split('/profiles/')[1];
+	// 			fs.unlink(`images/profiles/${filename}`, () => {
+	// 				db.query(`UPDATE users SET imageUrl = NULL WHERE id = ${req.params.id}`,
+	// 					(err, result) => {
+	// 						if (err) {
+	// 							return res.status(500).json(err);
+	// 						}
+	// 						return res.status(200).json({ message: 'Your profile image has been successfully deleted!' })
+	// 					}
+	// 				);
+	// 			});
+	// 		}
+	// 	);
+	// } else if (req.body.accountToDelete) {
+	// 	// Disables the user's account
 		db.query(`UPDATE users SET active = 'false' WHERE id = ${req.params.id}`,
 			(err, result) => {
 				if (err) {
@@ -195,6 +199,6 @@ exports.deleteOneUser = (req, res) => {
 				res.status(200).json({ message: 'Your account has been permanently deleted!' });
 			}
 		);
-	}
+	// }
 };   
   

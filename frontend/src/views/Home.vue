@@ -3,7 +3,7 @@
         <Header/>
         <!-- <p v-if="successResMsg !== null" class="server-response">{{ successResMsg state message will be displayed here! }}<font-awesome-icon icon='check-circle' color='#2ecc71' size="lg"/></p> -->
         <main>
-            <!-- Make post section -->
+            <!-- Makepost section -->
             <section id="makepost">
                 <form>
                     <div class="makepost__div"> 
@@ -59,7 +59,7 @@
                         </form>
                         <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
                     </div>
-                    <!-- Likes and comments section -->
+                    <!-- Likes section -->
                     <div class="userpost__interaction">
                         <div class="userpost__likes">
                             <span @click="onLikeChange(post.post_id)"><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> {{ post.likes }}</span>
@@ -69,28 +69,22 @@
                             <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> 2</span>
                         </div>
                     </div>
+                    <!-- Comments section-->
                     <div class="userpost__comments">
-                          <div class="userpost__userinfo">
-                                <img class="userpost__userimage" src="../assets/images/banner2.jpeg" alt="user image">
-                                <div class="userpost__username-postdate">
-                                    <h3>Teddy Jam</h3>
-                                    <small>Posted on March 04, 2021 </small>
-                                </div>
-                          </div>
-                          <div class="userpost__comment">
-                              <p>This is my first comment !</p>
-                              <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
-                          </div>
-                          <div class="userpost__userinfo">
-                                <img class="userpost__userimage" src="../assets/images/banner1.jpeg" alt="user image">
-                                <div class="userpost__username-postdate">
-                                    <h3>Ayoub Ali</h3>
-                                    <small>Posted on April 11, 2021 </small>
-                                </div>
-                          </div>
-                          <div class="userpost__comment">
-                              <p>Lorem ipsum dolor sit amet. Id enim rerum et consectetur eaque non iusto officia qui quia ut praesentium harum qui nulla minima !</p>
-                              <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>                    
+                          <div  v-for="comment in comments" :key="comment.comment_id">
+                              <div v-if="post.post_id == comment.post_id">
+                                  <div class="userpost__userinfo">
+                                        <img class="userpost__userimage" :src="comment.imageUrl != undefined ? comment.imageUrl : require('../assets/images/user-icon.png')" alt="user image">
+                                        <div class="userpost__username-postdate">
+                                            <h3>{{ comment.firstName }} {{ comment.lastName }}</h3>
+                                            <small>Posted on {{ comment.creation_date}} </small>
+                                        </div>
+                                  </div>
+                                  <div class="userpost__comment">
+                                      <p>{{ comment.comment }}</p>
+                                      <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>
+                                  </div>
+                              </div>
                           </div>
                           <form class="userpost__commentsform">
                               <img class="userpost__userimage"  :src="userImage" alt="user image">
@@ -120,19 +114,20 @@ export default {
   },
   data() {
     return {
+        // Properties that have common purposes
         userImage: require("../assets/images/user-icon.png"),
         myText: null, myFile: null,
         imagePreview: null,
         nothingAdded: false,
-
+        // properties related to the post edit
         textToEdit: null, postToUpdate: null,
         postId: null,
-
+        // Properties related to the post's likes & dislikes
         like: null, dislike: null
     }
   },
   computed: {
-    ...mapState(['posts', 'user', 'likes', 'successResMsg']),
+    ...mapState(['posts', 'user', 'likes', 'comments', 'successResMsg']),
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -142,6 +137,7 @@ export default {
     this.$store.dispatch('getOneUser')
     this.$store.dispatch('getAllPosts')
     this.$store.dispatch('getLikesAndDislikes')
+    this.$store.dispatch('getAllComments')
     setTimeout(() => {
       this.setUserImage()
     }, 100)

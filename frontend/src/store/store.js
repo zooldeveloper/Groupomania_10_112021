@@ -15,6 +15,7 @@ export default createStore({
     posts: {},
     user: {},
     likes: {},
+    comments: {},
   },
   mutations: {
     SUCCESS_MESSAGE(state, message) {
@@ -34,6 +35,9 @@ export default createStore({
     },
     GET_ALL_LIKES(state, likes) {
       state.likes = likes
+    },
+    GET_ALL_COMMENTS(state, comments) {
+      state.comments = comments
     }
   },
   actions: {
@@ -128,7 +132,6 @@ export default createStore({
     },
     // Makes the delete request of one users 
     async deleteOneUser({ commit }, whatToDelete) {
-      console.log(whatToDelete)
       try {
         if (whatToDelete === 'deleteAccount') {
           const result = await instance.delete(`/user/${user.id}`)
@@ -194,6 +197,7 @@ export default createStore({
     },
     // Makes the post request of all likes & dislikes
     async createOrUpdateLikeAndDislike({ commit }, likeDislike) {
+      console.log(likeDislike)
       try {
         const result = await instance.post('/likes', likeDislike)
         if (result.status === 201 || result.status === 200) {
@@ -213,7 +217,17 @@ export default createStore({
       } catch (err) {
         console.log(err)
       }
-    }
+    },
+    async getAllComments({ commit }) {
+      try {
+        const result = await instance.get('/comments')
+        if (result.status === 200) {
+          commit('GET_ALL_COMMENTS', result.data)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
   },
   modules: {}
 })

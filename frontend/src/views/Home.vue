@@ -50,13 +50,18 @@
                             />
                         </div>
                         <!-- Edit form -->
-                        <form class="userpost_form-editpost" v-if="post.post_id === postToUpdate">
-                            <div class="userpost__form-group">
-                                <CancelBtn @trigger-on-cancel="cancelEditPost"/>
-                                <textarea :value="post.textual_post" @input="textToEdit = $event.target.value"></textarea>
-                                <button type="submit" @click.prevent="onEditPost"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
-                            </div>
-                        </form>
+                        <EditForm
+                             v-if="post.post_id === postToUpdate"
+                             @trigger-on-edit-text="onEditPost"
+                             :textareaValue="post.textual_post"
+                             @trigger-text-to-edit="onTextToEdit">
+                              <template v-slot:cancelBtn>
+                                  <CancelBtn 
+                                      @trigger-on-cancel="cancelEditPost"
+                                      class="userpost__span-cancelBtn"
+                                      />
+                              </template>
+                        </EditForm>
                         <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
                     </div>
                     <!-- Likes section -->
@@ -82,7 +87,17 @@
                                   </div>
                                   <div class="userpost__comment">
                                       <p>{{ comment.comment }}</p>
-                                      <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>
+                                      <!-- Should be reviewed ! -->
+                                      <!-- <EditDelete 
+                                          v-if="comment.user_id === user[0].id"
+                                          @trigger-edit-post="showEditPost(post.post_id)"
+                                          @trigger-delete-post="showDeleteConfirm(post.post_id)"
+                                          @trigger-cancel-delete="cancelDelete"
+                                          @trigger-confirm-delete="confirmDelete"
+                                          :showConfirmDelete="postId === post.post_id"
+                                          :key="post.post_id"
+                                      /> -->
+                                      <!-- <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span> -->
                                   </div>
                               </div>
                           </div>
@@ -101,8 +116,9 @@
 
 <script>
 import Header from '../components/Header.vue'
-import EditDelete from '../components/EditDelete.vue'
+import EditForm from '../components/EditForm.vue'
 import CancelBtn from '../components/CancelBtn.vue'
+import EditDelete from '../components/EditDelete.vue'
 import ImagePreview from '../components/ImagePreview.vue'
 
 import { mapState } from 'vuex'
@@ -110,7 +126,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Home',
   components: {
-    Header, EditDelete, CancelBtn, ImagePreview,
+    Header, EditDelete, EditForm, CancelBtn, ImagePreview,
   },
   data() {
     return {
@@ -179,6 +195,11 @@ export default {
       this.postToUpdate = postId
       this.textToEdit = null
     },
+    // To set the value of the text to edit
+    onTextToEdit(payload) {
+      this.textToEdit = payload
+    },
+     // To send the value of the text to edit
     onEditPost() {
       if(this.textToEdit !== null) {
         this.$store.dispatch('modifyOnePost', {
@@ -188,12 +209,15 @@ export default {
         location.reload()
       }
     },
+    // Shows the delete confirm button
     showDeleteConfirm(postId) { 
       this.postId = postId
     },
+    // Cancels the delete option
     cancelDelete() {
       this.postId = null
     },
+    // Confirm the delete option
     confirmDelete() {
       if(this.postId !== null) {
         this.$store.dispatch('deleteOnePost', this.postId)
@@ -201,6 +225,7 @@ export default {
       }
       location.reload()
     },
+    // Sets & update likes
     onLikeChange(postId) {
       for(let i = 0; i < this.likes.length; i++) {
        if (this.likes[i].users_liked == this.user[0].id) {
@@ -226,6 +251,7 @@ export default {
         this.$store.dispatch('getLikesAndDislikes')
       }, 100)
     },
+    // Sets & update dislikes
     onDislikeChange(postId) {
       for(let i = 0; i < this.likes.length; i++) {
        if (this.likes[i].users_disliked == this.user[0].id) {
@@ -394,6 +420,12 @@ export default {
               border: 1px solid $border-color;
               border-radius: 50%;
             }
+          }
+          &__span-cancelBtn {
+            position: absolute;
+            left: 86%;
+            top: -8px;
+            cursor: pointer;
           }
 
 

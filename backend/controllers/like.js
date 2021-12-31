@@ -60,8 +60,8 @@ exports.createAndUpdateLikes = (req, res) => {
                             return res.status(500).send(err);
                         }
                         res.status(200).json({ message: "Added a dislike!" });
-                    });
-            } else if (result.length < 0) {
+                });
+            } else {
                 // Inserts dislike, post id and user id to the post_likes table
                 db.query('INSERT INTO post_likes (dislikes, post_id, users_disliked ) VALUES (?, ?, ?)',
                 [dislike, post_id, user_id], (err, result) => {

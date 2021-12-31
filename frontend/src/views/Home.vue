@@ -62,8 +62,8 @@
                     <!-- Likes and comments section -->
                     <div class="userpost__interaction">
                         <div class="userpost__likes">
-                            <span @click="onLikeChange(post.id, post.post_id)"><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> {{ post.likes }}</span>
-                            <span><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> {{ post.dislikes }}</span>
+                            <span @click="onLikeChange(post.post_id)"><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> {{ post.likes }}</span>
+                            <span @click="onDislikeChange(post.post_id)"><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> {{ post.dislikes }}</span>
                         </div>
                         <div class="comments">
                             <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> 2</span>
@@ -128,7 +128,7 @@ export default {
         textToEdit: null, postToUpdate: null,
         postId: null,
 
-        like: null,
+        like: null, dislike: null
     }
   },
   computed: {
@@ -205,7 +205,7 @@ export default {
       }
       location.reload()
     },
-    onLikeChange(userId, postId) {
+    onLikeChange(postId) {
       for(let i = 0; i < this.likes.length; i++) {
        if (this.likes[i].users_liked == this.user[0].id) {
           if(this.likes[i].post_id == postId) {
@@ -229,7 +229,32 @@ export default {
         this.$store.dispatch('getAllPosts')
         this.$store.dispatch('getLikesAndDislikes')
       }, 100)
-    }
+    },
+    onDislikeChange(postId) {
+      for(let i = 0; i < this.likes.length; i++) {
+       if (this.likes[i].users_disliked == this.user[0].id) {
+          if(this.likes[i].post_id == postId) {
+            if(this.likes[i].dislikes == 0) {
+              this.dislike = 1
+            } else if(this.likes[i].dislikes == 1) {
+              this.dislike = 0
+            }
+          } 
+        } else if(this.likes[i].users_disliked !== this.user[0].id){
+            this.dislike = 1
+          }
+      } 
+      this.$store.dispatch('createOrUpdateLikeAndDislike', {
+        dislike: this.dislike,
+        post_id: postId,
+        user_id: this.user[0].id
+      })
+      setTimeout(()=> {
+        this.$store.dispatch('getOneUser')
+        this.$store.dispatch('getAllPosts')
+        this.$store.dispatch('getLikesAndDislikes')
+      }, 100)
+    },
   },
 }
 </script>

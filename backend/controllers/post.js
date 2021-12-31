@@ -31,10 +31,10 @@ exports.getAllPosts = (req, res) => {
            
     db.query(`SELECT users.id, users.firstName, users.lastName, users.imageUrl, isAdmin,
                 posts.post_id, posts.textual_post, posts.image_url, posts.creation_date,
-                COUNT(CASE likes_dislikes.likes WHEN posts.post_id = likes_dislikes.post_id THEN 0 END) AS likes,
-                COUNT(CASE likes_dislikes.dislikes WHEN posts.post_id = likes_dislikes.post_id THEN 0 END) AS dislikes FROM users
+                (SELECT COALESCE(SUM(likes),0) FROM post_likes WHERE post_id = posts.post_id) AS likes, 
+                (SELECT COALESCE(SUM(dislikes),0) FROM post_likes WHERE post_id = posts.post_id) AS dislikes FROM users
                 JOIN posts ON users.id = posts.user_id 
-                JOIN likes_dislikes 
+                JOIN post_likes 
                 WHERE users.active = 'true'
                 GROUP BY posts.post_id
                 ORDER BY posts.creation_date DESC`,

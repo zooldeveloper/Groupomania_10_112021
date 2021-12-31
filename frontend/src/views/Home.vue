@@ -26,7 +26,7 @@
                 </form>
             </section>
             <!-- User post section -->
-            <section id="userpost" v-for="post in posts" :key="post.userId">
+            <section id="userpost" v-for="post in posts" :key="post.post_id">
                 <div class="userpost__wrapper">
                     <div class="userpost__userinfo">
                         <img class="userpost__userimage" :src="post.imageUrl !== null ? post.imageUrl : require('../assets/images/user-icon.png')" alt="image about the post">
@@ -62,8 +62,8 @@
                     <!-- Likes and comments section -->
                     <div class="userpost__interaction">
                         <div class="userpost__likes">
-                            <span><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> 5</span>
-                            <span><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> 10</span>
+                            <span @click="onLikeChange(post.id, post.post_id)"><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> {{ post.likes }}</span>
+                            <span><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> {{ post.dislikes }}</span>
                         </div>
                         <div class="comments">
                             <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> 2</span>
@@ -108,6 +108,7 @@
 <script>
 import Header from '../components/Header.vue'
 import EditDelete from '../components/EditDelete.vue'
+import CancelBtn from '../components/CancelBtn.vue'
 import ImagePreview from '../components/ImagePreview.vue'
 
 import { mapState } from 'vuex'
@@ -115,7 +116,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Home',
   components: {
-    Header, EditDelete, ImagePreview,
+    Header, EditDelete, CancelBtn, ImagePreview,
   },
   data() {
     return {
@@ -126,10 +127,12 @@ export default {
 
         textToEdit: null, postToUpdate: null,
         postId: null,
+
+        like: null,
     }
   },
   computed: {
-    ...mapState(['posts', 'user', 'likes']),
+    ...mapState(['posts', 'user', 'likes', 'successResMsg']),
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -142,7 +145,6 @@ export default {
     setTimeout(() => {
       this.setUserImage()
     }, 100)
-    
   },
   methods: {
     setUserImage() {
@@ -203,6 +205,31 @@ export default {
       }
       location.reload()
     },
+    onLikeChange(userId, postId) {
+      for(let i = 0; i < this.likes.length; i++) {
+       if (this.likes[i].users_liked == this.user[0].id) {
+          if(this.likes[i].post_id == postId) {
+            if(this.likes[i].likes == 0) {
+              this.like = 1
+            } else if(this.likes[i].likes == 1) {
+              this.like = 0
+            }
+          } 
+        } else if(this.likes[i].users_liked !== this.user[0].id){
+            this.like = 1
+          }
+      } 
+      this.$store.dispatch('createOrUpdateLikeAndDislike', {
+        like: this.like,
+        post_id: postId,
+        user_id: this.user[0].id
+      })
+      setTimeout(()=> {
+        this.$store.dispatch('getOneUser')
+        this.$store.dispatch('getAllPosts')
+        this.$store.dispatch('getLikesAndDislikes')
+      }, 100)
+    }
   },
 }
 </script>
@@ -376,6 +403,7 @@ export default {
           &__likes {
             span {
               margin-right: 13px;
+              cursor: pointer;
             }
           }
           &__comments {

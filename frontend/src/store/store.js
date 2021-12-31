@@ -192,10 +192,21 @@ export default createStore({
         console.log(err)
       }
     },
+    // Makes the post request of all likes & dislikes
+    async createOrUpdateLikeAndDislike({ commit }, likeDislike) {
+      try {
+        const result = await instance.post('/likes', likeDislike)
+        if (result.status === 201 || result.status === 200) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
     // Makes the get request of all likes & dislikes
     async getLikesAndDislikes({ commit }) {
       try {
-        const result = await instance.get('likes')
+        const result = await instance.get('/likes')
         if (result.status === 200) {
           commit('GET_ALL_LIKES', result.data)
         }

@@ -5,9 +5,12 @@ const db = require('../config/database');
 exports.createComment = (req, res) => {
 
     const { comment, post_id, user_id } = req.body;
+    const event = new Date(Date.now());
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const timestamp = event.toLocaleDateString('en-FR', options);
     // Inserts the specified data into the comments table
-    db.query('INSERT INTO comments (comments, post_id, user_id, comment_creation_date) VALUES (?, ?, ?, ?)',
-        [`${comment}`, post_id, user_id, new Date()], (err, result) => {
+    db.query('INSERT INTO comments (comment, post_id, user_id, creation_date) VALUES (?, ?, ?, ?)',
+        [`${comment}`, post_id, user_id, timestamp], (err, result) => {
             if (err) {
                 return res.status(500).send(err);
             }
@@ -19,12 +22,15 @@ exports.createComment = (req, res) => {
 // Get request controller
 exports.getComment = (req, res) => {
     // Gets all data from the comments table that matches the condition
-    db.query('SELECT * FROM comments JOIN posts ON comments.post_id = posts.post_id',
+    db.query(`SELECT firstName, lastName, imageUrl, comment,
+                comment_id, comments.post_id, comments.user_id, comments.creation_date FROM comments
+                JOIN posts ON comments.post_id = posts.post_id
+                JOIN users ON comments.user_id = users.id`,
         (err, result) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(201).send(result);
+            res.status(200).send(result);
         });
 };
 
@@ -33,9 +39,12 @@ exports.getComment = (req, res) => {
 exports.updateComment = (req, res) => {
 
     const { comment } = req.body;
-    // Updates the comments & comment_creation_date columns that matches the condition
-    db.query('UPDATE comments SET comments = ?, comment_creation_date = ?  WHERE comment_id = ?',
-        [`${comment}`, new Date(), req.params.id], (err, result) => {
+    const event = new Date(Date.now());
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const timestamp = event.toLocaleDateString('en-FR', options);
+    // Updates the comment & creation_date columns that matches the condition
+    db.query('UPDATE comments SET comment = ?, creation_date = ?  WHERE comment_id = ?',
+        [`${comment}`, timestamp, req.params.id], (err, result) => {
             if (err) {
                 return res.status(500).send(err);
             }

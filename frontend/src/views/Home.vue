@@ -41,23 +41,23 @@
                             <p>{{ post.textual_post}}</p>
                             <EditDelete 
                                 v-if="post.id === user[0].id"
-                                @trigger-edit-post="showEditPost(post.post_id)"
-                                @trigger-delete-post="showDeleteConfirm(post.post_id)"
+                                @trigger-edit-text="showEditPost(post.post_id)"
+                                @trigger-delete-text="showDeleteConfirm(post.post_id, null)"
                                 @trigger-cancel-delete="cancelDelete"
                                 @trigger-confirm-delete="confirmDelete"
                                 :showConfirmDelete="postId === post.post_id"
                                 :key="post.post_id"
                             />
                         </div>
-                        <!-- Edit form -->
+                        <!-- Edit form posts-->
                         <EditForm
                              v-if="post.post_id === postToUpdate"
                              @trigger-on-edit-text="onEditPost"
                              :textareaValue="post.textual_post"
-                             @trigger-text-to-edit="onTextToEdit">
+                             @trigger-text-to-edit="setPostValue">
                               <template v-slot:cancelBtn>
                                   <CancelBtn 
-                                      @trigger-on-cancel="cancelEditPost"
+                                      @trigger-on-cancel="cancelEdit"
                                       class="userpost__span-cancelBtn"
                                       />
                               </template>
@@ -85,20 +85,32 @@
                                             <small>Posted on {{ comment.creation_date}} </small>
                                         </div>
                                   </div>
-                                  <div class="userpost__comment">
-                                      <p>{{ comment.comment }}</p>
-                                      <!-- Should be reviewed ! -->
-                                      <!-- <EditDelete 
+                                  <!--  v-if="comment.comment_id !== commentToUpdate" -->
+                                  <div class="userpost__comment" v-if="comment.comment_id !== commentToUpdate" >
+                                      <p >{{ comment.comment }}</p>
+                                      <EditDelete 
                                           v-if="comment.user_id === user[0].id"
-                                          @trigger-edit-post="showEditPost(post.post_id)"
-                                          @trigger-delete-post="showDeleteConfirm(post.post_id)"
+                                          @trigger-edit-text="showEditComment(comment.comment_id)"
+                                          @trigger-delete-text="showDeleteConfirm(null, comment.comment_id)"
                                           @trigger-cancel-delete="cancelDelete"
                                           @trigger-confirm-delete="confirmDelete"
-                                          :showConfirmDelete="postId === post.post_id"
-                                          :key="post.post_id"
-                                      /> -->
-                                      <!-- <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span> -->
+                                          :showConfirmDelete="commentId === comment.comment_id"
+                                          :key="comment.comment_id"
+                                      />
                                   </div>
+                                  <!-- Edit form comments -->
+                                  <EditForm
+                                        v-if="comment.comment_id === commentToUpdate"
+                                        @trigger-on-edit-text="onEditComment"
+                                        :textareaValue="comment.comment"
+                                        @trigger-text-to-edit="setCommentValue">
+                                          <template v-slot:cancelBtn>
+                                              <CancelBtn 
+                                                  @trigger-on-cancel="cancelEdit"
+                                                  class="userpost__span-cancelBtn"
+                                                  />
+                                          </template>
+                                    </EditForm>
                               </div>
                           </div>
                           <form class="userpost__commentsform">
@@ -136,10 +148,11 @@ export default {
         imagePreview: null,
         nothingAdded: false,
         // properties related to the post edit
-        textToEdit: null, postToUpdate: null,
-        postId: null,
+         postValueToSend: null, postToUpdate: null, postId: null,
         // Properties related to the post's likes & dislikes
-        like: null, dislike: null
+        like: null, dislike: null,
+        // properties related to the comment edit
+        commentValueToSend: null, commentToUpdate: null, commentId: null,
     }
   },
   computed: {
@@ -188,34 +201,39 @@ export default {
         location.reload()
       } 
     },
-    cancelEditPost() {
+    // Cancels the modification on both posts & comments
+    cancelEdit() {
       this.postToUpdate = null
+      this.commentToUpdate = null
     },
+    // Shows the textarea to edit the post
     showEditPost(postId) {
       this.postToUpdate = postId
-      this.textToEdit = null
+      this.postValueToSend = null
     },
-    // To set the value of the text to edit
-    onTextToEdit(payload) {
-      this.textToEdit = payload
+    // Sets the value of the post to edit
+    setPostValue(payload) {
+      this.postValueToSend = payload
     },
-     // To send the value of the text to edit
+    // Sends the value of the post to edit
     onEditPost() {
-      if(this.textToEdit !== null) {
+      if(this.postValueToSend !== null) {
         this.$store.dispatch('modifyOnePost', {
           postId: this.postToUpdate,
-          textual_post: this.textToEdit
+          textual_post: this.postValueToSend
         })
         location.reload()
       }
     },
-    // Shows the delete confirm button
-    showDeleteConfirm(postId) { 
+    // Shows the delete confirm button on both posts & comments
+    showDeleteConfirm(postId, commentId) { 
       this.postId = postId
+      this.commentId = commentId
     },
     // Cancels the delete option
     cancelDelete() {
       this.postId = null
+      this.commentId = null
     },
     // Confirm the delete option
     confirmDelete() {
@@ -246,7 +264,7 @@ export default {
         user_id: this.user[0].id
       })
       setTimeout(()=> {
-        this.$store.dispatch('getOneUser')
+        // this.$store.dispatch('getOneUser')
         this.$store.dispatch('getAllPosts')
         this.$store.dispatch('getLikesAndDislikes')
       }, 100)
@@ -272,10 +290,32 @@ export default {
         user_id: this.user[0].id
       })
       setTimeout(()=> {
-        this.$store.dispatch('getOneUser')
+        // this.$store.dispatch('getOneUser')
         this.$store.dispatch('getAllPosts')
         this.$store.dispatch('getLikesAndDislikes')
       }, 100)
+    },
+    // Shows the textarea to edit the comment
+    showEditComment(commentId) {
+      this.commentToUpdate = commentId
+      this.commentValueToSend = null
+    },
+    // Sets the value of the comment to edit
+    setCommentValue(payload) {
+      this.commentValueToSend = payload
+    },
+    // Sends the value of the comment to edit
+    onEditComment() {
+      if(this.commentValueToSend !== null) {
+        this.$store.dispatch('modifyOneComment', {
+          commentId: this.commentToUpdate,
+          comment: this.commentValueToSend
+        })
+        setTimeout(() => {
+          this.cancelEdit()
+          this.$store.dispatch('getAllComments')
+        }, 100)
+      }
     },
   },
 }

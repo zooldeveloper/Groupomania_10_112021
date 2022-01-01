@@ -35,10 +35,10 @@ export default {
     },
     methods: {
         editPost() {
-            this.$emit('trigger-edit-post')
+            this.$emit('trigger-edit-text')
         },
         deletePost() {
-            this.$emit('trigger-delete-post')
+            this.$emit('trigger-delete-text')
         },
         cancelDelete() {
              this.$emit('trigger-cancel-delete')

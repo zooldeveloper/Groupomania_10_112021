@@ -228,6 +228,19 @@ export default createStore({
         console.log(err)
       }
     },
+    // Sends the update request of the user's comment
+    async modifyOneComment({ commit }, comment) {
+      try {
+        const result = await instance.put(`/comments/${comment.commentId}`, 
+          JSON.stringify({ comment: comment.comment })
+        )
+        if (result.status === 200) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
   },
   modules: {}
 })

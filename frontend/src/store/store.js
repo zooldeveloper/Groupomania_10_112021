@@ -241,6 +241,17 @@ export default createStore({
         console.log(err)
       }
     },
+    // Sends the delete request of the user's comment
+    async deleteOneComment({ commit }, commentId) {
+      try {
+        const result = await instance.delete(`/comments/${commentId}`)
+        if (result.status === 200) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
   },
   modules: {}
 })

@@ -240,8 +240,16 @@ export default {
       if(this.postId !== null) {
         this.$store.dispatch('deleteOnePost', this.postId)
         this.postId = null
+        setTimeout(() => {
+           location.reload()
+        }, 50)
+      } else if(this.commentId !== null) {
+        this.$store.dispatch('deleteOneComment', this.commentId)
+        this.commentId = null
+        setTimeout(() => {
+          this.$store.dispatch('getAllComments')
+        }, 100)
       }
-      location.reload()
     },
     // Sets & update likes
     onLikeChange(postId) {

@@ -25,7 +25,8 @@ exports.getComment = (req, res) => {
     db.query(`SELECT firstName, lastName, imageUrl, comment,
                 comment_id, comments.post_id, comments.user_id, comments.creation_date FROM comments
                 JOIN posts ON comments.post_id = posts.post_id
-                JOIN users ON comments.user_id = users.id`,
+                JOIN users ON comments.user_id = users.id
+                ORDER BY comments.creation_date ASC`,
         (err, result) => {
             if (err) {
                 return res.status(500).send(err);

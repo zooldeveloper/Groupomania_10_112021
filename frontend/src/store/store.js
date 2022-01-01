@@ -200,7 +200,7 @@ export default createStore({
       console.log(likeDislike)
       try {
         const result = await instance.post('/likes', likeDislike)
-        if (result.status === 201 || result.status === 200) {
+        if (result.status === 201 || result.status === 200) {
           commit('SUCCESS_MESSAGE', result.data.message)
         }
       } catch (err) {
@@ -218,6 +218,17 @@ export default createStore({
         console.log(err)
       }
     },
+    async createOneComment({ commit }, comment) {
+      try {
+        const result = await instance.post('/comments', comment)
+        if (result.status === 201) {
+          commit('SUCCESS_MESSAGE', result.data.message)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // Makes the get request of all comments
     async getAllComments({ commit }) {
       try {
         const result = await instance.get('/comments')

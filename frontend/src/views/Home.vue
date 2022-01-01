@@ -71,7 +71,7 @@
                             <span @click="onDislikeChange(post.post_id)"><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> {{ post.dislikes }}</span>
                         </div>
                         <div class="comments">
-                            <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> 2</span>
+                            <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> {{ post.comments }}</span>
                         </div>
                     </div>
                     <!-- Comments section-->
@@ -115,8 +115,8 @@
                           </div>
                           <form class="userpost__commentsform">
                               <img class="userpost__userimage"  :src="userImage" alt="user image">
-                              <textarea class="userpost__commenttextarea" name="" id="" placeholder="Your comment!"></textarea>
-                              <button class="userpost__btn" type="submit"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                              <textarea class="userpost__commenttextarea" @input="commentValueToSend = $event.target.value" placeholder="Your comment!"></textarea>
+                              <button class="userpost__btn" type="submit" @click.prevent="onCreateComment(post.post_id)"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                           </form> 
                      </div>
                 </div>
@@ -148,7 +148,7 @@ export default {
         imagePreview: null,
         nothingAdded: false,
         // properties related to the post edit
-         postValueToSend: null, postToUpdate: null, postId: null,
+        postValueToSend: null, postToUpdate: null, postId: null,
         // Properties related to the post's likes & dislikes
         like: null, dislike: null,
         // properties related to the comment edit
@@ -247,6 +247,7 @@ export default {
         this.$store.dispatch('deleteOneComment', this.commentId)
         this.commentId = null
         setTimeout(() => {
+          this.$store.dispatch('getAllPosts')
           this.$store.dispatch('getAllComments')
         }, 100)
       }
@@ -272,7 +273,6 @@ export default {
         user_id: this.user[0].id
       })
       setTimeout(()=> {
-        // this.$store.dispatch('getOneUser')
         this.$store.dispatch('getAllPosts')
         this.$store.dispatch('getLikesAndDislikes')
       }, 100)
@@ -298,10 +298,27 @@ export default {
         user_id: this.user[0].id
       })
       setTimeout(()=> {
-        // this.$store.dispatch('getOneUser')
         this.$store.dispatch('getAllPosts')
         this.$store.dispatch('getLikesAndDislikes')
       }, 100)
+    },
+    // Creates the comment
+    onCreateComment(postId) {
+      if(this.commentValueToSend !== null) {
+        this.$store.dispatch('createOneComment', { 
+          comment: this.commentValueToSend,
+           post_id: postId,
+           user_id: this.user[0].id
+        })
+        setTimeout(() => {
+          this.$store.dispatch('getAllPosts')
+          this.$store.dispatch('getAllComments')
+          const commentForm = document.getElementsByClassName('userpost__commentsform')
+          for(let i = 0; i < commentForm.length; i++) {
+            commentForm[i].reset()
+          }
+        }, 100)
+      }
     },
     // Shows the textarea to edit the comment
     showEditComment(commentId) {

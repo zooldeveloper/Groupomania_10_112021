@@ -177,6 +177,7 @@ export default {
         this.firstName = this.user[0].firstName
         this.lastName = this.user[0].lastName
         this.bio = this.user[0].bio
+        this.email = this.user[0].email
         if (this.user[0].imageUrl != undefined ) {
           this.userImage = this.user[0].imageUrl
         }
@@ -277,7 +278,7 @@ export default {
               width: 165px !important;
               height: 30px;
               position: absolute;
-              bottom: 34px;
+              bottom: 57px;
               border-radius: 15px !important;
               border: none ;
               color: $quaternary-color;
@@ -289,6 +290,9 @@ export default {
             }
             input {
               display: none;
+            }
+            p {
+              margin-top: 20px;
             }
           }
           &__bioform {

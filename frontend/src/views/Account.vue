@@ -49,6 +49,7 @@
                               <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/>
                           </button>
                       </form>
+                      <p v-if="isAdmin == 'true'">{{ firstName }} {{ lastName }} is the <span>Admin</span></p>
                   </div>
               </section>
               <section id="usersetting" :class="[deleteAccount ? 'usersetting-margin': '']">
@@ -132,7 +133,7 @@ export default {
       // User data to display
       userImage: require("../assets/images/user-icon.png"),
       firstName: null, lastName: null,
-      email: null, bio: null,
+      email: null, bio: null, isAdmin: null,
       // User data to send
       myFile: null,  imagePreview: null,
       oldPassword: null, newPassword: null,
@@ -178,6 +179,7 @@ export default {
         this.lastName = this.user[0].lastName
         this.bio = this.user[0].bio
         this.email = this.user[0].email
+        this.isAdmin = this.user[0].isAdmin
         if (this.user[0].imageUrl != undefined ) {
           this.userImage = this.user[0].imageUrl
         }
@@ -293,6 +295,9 @@ export default {
             }
             p {
               margin-top: 20px;
+              span {
+                color: $secondary-color;
+              }
             }
           }
           &__bioform {

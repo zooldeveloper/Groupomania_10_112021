@@ -64,11 +64,12 @@ exports.addDataToUserProfile = (req, res) => {
 // Get request controller
 exports.getOneUser = (req, res) => {
 	// Selects user's data from the database and send them as a response
-    db.query(`SELECT id, firstName, lastName, email, bio, imageUrl, active  FROM users WHERE id = ?`, [req.params.id],
+    db.query(`SELECT * FROM users WHERE id = ?`, req.params.id,
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);
-            }
+			}
+			delete result[0].password;
             res.status(200).json(result);
         }
 	);

@@ -58,7 +58,7 @@
                               <template v-slot:cancelBtn>
                                   <CancelBtn 
                                       @trigger-on-cancel="cancelEdit"
-                                      class="userpost__span-cancelBtn"
+                                      classes="cancel-btn"
                                       />
                               </template>
                         </EditForm>
@@ -107,7 +107,7 @@
                                           <template v-slot:cancelBtn>
                                               <CancelBtn 
                                                   @trigger-on-cancel="cancelEdit"
-                                                  class="userpost__span-cancelBtn"
+                                                  classes="cancel-btn"
                                                   />
                                           </template>
                                     </EditForm>
@@ -455,19 +455,6 @@ export default {
           &__username-postdate {
             margin-left: 15px;
           }
-
-          &__form-group {
-            @include flexbox(space-between);
-            width: 90%;
-            margin: 0 40px;
-            overflow:visible;
-            position: relative;
-            span {
-              position: absolute;
-              left: 86%;
-              top: -8px;
-              cursor: pointer;
-            }
             textarea {
               width: 85%;
               height: 70px;
@@ -478,7 +465,7 @@ export default {
               &::-webkit-scrollbar {
                 display: none;
               }
-            }
+            // }
             button {
               @include btn(none);
               padding: 10px 12px 10px 10px;
@@ -486,13 +473,6 @@ export default {
               border-radius: 50%;
             }
           }
-          &__span-cancelBtn {
-            position: absolute;
-            left: 86%;
-            top: -8px;
-            cursor: pointer;
-          }
-
 
           &__text-btn {
             margin: 30px 40px 0;
@@ -560,13 +540,6 @@ export default {
             &__text-btn { margin: 30px 0px !important; }
             &__interaction { padding-left: 30px !important }
             &__comments { margin: 0; }
-          }
-          @media screen and (max-width: 425px) {
-            &__form-group { 
-              flex-direction: column; 
-              textarea { width: 100%; margin-bottom: 10px; }
-              span { left: 98%; }
-            }
           }
         }      
       }

@@ -68,4 +68,13 @@ export default {
             border-radius: 50%;
         }
     }
+    @media screen and (max-width: 768px) {
+        .form-group { margin: 0 0 !important; width: 100%; }
+     }
+    @media screen and (max-width: 550px) {
+        .form-group { 
+            flex-direction: column; 
+            textarea { width: 100%; margin-bottom: 10px; }
+        }
+    }
 </style>

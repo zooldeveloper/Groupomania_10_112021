@@ -41,6 +41,7 @@
                             <p>{{ post.textual_post}}</p>
                             <EditDelete 
                                 v-if="post.id === user[0].id || user[0].isAdmin == 'true'"
+                                :isAdmin="post.id === user[0].id"
                                 @trigger-edit-text="showEditPost(post.post_id)"
                                 @trigger-delete-text="showDeleteConfirm(post.post_id, null)"
                                 @trigger-cancel-delete="cancelDelete"
@@ -90,6 +91,7 @@
                                       <p >{{ comment.comment }}</p>
                                       <EditDelete 
                                           v-if="comment.user_id === user[0].id || user[0].isAdmin == 'true'"
+                                          :isAdmin="post.id === user[0].id"
                                           @trigger-edit-text="showEditComment(comment.comment_id)"
                                           @trigger-delete-text="showDeleteConfirm(null, comment.comment_id)"
                                           @trigger-cancel-delete="cancelDelete"

@@ -2,7 +2,7 @@
     <div class="userpost__ellipsis">
         <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>
         <div class="userpost__edit-delete">
-            <div class="userpost__edit">
+            <div class="userpost__edit" v-if="isAdmin">
                 <small>Edit</small>
                 <span @click="editPost"><font-awesome-icon icon='edit' color='#76c8d3' size="lx"/></span>
             </div>
@@ -31,6 +31,10 @@ export default {
     props: {
         showConfirmDelete:{
             type: Boolean,
+        },
+        isAdmin: {
+            type: Boolean,
+            required: true
         } 
     },
     methods: {

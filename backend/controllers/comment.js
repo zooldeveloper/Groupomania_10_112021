@@ -26,6 +26,7 @@ exports.getComment = (req, res) => {
                 comment_id, comments.post_id, comments.user_id, comments.creation_date FROM comments
                 JOIN posts ON comments.post_id = posts.post_id
                 JOIN users ON comments.user_id = users.id
+                WHERE users.active = 'true'
                 ORDER BY comments.creation_date ASC`,
         (err, result) => {
             if (err) {

@@ -256,53 +256,131 @@ export default {
     },
     // Sets & update likes
     onLikeChange(postId) {
-      for(let i = 0; i < this.likes.length; i++) {
-       if (this.likes[i].users_liked == this.user[0].id) {
-          if(this.likes[i].post_id == postId) {
-            if(this.likes[i].likes == 0) {
-              this.like = 1
-            } else if(this.likes[i].likes == 1) {
-              this.like = 0
-            }
-          } 
-        } else if(this.likes[i].users_liked !== this.user[0].id){
-            this.like = 1
-          }
-      } 
-      this.$store.dispatch('createOrUpdateLikeAndDislike', {
-        like: this.like,
-        post_id: postId,
-        user_id: this.user[0].id
-      })
-      setTimeout(()=> {
-        this.$store.dispatch('getAllPosts')
-        this.$store.dispatch('getLikesAndDislikes')
-      }, 100)
+
+		let likesTable = []
+		let dislikesTable = []
+		
+		this.likes.forEach(like => {
+			if(like.post_id === postId) {
+				if(like.users_liked === this.user[0].id) {
+					likesTable.push({like: like.likes})
+					likesTable.push({userLiked: like.users_liked})
+				}
+				if(like.users_disliked === this.user[0].id) {
+					dislikesTable.push({dislike: like.dislikes})
+					dislikesTable.push({userDisliked: like.users_disliked})
+				}
+			}
+		});
+
+		if(likesTable.length === 0 && dislikesTable.length === 0) {
+			this.like = 1
+		}
+		else if(likesTable.length === 2 && dislikesTable.length === 0) {
+			if(likesTable[0].like === 0) {
+					this.like = 1
+				}
+				else if(likesTable[0].like === 1) {
+					this.like = 0
+				}
+		}
+		else if(likesTable.length  === 0 && dislikesTable.length  === 2) {
+			if(dislikesTable[0].dislike === 0) {
+					this.like = 1
+				}
+				else if(dislikesTable[0].dislike === 1) {
+					this.like = null
+				}
+		}
+		else if(likesTable.length === 2 && dislikesTable.length === 2) {
+			if(likesTable[0].like === 0 && dislikesTable[0].dislike === 0) {
+				this.like = 1
+			}
+			else if(likesTable[0].like === 1 && dislikesTable[0].dislike === 0) {
+				this.like = 0
+			}
+			else if(likesTable[0].like === 0 && dislikesTable[0].dislike === 1) {
+				this.like = null
+			}
+		}
+      
+      if(this.like === 1 || this.like === 0) {
+        this.$store.dispatch('createOrUpdateLikeAndDislike', {
+          like: this.like,
+          post_id: postId,
+          user_id: this.user[0].id
+        })
+        setTimeout(()=> {
+          this.$store.dispatch('getAllPosts')
+          this.$store.dispatch('getLikesAndDislikes')
+        }, 100)
+      }
     },
     // Sets & update dislikes
     onDislikeChange(postId) {
-      for(let i = 0; i < this.likes.length; i++) {
-       if (this.likes[i].users_disliked == this.user[0].id) {
-          if(this.likes[i].post_id == postId) {
-            if(this.likes[i].dislikes == 0) {
-              this.dislike = 1
-            } else if(this.likes[i].dislikes == 1) {
-              this.dislike = 0
-            }
-          } 
-        } else if(this.likes[i].users_disliked !== this.user[0].id){
-            this.dislike = 1
-          }
-      } 
-      this.$store.dispatch('createOrUpdateLikeAndDislike', {
-        dislike: this.dislike,
-        post_id: postId,
-        user_id: this.user[0].id
-      })
-      setTimeout(()=> {
-        this.$store.dispatch('getAllPosts')
-        this.$store.dispatch('getLikesAndDislikes')
-      }, 100)
+
+		let dislikesTable = []
+		let likesTable = []
+		
+		this.likes.forEach(like => {
+			if(like.post_id === postId) {
+				if(like.users_disliked === this.user[0].id) {
+					dislikesTable.push({dislike: like.dislikes})
+					dislikesTable.push({userDisliked: like.users_disliked})
+				}
+				if(like.users_liked === this.user[0].id) {
+					likesTable.push({like: like.likes})
+					likesTable.push({userLiked: like.users_liked})
+				}
+			}
+		});
+		
+		if(dislikesTable.length  === 0  && likesTable.length === 0) {
+			this.dislike = 1
+		}
+		else if(dislikesTable.length  === 2 && likesTable.length === 0) {
+			if(dislikesTable[0].dislike === 0) {
+				this.dislike = 1
+
+			}
+			else if(dislikesTable[0].dislike === 1) {
+				this.dislike = 0
+
+			}
+		}
+		else if(dislikesTable.length  === 0 && likesTable.length  === 2) {
+			if(likesTable[0].like === 0) {
+				this.dislike = 1
+
+			}
+			else if(likesTable[0].like === 1) {
+				this.dislike = null
+
+			}
+		}
+		else if(dislikesTable.length === 2 && likesTable.length === 2) {
+			if(dislikesTable[0].dislike === 0 && likesTable[0].like === 0 ) {
+				this.dislike = 1
+			}
+			else if(dislikesTable[0].dislike === 1 && likesTable[0].like === 0) {
+				this.dislike = 0
+			}
+			else if(dislikesTable[0].dislike === 0 && likesTable[0].like === 1) {
+				this.dislike = null
+			}
+		}
+		
+		if(this.dislike === 1 || this.dislike === 0) {
+			this.$store.dispatch('createOrUpdateLikeAndDislike', {
+			  dislike: this.dislike,
+			  post_id: postId,
+			  user_id: this.user[0].id
+			})
+			setTimeout(()=> {
+			  this.$store.dispatch('getAllPosts')
+			  this.$store.dispatch('getLikesAndDislikes')
+			}, 100)
+		}
     },
     // Creates the comment
     onCreateComment(postId) {

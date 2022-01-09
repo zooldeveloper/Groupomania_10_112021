@@ -264,19 +264,17 @@ export default {
 			if(like.post_id === postId) {
 				if(like.users_liked === this.user[0].id) {
 					likesTable.push({like: like.likes})
-					likesTable.push({userLiked: like.users_liked})
 				}
 				if(like.users_disliked === this.user[0].id) {
 					dislikesTable.push({dislike: like.dislikes})
-					dislikesTable.push({userDisliked: like.users_disliked})
 				}
 			}
 		});
 
-		if(likesTable.length === 0 && dislikesTable.length === 0) {
+		if(likesTable.length < 1 && dislikesTable.length < 1) {
 			this.like = 1
 		}
-		else if(likesTable.length === 2 && dislikesTable.length === 0) {
+		else if(likesTable.length > 0 && dislikesTable.length < 1) {
 			if(likesTable[0].like === 0) {
 					this.like = 1
 				}
@@ -284,7 +282,7 @@ export default {
 					this.like = 0
 				}
 		}
-		else if(likesTable.length  === 0 && dislikesTable.length  === 2) {
+		else if(likesTable.length  < 1 && dislikesTable.length  > 0) {
 			if(dislikesTable[0].dislike === 0) {
 					this.like = 1
 				}
@@ -292,7 +290,7 @@ export default {
 					this.like = null
 				}
 		}
-		else if(likesTable.length === 2 && dislikesTable.length === 2) {
+		else if(likesTable.length > 0 && dislikesTable.length > 0) {
 			if(likesTable[0].like === 0 && dislikesTable[0].dislike === 0) {
 				this.like = 1
 			}
@@ -326,19 +324,17 @@ export default {
 			if(like.post_id === postId) {
 				if(like.users_disliked === this.user[0].id) {
 					dislikesTable.push({dislike: like.dislikes})
-					dislikesTable.push({userDisliked: like.users_disliked})
 				}
 				if(like.users_liked === this.user[0].id) {
 					likesTable.push({like: like.likes})
-					likesTable.push({userLiked: like.users_liked})
 				}
 			}
 		});
 		
-		if(dislikesTable.length  === 0  && likesTable.length === 0) {
+		if(dislikesTable.length  < 1  && likesTable.length < 1) {
 			this.dislike = 1
 		}
-		else if(dislikesTable.length  === 2 && likesTable.length === 0) {
+		else if(dislikesTable.length  > 0 && likesTable.length < 1) {
 			if(dislikesTable[0].dislike === 0) {
 				this.dislike = 1
 
@@ -348,7 +344,7 @@ export default {
 
 			}
 		}
-		else if(dislikesTable.length  === 0 && likesTable.length  === 2) {
+		else if(dislikesTable.length  < 1 && likesTable.length  > 0) {
 			if(likesTable[0].like === 0) {
 				this.dislike = 1
 
@@ -358,7 +354,7 @@ export default {
 
 			}
 		}
-		else if(dislikesTable.length === 2 && likesTable.length === 2) {
+		else if(dislikesTable.length > 0 && likesTable.length > 0) {
 			if(dislikesTable[0].dislike === 0 && likesTable[0].like === 0 ) {
 				this.dislike = 1
 			}

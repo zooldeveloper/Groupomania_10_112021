@@ -1,10 +1,15 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
+import { VueCookieNext } from 'vue-cookie-next'
 
 const user = JSON.parse(localStorage.getItem('user'))
+
 const instance = axios.create({
   baseURL: 'http://localhost:3001/api',
-  headers: { 'Content-Type': 'application/json' }
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + VueCookieNext.getCookie('token')
+  }
 })
 
 export default createStore({
@@ -79,6 +84,7 @@ export default createStore({
         if (result.status == 200) {
           const user = result.data.user
           localStorage.setItem('user', JSON.stringify(user));
+          VueCookieNext.setCookie('token', result.data.token)
         }
       } catch (err) {
         if (err.response.status === 403) {
@@ -197,7 +203,6 @@ export default createStore({
     },
     // Makes the post request of all likes & dislikes
     async createOrUpdateLikeAndDislike({ commit }, likeDislike) {
-      console.log(likeDislike)
       try {
         const result = await instance.post('/likes', likeDislike)
         if (result.status === 201 || result.status === 200) {

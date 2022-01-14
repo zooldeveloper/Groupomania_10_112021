@@ -3,17 +3,19 @@ require('dotenv').config({ path: '../config/.env' });
 
 // Checks if the authentication matches u
 module.exports = (req, res, next) => {
-    const handleThrow = (message) => {
-        throw message;
-    }
-        try {
-            const token = req.headers.authorization.split(' ')[1];
-            const decodedToken = jwt.verify(token, process.env.USER_TOKEN);
-            const now = Date.now() / 1000;
-            decodedToken.exp < now ?
-                handleThrow('Please provid a valid token!') : next();
-        } catch (err){
-            new Error(err);
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, process.env.USER_TOKEN);
+        const now = Date.now() / 1000;
+        if (decodedToken.exp < now) {
+            throw 'Please provid a valid token!'
         }
+        else {
+            next();
+        } 
+    } catch {
+        res.status(401).json({ 
+            Error: 'User is not authorized, please provid a valid token!' });
+    }
 };
   

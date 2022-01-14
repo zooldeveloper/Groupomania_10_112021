@@ -71,8 +71,9 @@ exports.login = (req, res) => {
                         if (!valid) {
                             return res.status(401).json({ message: 'Password is incorrect!' });
                         }
+                        delete result[0].password
                         res.status(200).json({
-                            userId: result[0].id,
+                            user: result[0],
                             token: jwt.sign(
                                 { userId: result[0].id },
                                 process.env.USER_TOKEN, 

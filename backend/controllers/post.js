@@ -11,7 +11,7 @@ exports.creatPost = (req, res) => {
 
     const event = new Date(Date.now());
     const options = { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'short', day: 'numeric' };
-    const timestamp = event.toLocaleDateString('en-FR', options);
+    const timestamp = event.toLocaleDateString('fr-FR', options);
     // Inserrs data into the posts table
     db.query(`INSERT INTO posts (textual_post, image_url, creation_date, user_id) VALUES (?, ?, ?, ?)`,
         [body.textual_post, body.image_url, timestamp, req.params.id],
@@ -64,7 +64,7 @@ exports.modifiyPost = (req, res) => {
     //     } : { ...req.body };
     const event = new Date(Date.now());
     const options = { hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'short', day: 'numeric' };
-    const timestamp = event.toLocaleDateString('en-FR', options);
+    const timestamp = event.toLocaleDateString('fr-FR', options);
     // Updates posts table content
     db.query(`UPDATE posts SET textual_post = ?, creation_date = ? WHERE post_id = ?`,
         [`${req.body.textual_post}`,  timestamp, `${req.params.id}`],

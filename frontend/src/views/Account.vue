@@ -253,7 +253,9 @@ export default {
 
   .about {
     margin-top: 100px;
-    
+    h1 {
+      font-size: 1.5rem;
+    }
     .wrapper {
       padding: 30px 45px;
       box-shadow: 0px 5px 15px $border-color;

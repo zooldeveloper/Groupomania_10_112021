@@ -14,7 +14,7 @@ exports.createComment = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(201).json({ message: 'Comment added!' });
+            res.status(201).json({ message: 'Commentaire ajouté !' });
         });
 };
 
@@ -50,7 +50,7 @@ exports.updateComment = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: 'Comment updated!' });
+            res.status(200).json({ message: 'Commentaire modifié !' });
         });
 };
 
@@ -63,7 +63,7 @@ exports.deleteComment = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: 'Comment deleted!' });
+            res.status(200).json({ message: 'Commentaire supprimé !' });
         });
     
 };

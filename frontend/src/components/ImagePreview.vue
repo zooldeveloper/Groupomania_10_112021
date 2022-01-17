@@ -1,7 +1,7 @@
 <template>
     <div class="imagepreview" :class="customClasses">
         <CancelBtn @trigger-on-cancel="removeImagePreview"/>
-        <img :src="imagePreview" alt="image preview">
+        <img :src="imagePreview" alt="aperçu de l'image">
     </div>
 </template>
 

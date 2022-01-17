@@ -2,7 +2,7 @@
   <div class="about">
       <Header/>
       <main>
-          <h1>User's profile</h1>
+          <h1>Profil de l'utilisateur</h1>
           <div class="wrapper">
               <section id="userinfo">
                   <div class="userinfo__user userinfo__user-border">
@@ -11,7 +11,7 @@
                           :src="userImage" 
                           alt="user image" 
                           v-if="myFile == null"/>
-                      <label for="userimage" v-if="myFile == null">Change your photo
+                      <label for="userimage" v-if="myFile == null">Changer votre photo
                             <input 
                               id="userimage" 
                               type="file"  
@@ -25,7 +25,7 @@
                       />
                       <Button 
                           v-if="myFile !== null"
-                          name="Send It"
+                          name="Envoyer"
                           class="user-profile-image-btn"
                           @click="onSubmit"
                       />
@@ -40,7 +40,7 @@
                           @submit.prevent="onSubmit">
                           <textarea 
                               class="userinfo__biotextarea" 
-                              placeholder="Your bio!"
+                              placeholder="Votre bio!"
                               v-model="bioToSave">
                           </textarea>
                           <button 
@@ -49,12 +49,12 @@
                               <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/>
                           </button>
                       </form>
-                      <p v-if="isAdmin == 'true'">{{ firstName }} {{ lastName }} is the <span>Admin</span></p>
+                      <p v-if="isAdmin == 'true'">{{ firstName }} {{ lastName }} est <span>l'Admin</span></p>
                   </div>
               </section>
               <section id="usersetting" :class="[deleteAccount ? 'usersetting-margin': '']">
                   <div class="usersetting__setting">
-                      <h2>Change your password</h2>
+                      <h2>Changer votre mot de passe</h2>
                       <form @submit.prevent="onSubmit">
                           <div class="usersetting__form-group">
                               <label for="oldpassword">
@@ -63,7 +63,7 @@
                               <input 
                                   type="password"
                                   id="oldpassword" 
-                                  placeholder="Your old passwrd"
+                                  placeholder="Votre ancien mot de passe"
                                   v-model="oldPassword">
                               <small v-if="checkOldPassword">{{ oldPasswordError }}</small>
                           </div>
@@ -74,25 +74,25 @@
                               <input 
                                   type="password" 
                                   id="newpassword" 
-                                  placeholder="Your new passwrd"
+                                  placeholder="Votre nouveau mot de passe"
                                   v-model="newPassword">
                               <small v-if="checkNewPassword">{{ newPasswordError }}</small>
                           </div>
                           <Button
-                              name="Submit"
+                              name="Envoyer"
                               classes="btn"
                           />
                       </form>
                   </div>
                   <div class="usersetting__setting">
-                      <h2>Delete your account</h2>
+                      <h2>Supprimer votre compte</h2>
                       <Button
-                          name="Delete"
+                          name="Supprimer"
                           classes="btn custom-btn"
                           @click="onDeleteAccount"
                        />
                        <Button
-                          name="I confirm"
+                          name="Je confirme"
                           classes="btn custom-btn"
                           :class="[deleteAccount ? 'show-delete-confirm-btn': 'hide-delete-confirm-btn']"
                           @click="onDeleteAccount"

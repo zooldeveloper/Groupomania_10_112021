@@ -8,20 +8,20 @@
                 <form>
                     <div class="makepost__div"> 
                         <img :src="userImage" alt="user image">
-                        <textarea class="makepost__posttextarea" v-model="myText" placeholder="What would you like to share?"></textarea>
+                        <textarea class="makepost__posttextarea" v-model="myText" placeholder="Que voulez-vous partager ?"></textarea>
                     </div>
-                    <small :class="{'makepost__displaybloc': nothingAdded,'makepost__displaynone': !nothingAdded }">There is nothing added!</small>
+                    <small :class="{'makepost__displaybloc': nothingAdded,'makepost__displaynone': !nothingAdded }">Rien n'est ajouté !</small>
                     <ImagePreview
                       v-if="myFile !== null"
                       @trigger-on-cancel="removeImagePreview"
                       :imagePreview="imagePreview"
                     />
                     <div class="makepost__div makepost__fileinput">
-                          <label for="myImage">Uplaod a file
+                          <label for="myImage">Télécharger un fichier
                                 <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
                                 <input type="file" id="myImage" @change="onFileChange">
                           </label>
-                          <button class="makepost__btn" type="submit" @click.prevent="onSubmitForm">Post it  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                          <button class="makepost__btn" type="submit" @click.prevent="onSubmitForm">Publier  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                     </div>
                 </form>
             </section>
@@ -29,10 +29,10 @@
             <section id="userpost" v-for="post in posts" :key="post.post_id">
                 <div class="userpost__wrapper">
                     <div class="userpost__userinfo">
-                        <img class="userpost__userimage" :src="post.imageUrl !== null ? post.imageUrl : require('../assets/images/user-icon.png')" alt="image about the post">
+                        <img class="userpost__userimage" :src="post.imageUrl !== null ? post.imageUrl : require('../assets/images/user-icon.png')" alt="Image de l'utilisateur">
                         <div class="userpost__username-postdate">
                             <h2>{{ post.firstName}} {{ post.lastName}}</h2>
-                            <small>Posted on {{ post.creation_date}} </small>
+                            <small>Publié le {{ post.creation_date}} </small>
                         </div>
                     </div>
                     <div class="userpost__post">
@@ -63,7 +63,7 @@
                                       />
                               </template>
                         </EditForm>
-                        <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="post image">
+                        <img v-if="post.image_url != undefined" class="userpost__imagepost" :src="post.image_url" alt="Image du post">
                     </div>
                     <!-- Likes section -->
                     <div class="userpost__interaction">
@@ -83,7 +83,7 @@
                                         <img class="userpost__userimage" :src="comment.imageUrl != undefined ? comment.imageUrl : require('../assets/images/user-icon.png')" alt="user image">
                                         <div class="userpost__username-postdate">
                                             <h3>{{ comment.firstName }} {{ comment.lastName }}</h3>
-                                            <small>Posted on {{ comment.creation_date}} </small>
+                                            <small>Publié le {{ comment.creation_date}} </small>
                                         </div>
                                   </div>
                                   <!--  v-if="comment.comment_id !== commentToUpdate" -->
@@ -117,7 +117,7 @@
                           </div>
                           <form class="userpost__commentsform">
                               <img class="userpost__userimage"  :src="userImage" alt="user image">
-                              <textarea class="userpost__commenttextarea" @input="commentValueToSend = $event.target.value" placeholder="Your comment!"></textarea>
+                              <textarea class="userpost__commenttextarea" @input="commentValueToSend = $event.target.value" placeholder="Votre commentaire !"></textarea>
                               <button class="userpost__btn" type="submit" @click.prevent="onCreateComment(post.post_id)"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
                           </form> 
                      </div>

@@ -20,7 +20,7 @@ exports.createAndUpdateLikes = (req, res) => {
                         if (err) {
                             return res.status(500).send(err);
                         }
-                        res.status(200).json({ message: "Added a like!" });
+                        res.status(200).json({ message: "Like ajouté !" });
                     });
         
             } else {
@@ -30,7 +30,7 @@ exports.createAndUpdateLikes = (req, res) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
-                    res.status(201).json({ message: "Added a like!" });
+                    res.status(201).json({ message: "Like ajouté !" });
                 });
             }
         })        
@@ -41,7 +41,7 @@ exports.createAndUpdateLikes = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: "Like removed!" });
+            res.status(200).json({ message: "Like retiré !" });
         });
     }
     
@@ -59,7 +59,7 @@ exports.createAndUpdateLikes = (req, res) => {
                         if (err) {
                             return res.status(500).send(err);
                         }
-                        res.status(200).json({ message: "Added a dislike!" });
+                        res.status(200).json({ message: "Dislike ajouté !" });
                 });
             } else {
                 // Inserts dislike, post id and user id to the post_likes table
@@ -68,7 +68,7 @@ exports.createAndUpdateLikes = (req, res) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
-                    res.status(201).json({ message: "Added a dislike!" });
+                    res.status(201).json({ message: "Dislike ajouté !" });
                 });
             }
         });
@@ -80,7 +80,7 @@ exports.createAndUpdateLikes = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: "Dislike removed!" });
+            res.status(200).json({ message: "Dislike retiré !" });
         });
     }
 };

@@ -1,9 +1,9 @@
 <template>
     <div class="delete" v-if="showConfirmDelete">
-        <p>Delete post</p>
+        <p>Supprimer le post</p>
         <div class="delete__cancel-confirm">
-             <Button @trigger-function="cancelDelete" name="Cancel" classes="btn"/>
-             <Button @trigger-function="confirmDelete" name="Confirm" classes="btn custom-btn"/>
+             <Button @trigger-function="cancelDelete" name="Annuler" classes="btn"/>
+             <Button @trigger-function="confirmDelete" name="Confirmer" classes="btn custom-btn"/>
         </div>
     </div>
 </template>

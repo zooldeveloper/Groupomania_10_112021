@@ -3,11 +3,11 @@
         <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>
         <div class="userpost__edit-delete">
             <div class="userpost__edit" v-if="isAdmin">
-                <small>Edit</small>
+                <small>Modifier</small>
                 <span @click="editPost"><font-awesome-icon icon='edit' color='#76c8d3' size="lx"/></span>
             </div>
             <div class="userpost__wrapper">
-                <small>Delete</small>
+                <small>Supprimer</small>
                 <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#F08E8A' size="lx"/></span>
             </div>
         </div>

@@ -29,7 +29,7 @@ export default {
     @import '@/assets/sass/variables.scss';
 
     .btn {
-        width: 80px;
+        width: 87px;
         height: 30px;
         border-radius: 10px;
         border: none;

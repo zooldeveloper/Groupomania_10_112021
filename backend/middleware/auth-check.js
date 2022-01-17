@@ -8,14 +8,14 @@ module.exports = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.USER_TOKEN);
         const now = Date.now() / 1000;
         if (decodedToken.exp < now) {
-            throw 'Please provid a valid token!' 
+            throw 'Veuillez fournir un token valide !' 
         }
         else {
             next();
         } 
     } catch {
         res.status(401).json({ 
-            Error: 'User is not authorized, please provid a valid token!' });
+            Error: 'L\'utilisateur n\'est pas autorisé, veuillez fournir un token valide !' });
     }
 };
   

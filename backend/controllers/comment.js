@@ -27,7 +27,7 @@ exports.getComment = (req, res) => {
                 JOIN posts ON comments.post_id = posts.post_id
                 JOIN users ON comments.user_id = users.id
                 WHERE users.active = 'true'
-                ORDER BY comments.creation_date ASC`,
+                ORDER BY comments.creation_date DESC`,
         (err, result) => {
             if (err) {
                 return res.status(500).send(err);

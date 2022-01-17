@@ -29,6 +29,8 @@
 
 
 <script>
+import { VueCookieNext } from 'vue-cookie-next'
+
 export default {
     name: 'Header',
     data() {
@@ -51,6 +53,7 @@ export default {
         },
         logOut() {
             localStorage.clear()
+            VueCookieNext.removeCookie('token')
             this.$router.push({ name: 'Entry' })
         }
     }

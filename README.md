@@ -10,11 +10,11 @@ The frontend of the app was developed with Vue, Node.js & express for its API an
 
 Here are the dependencies that you need to have pre-installed on your machine:
 
-1- Node.js version 16.13.1 or v16.13.0
-2- MySql version 8.0.27 
-2- Vue.js @vue/cli 4.5.15
+    1- Node.js version 16.13.1 or v16.13.0
+    2- MySql version 8.0.27 
+    2- Vue.js @vue/cli 4.5.15
 
-## Database ##
+## Database : ##
 
 In order for this app to work as it intended, you have to create the following elements:
     -1 Go to the `user.schema.sql` file in the root of the backend directory and copy the first predefined command to create your database, then copy the other predifined sql commandse one by one to create the required tables.

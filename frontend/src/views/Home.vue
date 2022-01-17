@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <Header/>
-        <!-- <p v-if="successResMsg !== null" class="server-response">{{ successResMsg state message will be displayed here! }}<font-awesome-icon icon='check-circle' color='#2ecc71' size="lg"/></p> -->
+        <p  v-if="successResMsg !== null" class="server-response">{{ successResMsg }} <font-awesome-icon icon='check-circle' color='#2ecc71' size="lg"/></p>
         <main>
             <!-- Makepost section -->
             <section id="makepost">
@@ -475,13 +475,14 @@ export default {
       cursor: pointer;
     }
 
-      // .server-response {
-      //   position: absolute;
-      //   top: -50px;
-      //   left: 0;
-      //   right: 0;
-        // text-align: center;
-      // }
+      .server-response {
+        position: fixed;
+        top: 75px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 1;
+      }
 
       // Main section
       #makepost {

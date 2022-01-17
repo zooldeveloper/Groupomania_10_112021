@@ -24,7 +24,8 @@ export default createStore({
   },
   mutations: {
     SUCCESS_MESSAGE(state, message) {
-      state.successResMsg = message
+      setTimeout(() => { state.successResMsg = message }, 700)
+      setTimeout(() => { state.successResMsg = null }, 3000)
     },
     EMAIL_ERROR_MESSAGE(state, message) {
       state.emailResMsg = message

@@ -48,6 +48,7 @@
                                 @trigger-confirm-delete="confirmDelete"
                                 :showConfirmDelete="postId === post.post_id"
                                 :key="post.post_id"
+                                titles="post"
                             />
                         </div>
                         <!-- Edit form posts-->
@@ -98,6 +99,7 @@
                                           @trigger-confirm-delete="confirmDelete"
                                           :showConfirmDelete="commentId === comment.comment_id"
                                           :key="comment.comment_id"
+                                          titles="commentaire"
                                       />
                                   </div>
                                   <!-- Edit form comments -->

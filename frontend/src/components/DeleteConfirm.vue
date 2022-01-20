@@ -1,6 +1,6 @@
 <template>
     <div class="delete" v-if="showConfirmDelete">
-        <p>Supprimer le post</p>
+        <p>Supprimer le {{ titles }}</p>
         <div class="delete__cancel-confirm">
              <Button @trigger-function="cancelDelete" name="Annuler" classes="btn"/>
              <Button @trigger-function="confirmDelete" name="Confirmer" classes="btn custom-btn"/>
@@ -20,6 +20,10 @@ export default {
     props: {
         showConfirmDelete:{
             type: Boolean,
+        },
+        titles: {
+            type: String,
+            required: true
         } 
     },
     methods: {

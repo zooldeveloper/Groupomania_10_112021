@@ -15,6 +15,7 @@
             :showConfirmDelete="showConfirmDelete"
             @trigger-cancel-delete="cancelDelete"
             @trigger-confirm-delete="confirmDelete"
+            :titles="titles"
         />
     </div>
 </template>
@@ -34,6 +35,10 @@ export default {
         },
         isAdmin: {
             type: Boolean,
+            required: true
+        },
+        titles: {
+            type: String,
             required: true
         } 
     },

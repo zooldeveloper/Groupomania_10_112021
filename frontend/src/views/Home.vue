@@ -1,14 +1,15 @@
 <template>
     <div class="home">
         <Header/>
+        <h1 v-show="userFirstname !== null">Bienvenu à nouveau {{ userFirstname }} 😊</h1>
         <p  v-if="successResMsg !== null" class="server-response">{{ successResMsg }} <font-awesome-icon icon='check-circle' color='#2ecc71' size="lg"/></p>
         <main>
             <!-- Makepost section -->
             <section id="makepost">
                 <form>
                     <div class="makepost__div"> 
-                        <img :src="userImage" alt="user image">
-                        <textarea class="makepost__posttextarea" v-model="myText" placeholder="Que voulez-vous partager ?"></textarea>
+                        <img :src="userImage" alt="photo de l'utilisateur actuel">
+                        <textarea class="makepost__posttextarea" v-model="myText" placeholder="Que voulez-vous partager ?" aria-label="un champ de text pour créer un post"></textarea>
                     </div>
                     <small :class="{'makepost__displaybloc': nothingAdded,'makepost__displaynone': !nothingAdded }">Rien n'est ajouté !</small>
                     <ImagePreview
@@ -18,10 +19,10 @@
                     />
                     <div class="makepost__div makepost__fileinput">
                           <label for="myImage">Télécharger un fichier
-                                <font-awesome-icon icon='image' color='#76c8d3' size="lg"/>
+                                <font-awesome-icon icon='image' color='#2b7b85' size="lg"/>
                                 <input type="file" id="myImage" @change="onFileChange">
                           </label>
-                          <button class="makepost__btn" type="submit" @click.prevent="onSubmitForm">Publier  <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                          <button class="makepost__btn" type="submit" @click.prevent="onSubmitForm">Publier  <font-awesome-icon icon='paper-plane' color='#2b7b85' size="lg"/></button>
                     </div>
                 </form>
             </section>
@@ -56,7 +57,9 @@
                              v-if="post.post_id === postToUpdate"
                              @trigger-on-edit-text="onEditPost"
                              :textareaValue="post.textual_post"
-                             @trigger-text-to-edit="setPostValue">
+                             @trigger-text-to-edit="setPostValue"
+                             textareaAriaAttribute="Champ de text pour modifer un post"
+                             buttonAriaAttribute="button pour envoyer le post à modifier">
                               <template v-slot:cancelBtn>
                                   <CancelBtn 
                                       @trigger-on-cancel="cancelEdit"
@@ -69,8 +72,8 @@
                     <!-- Likes section -->
                     <div class="userpost__interaction">
                         <div class="userpost__likes">
-                            <span @click="onLikeChange(post.post_id)"><font-awesome-icon icon='thumbs-up' color='#76c8d3' size="lg"/> {{ post.likes }}</span>
-                            <span @click="onDislikeChange(post.post_id)"><font-awesome-icon icon='thumbs-down' color='#F08E8A' size="lg"/> {{ post.dislikes }}</span>
+                            <span @click="onLikeChange(post.post_id)"><font-awesome-icon icon='thumbs-up' color='#2b7b85' size="lg"/> {{ post.likes }}</span>
+                            <span @click="onDislikeChange(post.post_id)"><font-awesome-icon icon='thumbs-down' color='#c7201a' size="lg"/> {{ post.dislikes }}</span>
                         </div>
                         <div class="comments">
                             <span><font-awesome-icon icon='comment-dots' color='#71838F' size="lg"/> {{ post.comments }}</span>
@@ -81,7 +84,7 @@
                           <div  v-for="comment in comments" :key="comment.comment_id">
                               <div v-if="post.post_id == comment.post_id">
                                   <div class="userpost__userinfo">
-                                        <img class="userpost__userimage" :src="comment.imageUrl != undefined ? comment.imageUrl : require('../assets/images/user-icon.png')" alt="user image">
+                                        <img class="userpost__userimage" :src="comment.imageUrl != undefined ? comment.imageUrl : require('../assets/images/user-icon.png')" alt="">
                                         <div class="userpost__username-postdate">
                                             <h3>{{ comment.firstName }} {{ comment.lastName }}</h3>
                                             <small>Publié le {{ comment.creation_date}} </small>
@@ -107,7 +110,9 @@
                                         v-if="comment.comment_id === commentToUpdate"
                                         @trigger-on-edit-text="onEditComment"
                                         :textareaValue="comment.comment"
-                                        @trigger-text-to-edit="setCommentValue">
+                                        @trigger-text-to-edit="setCommentValue"
+                                        textareaAriaAttribute="Champ de text pour modifer un commentaire"
+                                        buttonAriaAttribute="button pour envoyer le commentaire à modifier">>
                                           <template v-slot:cancelBtn>
                                               <CancelBtn 
                                                   @trigger-on-cancel="cancelEdit"
@@ -118,9 +123,9 @@
                               </div>
                           </div>
                           <form class="userpost__commentsform">
-                              <img class="userpost__userimage"  :src="userImage" alt="user image">
-                              <textarea class="userpost__commenttextarea" @input="commentValueToSend = $event.target.value" placeholder="Votre commentaire !"></textarea>
-                              <button class="userpost__btn" type="submit" @click.prevent="onCreateComment(post.post_id)"><font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/></button>
+                              <img class="userpost__userimage"  :src="userImage" alt="photo de l'utilisateur actuel">
+                              <textarea class="userpost__commenttextarea" @input="commentValueToSend = $event.target.value" placeholder="Votre commentaire !" aria-label="un champ de text pour créer un commentaire"></textarea>
+                              <button class="userpost__btn" type="submit" @click.prevent="onCreateComment(post.post_id)" aria-label="button pour envoyer un commentaire"><font-awesome-icon icon='paper-plane' color='#2b7b85' size="lg"/></button>
                           </form> 
                      </div>
                 </div>
@@ -148,6 +153,7 @@ export default {
     return {
         // Properties that have common purposes
         userImage: require("../assets/images/user-icon.png"),
+        userFirstname: null,
         myText: null, myFile: null,
         imagePreview: null,
         nothingAdded: false,
@@ -172,11 +178,22 @@ export default {
     this.$store.dispatch('getLikesAndDislikes')
     this.$store.dispatch('getAllComments')
     setTimeout(() => {
-      this.setUserImage()
+      this.setUser()
     }, 100)
   },
   methods: {
-    setUserImage() {
+    // Sets user's welcome message and user's image
+    setUser() {
+      const onLoadPage = JSON.parse(localStorage.getItem('onLoadPage')) 
+      if(!onLoadPage) {
+        this.userFirstname = this.user[0].firstName
+        setTimeout(() => {
+          this.userFirstname =null
+          localStorage.setItem('onLoadPage', true)
+        }, 5000)
+      } else {
+        this.userFirstname =null
+      }
       if (this.user[0].imageUrl != undefined ) {
         this.userImage = this.user[0].imageUrl
       }
@@ -432,7 +449,12 @@ export default {
   .home {
     margin-top: 130px;
     position: relative;
+
+    h1 {
+      font-size: 1.4rem;
+    }
     // Common rules
+
     section {
       margin: 30px 0;
       box-shadow: 0px 5px 15px $border-color;
@@ -499,6 +521,9 @@ export default {
             min-height: 60px;
             margin-left: 15px;
             padding: 7px;
+            &:focus {
+              outline: 1px solid $primary_color;
+            }
           } 
           &__displaybloc {
             display: block;
@@ -514,6 +539,9 @@ export default {
           }
           &__btn {
               @include btn(static);
+              &:focus {
+                outline: 1px solid $primary_color;
+              }
           }
         }   
       }
@@ -607,6 +635,9 @@ export default {
             padding: 10px 45px 0 10px;
             border-radius: 25px;
             resize: none;
+            &:focus {
+              outline: 1px solid $primary_color;
+            }
           }
           &__btn {
             @include btn;

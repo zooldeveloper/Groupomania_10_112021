@@ -1,6 +1,6 @@
 <template>
         <span @click="onCancel" :class="classes">
-            <font-awesome-icon icon='times' color='#F08E8A' size="lg"/>
+            <font-awesome-icon icon='times' color='#c7201a' size="lg"/>
         </span>
 </template>
 

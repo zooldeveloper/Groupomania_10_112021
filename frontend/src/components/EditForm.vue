@@ -3,9 +3,9 @@
     <form class="userpost_form-editpost">
         <div class="form-group">
             <slot name="cancelBtn"></slot>
-            <textarea :value="textareaValue" @input="textToEdit($event)"></textarea>
-            <button type="submit" @click.prevent="onEditText">
-                <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/>
+            <textarea :value="textareaValue" @input="textToEdit($event)" :aria-label="textareaAriaAttribute"></textarea>
+            <button type="submit" @click.prevent="onEditText" :aria-label="buttonAriaAttribute">
+                <font-awesome-icon icon='paper-plane' color='#2b7b85' size="lg"/>
             </button>
         </div>
     </form>
@@ -21,6 +21,12 @@ export default {
             type: String,
             required: true,
         },
+        textareaAriaAttribute: {
+            type: String,
+        },
+        buttonAriaAttribute: {
+            type: String,
+        } 
     },
     methods: {
         textToEdit(event) {
@@ -57,6 +63,9 @@ export default {
             resize: vertical;
             border-radius: 15px;
             font-size: 1rem;
+            &:focus {
+                outline: 1px solid $primary_color;
+            }
             &::-webkit-scrollbar {
             display: none;
             }
@@ -66,6 +75,9 @@ export default {
             padding: 10px 12px 10px 10px;
             border: 1px solid $border-color;
             border-radius: 50%;
+            &:focus {
+                outline: 1px solid $primary_color;
+            }
         }
     }
     @media screen and (max-width: 768px) {

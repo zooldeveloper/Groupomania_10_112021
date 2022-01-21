@@ -4,11 +4,11 @@
         <div class="userpost__edit-delete">
             <div class="userpost__edit" v-if="isAdmin">
                 <small>Modifier</small>
-                <span @click="editPost"><font-awesome-icon icon='edit' color='#76c8d3' size="lx"/></span>
+                <span @click="editPost"><font-awesome-icon icon='edit' color='#2b7b85' size="lx"/></span>
             </div>
             <div class="userpost__wrapper">
                 <small>Supprimer</small>
-                <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#F08E8A' size="lx"/></span>
+                <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#c7201a' size="lx"/></span>
             </div>
         </div>
         <DeleteConfirm 

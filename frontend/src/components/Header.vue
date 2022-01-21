@@ -5,7 +5,7 @@
               <a href=""><img src="../assets/images/icon-left-font-monochrome-gray.svg" alt="company logo"></a>
             </div>
             <div id="sidemenu">
-                <button class="sidemenu__btn" v-on:click="navOpen=!navOpen" v-bind:class="{active:!navOpen}">
+                <button class="sidemenu__btn" v-on:click="navOpen=!navOpen" v-bind:class="{active:!navOpen}" aria-label="barre latérale">
                     <span class="top"></span>
                     <span class="mid"></span>
                     <span class="bottom"></span>
@@ -14,10 +14,10 @@
                     <div class="navbar" v-show="!navOpen">
                         <div class="sidemenu__wrapper">
                             <ul class="sidemenu__list">
-                                <li class="sidemenu__item"><router-link to="/"> <font-awesome-icon icon='home' color='#71838F' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/notif"> <font-awesome-icon icon='bell' color='#71838F' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/account"> <font-awesome-icon icon='user-alt' color='#71838F' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><button @click="logOut"><font-awesome-icon icon='power-off'/></button></li>
+                                <li class="sidemenu__item"><router-link to="/" title="page d'accueil"> <font-awesome-icon icon='home' color='#71838F' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/notif" title="notifications"> <font-awesome-icon icon='bell' color='#71838F' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <font-awesome-icon icon='user-alt' color='#71838F' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
                             </ul> 
                         </div>
                     </div>
@@ -75,7 +75,7 @@ export default {
             padding-left: 20px;
             position: fixed;
             top: 0;
-            background: linear-gradient(to bottom left, lighten($primary_color, $percentage1), lighten($secondary_color, $percentage1));
+            background: linear-gradient(to bottom left, lighten($primary_color, 40%), lighten($secondary_color, $percentage1));
             @include flexbox(space-around);
             .logo {
                 img {

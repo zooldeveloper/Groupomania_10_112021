@@ -9,7 +9,7 @@
                       <h2>{{ firstName }} {{ lastName }}</h2>
                       <img 
                           :src="userImage" 
-                          alt="user image" 
+                          alt="photo de compte de l'utilisateur" 
                           v-if="myFile == null"/>
                       <label for="userimage" v-if="myFile == null">Changer votre photo
                             <input 
@@ -29,7 +29,6 @@
                           class="user-profile-image-btn"
                           @click="onSubmit"
                       />
-                          
                       <p>{{ email }}</p>
                   </div>
                   <div class="userinfo__user">
@@ -41,12 +40,14 @@
                           <textarea 
                               class="userinfo__biotextarea" 
                               placeholder="Votre bio!"
-                              v-model="bioToSave">
+                              v-model="bioToSave"
+                              aria-label="un champ de text pour créer un modifier un bio">
                           </textarea>
                           <button 
                               class="userinfo__btn" 
-                              type="submit">
-                              <font-awesome-icon icon='paper-plane' color='#76c8d3' size="lg"/>
+                              type="submit"
+                              aria-label="envoyer votre bio">
+                              <font-awesome-icon icon='paper-plane' color='#2b7b85' size="lg"/>
                           </button>
                       </form>
                       <p v-if="isAdmin == 'true'">{{ firstName }} {{ lastName }} est <span>l'Admin</span></p>
@@ -57,25 +58,25 @@
                       <h2>Changer votre mot de passe</h2>
                       <form @submit.prevent="onSubmit">
                           <div class="usersetting__form-group">
-                              <label for="oldpassword">
-                                    <font-awesome-icon color="#F08E8A" icon="lock" size="lx"/>
-                                </label>
+                              <span>
+                                    <font-awesome-icon color="#c7201a" icon="lock" size="lx"/>
+                                </span>
                               <input 
                                   type="password"
-                                  id="oldpassword" 
                                   placeholder="Votre ancien mot de passe"
-                                  v-model="oldPassword">
+                                  v-model="oldPassword"
+                                  aria-label="champ de text pour saisir l'ancien mot de passe">
                               <small v-if="checkOldPassword">{{ oldPasswordError }}</small>
                           </div>
                           <div class="usersetting__form-group">
-                              <label for="newpassword">
-                                  <font-awesome-icon color="#F08E8A" icon="lock" size="lx"/>
-                              </label>
+                              <span>
+                                  <font-awesome-icon color="#c7201a" icon="lock" size="lx"/>
+                              </span>
                               <input 
                                   type="password" 
-                                  id="newpassword" 
                                   placeholder="Votre nouveau mot de passe"
-                                  v-model="newPassword">
+                                  v-model="newPassword"
+                                  aria-label="champ de text pour saisir le nouveau mot de passe">
                               <small v-if="checkNewPassword">{{ newPasswordError }}</small>
                           </div>
                           <Button
@@ -314,11 +315,17 @@ export default {
             border-radius: 25px;
             resize: none;
             box-sizing: border-box;
+            &:focus {
+              outline: 1px solid $primary_color;
+            }
           }
           &__btn {
             @include btn;
             right: 15px;
             top: 12px;
+            &:focus {
+              outline: 1px solid $primary_color;
+            }
           }
           @media  screen and (max-width:768px) {
             &__user { width: 75%; }
@@ -353,7 +360,7 @@ export default {
             right: 0;
             top: 100px;
             margin: auto;
-            background-color: darken($secondary-color, $percentage1);
+            background-color: darken($secondary-color, 40%);
           }
         }
         &__form-group {
@@ -361,7 +368,7 @@ export default {
           margin-bottom: 20px;
           text-align: left;
           width: 100%;
-          label {
+          span {
             position: absolute;
             top: 7px;
             left: 7px;
@@ -371,7 +378,9 @@ export default {
             padding: 10px 10px 10px 25px;
             border-radius: 10px;
             border: 1px solid $border-color;
-            outline: none;
+            &:focus {
+              outline-color: $primary_color;
+            }
           }
           small {
             position: absolute;

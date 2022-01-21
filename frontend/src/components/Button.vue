@@ -37,9 +37,12 @@ export default {
         color: $quaternary-color;
         font-weight: bold;
         cursor: pointer;
+        &:focus {
+            outline: 1px solid $primary_color;
+        }
     }
     .custom-btn {
-        background-color: $secondary-color;
+        background-color: darken($secondary-color, 30%);
     }
      @media screen and (max-width:768px) {
         .btn { width: 100px; }

@@ -5,60 +5,62 @@
           <h1>Parce que nous nous soucions de vos besoins</h1>
         </div>
         <div id="signup">
+          <main>
             <h2 v-if="mode === 'sign up'">Inscription</h2>
             <h2 v-else>Connexion</h2> 
             <div class="thisClassNameIsNotUsed"></div>
             <form action="" method="post">
                 <div class="form-group" v-if="mode === 'sign up'">
                     <div class="fullname fullname__firstname">
-                        <label for="firstname"><font-awesome-icon icon="user-circle" size="lx"/></label>
+                        <span><font-awesome-icon icon="user-circle" size="lx"/></span>
                         <input class="fullname__field" 
-                                :class="{success : checkFirstname === false , error: checkFirstname === true}" 
-                                type="text" id="firstname" name="firstname" v-model="firstname" placeholder="Votre prénom">
+                                :class="{success : checkFirstname === false , error: checkFirstname === true}" aria-label="votre prénom" 
+                                type="text" name="firstname" v-model="firstname" placeholder="Votre prénom">
                         <small v-if="checkFirstname">{{ errors.firstname.errMsg }}</small>
                     </div>
                     <div class="fullname">
-                        <label for="lastname"><font-awesome-icon icon="user-circle" size="lx"/></label>
+                        <span><font-awesome-icon icon="user-circle" size="lx"/></span>
                         <input class="fullname__field" 
-                               :class="{success : checkLastname === false, error: checkLastname === true}" 
-                               type="text" id="lastname" name="lastname" v-model="lastname" placeholder="Votre nom">
+                               :class="{success : checkLastname === false, error: checkLastname === true}" aria-label="votre nom"
+                               type="text" name="lastname" v-model="lastname" placeholder="Votre nom">
                         <small v-if="checkLastname">{{ errors.lastname.errMsg }}</small>
                     </div>
                 </div>
                 <div class="form-group" :class="[mode === 'log in' ? 'emailContainer' : '']">
-                    <label for="email"><font-awesome-icon icon="envelope" size="lx"/></label>
-                    <input :class="{success : checkEmail === false, error: checkEmail === true}" 
-                           type="text" id="email" name="email" v-model="email" placeholder="E-mail: example@gmail.com">
+                    <span><font-awesome-icon icon="envelope" size="lx"/></span>
+                    <input :class="{success : checkEmail === false, error: checkEmail === true}" aria-label="votre email"
+                           type="text" name="email" v-model="email" placeholder="E-mail: example@gmail.com">
                     <small v-if="errors.email.errMsg !== null">{{ errors.email.errMsg }}</small>
                     <small v-else-if="errors.email.reseErrMsg !== null">{{ errors.email.resErrMsg }}</small>
                 </div>
                 <div class="form-group">
                     <div class="password password__first-field" v-if="mode === 'sign up'">
-                        <label for="password"><font-awesome-icon icon="unlock" size="lx"/></label>
+                        <span><font-awesome-icon icon="unlock" size="lx"/></span>
                         <input class="password__field" 
-                               :class="{success : checkPassword === false, error: checkPassword === true}" 
-                               type="password" id="password" name="password" v-model="password" placeholder="Votre mot de passe">
+                               :class="{success : checkPassword === false, error: checkPassword === true}" aria-label="votre mot de passe"
+                               type="password" name="password" v-model="password" placeholder="Votre mot de passe">
                         <small class="password__bottom" v-if="checkPassword">{{ errors.password.errMsg }}</small>
                     </div>
                     <div  class="password" :class="[checkPassword === true ? 'password__second-field' : '']">
-                        <label for="passwordConfirm"><font-awesome-icon icon="lock" size="lx"/></label>
+                        <span><font-awesome-icon icon="lock" size="lx"/></span>
                         <input class="password__field" 
-                               :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" 
-                               type="password" id="passwordConfirm" name="passwordConfirm" v-model="passwordConfirm" :placeholder="placeholderValue()">
+                               :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" aria-label="confirmer votre mot de passe"
+                               type="password" name="passwordConfirm" v-model="passwordConfirm" :placeholder="placeholderValue()">
                         <small v-if="checkPasswordConfirm">{{ errors.passwordConfirm.errMsg }}</small>
                     </div>
                 </div>
                 <div class="form-input terms" v-if="mode === 'sign up'">
-                  <input @click="isBoxChecked" v-model="terms"
-                         type="checkbox" name="terms-of-use" id="terms" value="read and agreed">
-                  <label for="terms">J'ai lu et j'accepte les termes et conditions</label>
-                  <small v-if="!checkTerms" style="color: #ff8000; display:block">{{ errors.terms.errMsg }}</small>
+                  <input @click="isBoxChecked" v-model="terms" aria-label="case à cocher"
+                         type="checkbox" name="terms-of-use" value="read and agreed">
+                  <span>J'ai lu et j'accepte les termes et conditions</span>
+                  <small v-if="!checkTerms" style="color: #C15806; display:block">{{ errors.terms.errMsg }}</small>
                 </div>
                 <button type="submit" v-if="mode === 'sign up'" @click.prevent="signUp">Créer votre compte</button>
-                <button type="submit" v-else @click.prevent="logIn">Se connecter</button>
+                <button type="submit" v-else @click.prevent="logIn"> Se connecter</button>
             </form>
-            <p v-if="mode === 'sign up'">Vous avez déjà un compte ? <span @click='switchToLogIn()'>Se connecter</span></p>
-            <p v-else>Pas encore de compte ? <span @click='switchToSignUp()'>Créer un compte</span></p>
+            <p v-if="mode === 'sign up'">Vous avez déjà un compte ? <router-link to="entry"><span @click='switchToLogIn()'>Se connecter</span></router-link></p>
+            <p v-else>Pas encore de compte ? <router-link to="entry"><span @click='switchToSignUp()'>Créer un compte</span></router-link></p>
+          </main>
         </div>
     </div>
 </template>
@@ -297,7 +299,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to bottom right, lighten($primary_color, $percentage1), lighten($secondary_color, $percentage1));
+    background: linear-gradient(to bottom right, lighten($primary_color, 40%), lighten($secondary_color, 15%));
      // Presentation banner part //
     #banner {
       width: 35%;
@@ -339,7 +341,7 @@ export default {
       h2 {
         margin-top: 70px;
         position: relative;
-        color: $primary_color;
+        color: darken($primary_color, $percentage1);
         font-size: 2rem;
         &::before, &::after {
         content: '';
@@ -379,7 +381,7 @@ export default {
               width: 95%;
             }
           }
-          label {
+          span {
             position: absolute;
             left: 12px;
             bottom: 12px;
@@ -390,8 +392,10 @@ export default {
             height: 40px;
             padding-left: 30px;
             border-radius: 10px;
-            outline: none;
             border: 2px solid darken($quaternary-color, $percentage3);
+            &:focus, &[type="checkbox"]:focus {
+              outline-color: darken($quaternary-color, 55%);
+            }
           }
           small {
             position: absolute;
@@ -422,11 +426,14 @@ export default {
           width: 100%;
           height: 40px;
           border-radius: 10px;
-          background-color: $secondary_color;
+          background-color: darken($secondary_color, 40%);
           border: none;
           color: #fff;
           font-size: 1.2rem;
           cursor: pointer;
+          &:focus {
+            outline-color: $primary-color;
+          }
         }
       }
       .spinner { 
@@ -459,8 +466,10 @@ export default {
       p {
         span {
           color: $primary_color;
-          text-decoration: underline;
           cursor: pointer;
+          &:focus {
+            outline-color: $primary-color;
+          }
         }
       }
     }

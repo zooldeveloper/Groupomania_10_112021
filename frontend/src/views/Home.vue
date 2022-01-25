@@ -584,7 +584,7 @@ export default {
           &__text-btn {
             margin: 30px 40px 0;
             text-align: left;
-            @include flexbox(space-between, start);
+            @include flexbox(space-between, flex-start);
             p {
               font-size: 1.2rem;
               margin-right: 20px;
@@ -624,7 +624,7 @@ export default {
           }
           &__comment {
             margin: 7px;
-            @include flexbox(space-between, start);
+            @include flexbox(space-between, flex-start);
           }
           &__commentsform {
             flex-direction: row;

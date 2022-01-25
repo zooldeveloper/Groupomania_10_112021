@@ -263,7 +263,7 @@ export default {
 
       // user info section
       #userinfo {
-          @include flexbox(center, start);
+          @include flexbox(center, flex-start);
           border-top: 1px solid $border-color;
           border-bottom: 1px solid $border-color;
           text-align: left;
@@ -340,7 +340,7 @@ export default {
 
      // user setting section
      #usersetting {
-       @include flexbox(space-around, start);
+       @include flexbox(space-around, flex-start);
        border-bottom: 1px solid $border-color;
        padding-bottom: 30px;
      }

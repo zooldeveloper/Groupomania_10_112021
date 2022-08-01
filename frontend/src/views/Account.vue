@@ -115,7 +115,7 @@ import { mapState } from 'vuex'
 
 
 export default {
-  name: 'Home',
+  name: 'Account',
   components: {
     Header, Button, ImagePreview
   },

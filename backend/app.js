@@ -8,6 +8,7 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const likeRoutes = require('./routes/like');
 const commentRoutes = require('./routes/comment');
+const usersRoutes = require('./routes/users')
 
 const app = express(); 
 
@@ -28,5 +29,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/likes', likeRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/users', usersRoutes);
 
 module.exports = app; 

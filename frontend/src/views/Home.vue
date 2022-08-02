@@ -29,13 +29,12 @@
             <!-- User post section -->
             <section id="userpost" v-for="post in posts" :key="post.post_id">
                 <div class="userpost__wrapper">
-                    <div class="userpost__userinfo">
-                        <img class="userpost__userimage" :src="post.imageUrl !== null ? post.imageUrl : require('../assets/images/user-icon.png')" alt="Image de l'utilisateur">
-                        <div class="userpost__username-postdate">
-                            <h2>{{ post.firstName}} {{ post.lastName}}</h2>
-                            <small>Publié le {{ post.creation_date}} </small>
-                        </div>
-                    </div>
+                    <UserInfo
+                      :userImage="post.imageUrl !== null ? post.imageUrl : require('../assets/images/user-icon.png')"
+                      :firstName="post.firstName"
+                      :lastName="post.lastName"
+                      :postDate="post.creation_date"
+                    />
                     <div class="userpost__post">
                         <!-- Textual post and ellipsis btn -->
                         <div class="userpost__text-btn" v-if="post.post_id !== postToUpdate">
@@ -138,6 +137,7 @@
 <script>
 import Header from '../components/Header.vue'
 import EditForm from '../components/EditForm.vue'
+import UserInfo from '../components/UserInfo.vue'
 import CancelBtn from '../components/CancelBtn.vue'
 import EditDelete from '../components/EditDelete.vue'
 import ImagePreview from '../components/ImagePreview.vue'
@@ -147,7 +147,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Home',
   components: {
-    Header, EditDelete, EditForm, CancelBtn, ImagePreview,
+    Header, EditDelete, UserInfo, EditForm, CancelBtn, ImagePreview,
   },
   data() {
     return {

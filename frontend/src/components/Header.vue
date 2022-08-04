@@ -69,7 +69,7 @@ export default {
     header {
         margin-top: 0;
         position:  relative;
-        z-index: 1;
+        z-index: 20;
         nav {
             width: 100%;
             height: 80px;
@@ -94,7 +94,7 @@ export default {
                         display: block;
                         width: 40px;
                         height: 40px;
-                        background: $tertiary-color;
+                        background: $secondary-color;
                         border: none;
                         position: absolute;
                         right: 25px;
@@ -162,12 +162,12 @@ export default {
                         }
                         &__list {
                             position: absolute;
-                            height: 140px;
+                            height: 170px;
                             top: 90px;
                             right: 20px;
                             @include flexbox(space-between);
                             flex-direction: column;
-                            background: linear-gradient(to bottom left, lighten($primary_color, $percentage1), lighten($secondary_color, $percentage1));
+                            background: $primary_color;
                             padding: 15px 10px;
                         }
                     }

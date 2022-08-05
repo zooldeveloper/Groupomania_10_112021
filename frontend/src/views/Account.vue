@@ -3,12 +3,13 @@
 <template>
 	<div class="about">
 		<Header />
-		<main>
-			<h1>Profil de l'utilisateur</h1>
-			<div class="wrapper">
+		<h1>Profil</h1>
+		<UserProfile/>
+		<div class="outer-wrapper">
+			<div class="inner-wrapper">
 				<section id="userinfo">
 					<div class="userinfo__user userinfo__user-border">
-						<h2>{{ firstName }} {{ lastName }}</h2>
+						<!-- <h2>{{ firstName }} {{ lastName }}</h2> -->
 						<img
 							:src="userImage"
 							alt="photo de compte de l'utilisateur"
@@ -24,6 +25,7 @@
 						</label>
 						<ImagePreview
 							v-if="myFile !== null"
+							class="image-preview"
 							:imagePreview="imagePreview"
 							customClasses="imagepreview-user-profile"
 							@trigger-on-cancel="
@@ -36,22 +38,25 @@
 							class="user-profile-image-btn"
 							@click="onSubmit"
 						/>
-						<p>{{ email }}</p>
+						<!-- <p>{{ email }}</p> -->
 					</div>
 					<div class="userinfo__user">
-						<h2>Bio :</h2>
-						<p>{{ bio }}</p>
+						<!-- <h2>Bio :</h2> -->
+						<!-- <p>{{ bio }}</p> -->
 						<form
 							class="userinfo__bioform"
 							@submit.prevent="onSubmit"
 						>
-							<textarea
-								class="userinfo__biotextarea"
-								placeholder="Votre bio!"
-								v-model="bioToSave"
-								aria-label="un champ de text pour créer un modifier un bio"
-							>
-							</textarea>
+							<div class="userinfo__formgroupe">
+								<input class="userinfo__input-jobtitle" type="text" placeholder="Votre métier !">
+								<textarea
+									class="userinfo__textarea-bio"
+									placeholder="Votre bio !"
+									v-model="bioToSave"
+									aria-label="un champ de text pour créer un modifier un bio"
+								>
+								</textarea>
+							</div>
 							<button
 								class="userinfo__btn"
 								type="submit"
@@ -142,11 +147,13 @@
 									? 'show-delete-confirm-btn'
 									: 'hide-delete-confirm-btn',
 							]"
-							@click="onDeleteAccount"
+							@click="onDeleteAccount(true)"
 						/>
 					</div>
 				</section>
 			</div>
+		</div>
+		<main>
 			<!-- User post section -->
 			<section
 				id="userpost"
@@ -194,6 +201,8 @@
 	import Button from '../components/Button.vue';
 	import UserPost from '../components/UserPost.vue';
 	import ImagePreview from '../components/ImagePreview.vue';
+	import UserProfile from '../components/UserProfile.vue';
+      
 	import { mapState } from 'vuex';
 
 	export default {
@@ -203,6 +212,7 @@
 			Button,
 			UserPost,
 			ImagePreview,
+			UserProfile,
 		},
 		mounted() {
 			const user = JSON.parse(localStorage.getItem('user'));
@@ -321,14 +331,14 @@
 					this.newPassword === null
 				) {
 					this.newPasswordError =
-						'Your new password is required!';
+						'Votre nouveau mot de passe est requis !';
 					this.isNewPasswordNotValid = true;
 					this.isOldPasswordNotValid = false;
 				} else if (
 					this.oldPassword !== null &&
 					!this.isNewPasswordValid(this.newPassword)
 				) {
-					this.newPasswordError = ' Atleast 8 characters!';
+					this.newPasswordError = 'Au moins 8 caractères !';
 					this.isNewPasswordNotValid = true;
 					this.isOldPasswordNotValid = false;
 				} else if (
@@ -336,7 +346,7 @@
 					this.newPassword !== null
 				) {
 					this.oldPasswordError =
-						'Your old password is required!';
+						'Votre ancien mot de passe est requis!';
 					this.isOldPasswordNotValid = true;
 					this.isNewPasswordNotValid = false;
 				} else if (
@@ -358,10 +368,10 @@
 					password
 				);
 			},
-			onDeleteAccount() {
+			onDeleteAccount(confirmeDelete) {
 				if (this.deleteAccount === false) {
 					this.deleteAccount = true;
-				} else {
+				} else if (this.deleteAccount !== false && confirmeDelete === true) {
 					this.$store.dispatch(
 						'deleteOneUser',
 						'deleteAccount'
@@ -379,57 +389,78 @@
 	@import '@/assets/sass/mixins.scss';
 
 	.about {
-		margin-top: 100px;
+		margin-top: 90px;
 		h1 {
 			font-size: 1.5rem;
+			margin-block: 0;
 		}
-		.wrapper {
-			padding: 30px 45px;
-			box-shadow: 0px 5px 15px $border-color;
+		.outer-wrapper {
+			max-width: 800px;
+			margin: 0 auto;
+			z-index: 15;
+			position: relative;
+
+			.inner-wrapper {
+				max-width: 400px;
+				padding: 1rem 0;
+				box-shadow: 0px 5px 15px $border-color;
+				position: absolute;	
+				top: -200px;
+				right: 30px;
+				background-color: #fff;
+				border-radius: 15px;
+			}
 
 			// user info section
 			#userinfo {
-				@include flexbox(center, flex-start);
+				@include flexbox();
+				flex-direction: column;
 				border-top: 1px solid $border-color;
 				border-bottom: 1px solid $border-color;
 				text-align: left;
+				padding-top: .7rem;
+
 				.userinfo {
 					&__user {
 						@include flexbox(space-between);
 						flex-direction: column;
 						position: relative;
-						width: 45%;
+						padding: 0 1rem;
+						margin-bottom: 1rem;
 						img {
-							width: 180px;
-							height: 200px;
+							width: 70px;
+							height: 70px;
+							border-radius: 50%;
 							object-fit: cover;
 							text-align: left;
+						}
+						.image-preview {
+							width: 70px;
+							height: 70px;
+							border-radius: 50% !important;
 						}
 						label,
 						.user-profile-image-btn {
 							width: 165px !important;
 							height: 30px;
-							position: absolute;
-							bottom: 57px;
+							margin-top: .7rem;
+							padding: .1rem;
 							border-radius: 15px !important;
 							border: none;
 							color: $quaternary-color;
 							font-weight: bold;
 							font-size: 1rem;
 							cursor: pointer;
-							background-color: rgb(
-								118,
-								200,
-								211,
-								0.7
-							);
+							background-color: $primary_color;
 							@include flexbox;
 						}
 						input {
 							display: none;
 						}
+		
 						p {
 							margin-top: 20px;
+							margin-block: 0;
 							span {
 								color: $secondary-color;
 							}
@@ -439,9 +470,22 @@
 						position: relative;
 						margin-top: 10px;
 						width: 100%;
+						@include flexbox(space-between);
+						flex-direction: column;
 					}
-					&__biotextarea {
-						width: 100%;
+
+					&__formgroupe {
+						@include flexbox(space-between);
+					}
+					
+					&__input-jobtitle {
+						display: block !important;
+						border: 1px solid $border-color;
+						padding: 0 10px 10px !important;
+					}
+					
+					&__textarea-bio, &__input-jobtitle {
+						width: 47%;
 						height: 50px;
 						padding: 10px 20px 0 10px;
 						border-radius: 25px;
@@ -453,40 +497,28 @@
 					}
 					&__btn {
 						@include btn;
-						right: 15px;
-						top: 12px;
+						position: relative;
+						padding: .6rem;
+						border: 1px solid $border-color;
+						border-radius: 50%;
+						margin-top: 1rem;
 						&:focus {
 							outline: 1px solid $primary_color;
 						}
 					}
-					@media screen and (max-width: 768px) {
-						&__user {
-							width: 75%;
-						}
-						&__user-border {
-							border-bottom: 1px solid $border-color;
-						}
-						&__bioform {
-							margin-bottom: 20px;
-						}
-					}
-				}
-
-				.userPost {
-				}
-			}
-			@media screen and (max-width: 768px) {
-				#userinfo {
-					flex-direction: column;
-					align-items: center;
 				}
 			}
 
 			// user setting section
 			#usersetting {
-				@include flexbox(space-around, flex-start);
+				@include flexbox();
+				flex-direction: column;
 				border-bottom: 1px solid $border-color;
 				padding-bottom: 30px;
+			}
+
+			.usersetting-margin {
+				padding-bottom: 60px !important;
 			}
 			.usersetting {
 				&__setting {
@@ -550,17 +582,11 @@
 				}
 			}
 
-			@media screen and (max-width: 768px) {
-				#usersetting {
-					flex-direction: column;
-					align-items: center;
-				}
-				.usersetting-margin {
-					padding-bottom: 60px !important;
-				}
-				form {
-					padding-bottom: 20px;
-					border-bottom: 1px solid $border-color;
+			@media screen and (max-width: 425px) {
+				.inner-wrapper {
+					max-width: 100%;
+					top : -280px !important;
+					right: 0 !important;
 				}
 			}
 		}

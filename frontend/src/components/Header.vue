@@ -1,8 +1,9 @@
 <template>
     <header>
+        <div id="spinner-container"></div>
         <nav>
             <div class="logo">
-              <a href=""><img src="../assets/images/icon-left-font-monochrome-gray.svg" alt="company logo"></a>
+                <a href=""><img src="../assets/images/icon-left-font-monochrome-gray.svg" alt="company logo"></a>
             </div>
             <div id="sidemenu">
                 <button class="sidemenu__btn" v-on:click="navOpen=!navOpen" v-bind:class="{active:!navOpen}" aria-label="barre latérale">
@@ -17,9 +18,9 @@
                                 <li class="sidemenu__item"><router-link to="/" title="page d'accueil"> <font-awesome-icon icon='home' color='#F08E8A' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/users" title="notifications"> <font-awesome-icon icon='users' color='#F08E8A' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon icon='bell' color='#F08E8A' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <font-awesome-icon icon='user-alt' color='#F08E8A' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="imageUrl" alt="photo de profil"> </router-link></li>
                                 <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
-                            </ul> 
+                            </ul>
                         </div>
                     </div>
                 </transition>
@@ -34,8 +35,15 @@ import { VueCookieNext } from 'vue-cookie-next'
 
 export default {
     name: 'Header',
+    propos: {
+        profileImage: {
+            type: String,
+            required: true,
+        }
+    },
     data() {
         return {
+            imageUrl:  require('../assets/images/user-icon.png'),
             navOpen: true,
             width: ''
         }
@@ -43,6 +51,11 @@ export default {
     created() {
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
+        setTimeout(()=> {
+             if(this.$store.state.user[0].imageUrl) {
+                this.imageUrl = this.$store.state.user[0].imageUrl;
+            }
+        }, 100)
     },
     unmounted() {
         window.removeEventListener('resize', this.handleResize);
@@ -53,9 +66,13 @@ export default {
             this.width > 768 ? this.navOpen = false : this.navOpen = true
         },
         logOut() {
+            document.querySelector('#spinner-container').classList.add('spinner');
             localStorage.clear()
             VueCookieNext.removeCookie('token')
-            this.$router.push({ name: 'Entry' })
+            setTimeout(()=>{
+                document.querySelector('#spinner-container').classList.remove('spinner')
+                this.$router.push({ name: 'Entry' })
+            }, 2000)
         }
     }
 }
@@ -66,10 +83,21 @@ export default {
   @import '@/assets/sass/variables.scss';
   @import '@/assets/sass/mixins.scss';
 
+    #spinner-container {
+        width: 100vw;
+        height: 60vh;
+        position: absolute;
+    }
+
+    .spinner {
+            @include spinner(80vh !important, fixed !important);
+        }
+
     header {
         margin-top: 0;
         position:  relative;
         z-index: 20;
+
         nav {
             width: 100%;
             height: 80px;
@@ -148,6 +176,13 @@ export default {
                         padding: 0;
                         margin: 0;
                         @include flexbox(space-between);
+
+                        img {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: 50%;
+                            border: 2px solid $secondary_color;
+                        }
                     }
                     &__item {
                         cursor: pointer;

@@ -3,30 +3,30 @@
             <div class="user-profile__top-background">   
                   <div class="user-profile__absolute-position">
                         <div class="user-profile__user-info">
-                              <img src="../../../backend/images/profiles/leo.jpeg1659373650557.jpg" alt="">
-                              <h2>Leo ROUX</h2>
+                              <img :src="userImage" alt="image de l'utilisateur">
+                              <h2>{{userFirstName}} {{userLastName}}</h2>
                               <div class="user-profile__jobtitle-subscribersnumber-email">
-                                    <p>Web Developer</p>
+                                    <p>{{userJobTitle}}</p>
                                     <font-awesome-icon icon="users" color="#2b7b85" size="sm"/>
-                                    <small>3</small>
-                                    <p class="email">leoroux@gmail.com</p>
+                                    <small>2</small>
+                                    <p class="email">{{userEmail}}</p>
                               </div>
                         </div>
                         <div class="user-profile__subscribe-setting">
                               <button class="subscribe-btn">
                                     <font-awesome-icon icon="user-plus" color="#2b7b85" size="2x"/>
                               </button>
-                              <button class="setting-btn">
+                              <button class="setting-btn" v-show="isAcualUser" @click="triggerUserProfileSetting">
                                     <font-awesome-icon icon="sliders-h" color="#2b7b85" size="2x"/>
                               </button>
                         </div>
                   </div>
             </div>
             <div class="user-profile__bottom-background">
-                        <div class="user-profile__user-bio">
+                  <div class="user-profile__user-bio">
                         <h3>Bio :</h3>
-                        <p>If you look at what you have in life, you will always have more.</p>
-                        </div>
+                        <p>{{userBio}}</p>
+                  </div>
             </div>
             
       </div>
@@ -35,6 +35,45 @@
 <script>
       export default {
             name: 'UserProfile',
+            props: {
+                  userImage: {
+                        type: String,
+                        required: true,
+                  },
+                  userFirstName: {
+                        type: String,
+                        required: true,
+                  },
+                  userLastName: {
+                        type: String,
+                        required: true,
+                  },
+                  userJobTitle: {
+                        type: String,
+                        required: true,
+                  },
+                  userSubscribersNum: {
+                        type: Number,
+                        required: true,
+                  },
+                  userEmail: {
+                        type: String,
+                        required: true,
+                  },
+                  userBio: {
+                        type: String,
+                        required: true,
+                  },
+                  isAcualUser: {
+                        type: Boolean,
+                        required: true,
+                  }
+            },
+            methods: {
+                  triggerUserProfileSetting() {
+                        this.$emit('trigger-user-prfile-setting')
+                  }
+            }
       }
 </script>
 
@@ -114,7 +153,7 @@
                   height: 130px;
                   margin-right: 3.5rem;
                   padding-left: 12rem;
-                  @include flexbox(end);
+                  @include flexbox(flex-end);
            
                   h3 {
                         margin-block: 0; 
@@ -122,6 +161,7 @@
 
                   p {
                         max-width: 370px;
+                        margin-block: 0;
                   }
              }
 

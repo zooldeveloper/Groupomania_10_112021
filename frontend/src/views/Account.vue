@@ -1,15 +1,29 @@
-<!-- @format -->
+@format
 
 <template>
 	<div class="about">
 		<Header />
 		<h1>Profil</h1>
-		<UserProfile/>
+		<UserProfile
+			:userImage="userImage"
+			:userFirstName="firstName"
+			:userLastName="lastName"
+			:userJobTitle="userJobTitle"
+			:userSubscribersNum="4"
+			:userEmail="userEmail"
+			:userBio="userBio"
+			:isAcualUser="true"
+			@trigger-user-prfile-setting="onUserPorfileSetting"
+		/>
 		<div class="outer-wrapper">
-			<div class="inner-wrapper">
+			<div class="inner-wrapper"  v-show="userProfileSetting">
+				<CancelBtn 
+					classes="cancel-btn"
+					class="cancel-btn"
+					@trigger-on-cancel="onUserPorfileSetting"
+				/>
 				<section id="userinfo">
 					<div class="userinfo__user userinfo__user-border">
-						<!-- <h2>{{ firstName }} {{ lastName }}</h2> -->
 						<img
 							:src="userImage"
 							alt="photo de compte de l'utilisateur"
@@ -38,11 +52,8 @@
 							class="user-profile-image-btn"
 							@click="onSubmit"
 						/>
-						<!-- <p>{{ email }}</p> -->
 					</div>
 					<div class="userinfo__user">
-						<!-- <h2>Bio :</h2> -->
-						<!-- <p>{{ bio }}</p> -->
 						<form
 							class="userinfo__bioform"
 							@submit.prevent="onSubmit"
@@ -200,8 +211,9 @@
 	import Header from '../components/Header.vue';
 	import Button from '../components/Button.vue';
 	import UserPost from '../components/UserPost.vue';
-	import ImagePreview from '../components/ImagePreview.vue';
+	import CancelBtn from '../components/CancelBtn.vue';
 	import UserProfile from '../components/UserProfile.vue';
+	import ImagePreview from '../components/ImagePreview.vue';
       
 	import { mapState } from 'vuex';
 
@@ -211,27 +223,20 @@
 			Header,
 			Button,
 			UserPost,
-			ImagePreview,
+			CancelBtn,
 			UserProfile,
-		},
-		mounted() {
-			const user = JSON.parse(localStorage.getItem('user'));
-			if (!user) {
-				this.$router.push({ name: 'Entry' });
-			}
-			this.$store.dispatch('getOneUser');
-			setTimeout(() => {
-				this.setUser();
-			}, 100);
+			ImagePreview,
 		},
 		data() {
 			return {
 				// User data to display
+				userProfileSetting: false,
 				userImage: require('../assets/images/user-icon.png'),
 				firstName: null,
 				lastName: null,
-				email: null,
-				bio: null,
+				userEmail: null,
+				userBio: null,
+				userJobTitle: null,
 				isAdmin: null,
 				// User data to send
 				myFile: null,
@@ -293,12 +298,16 @@
 			}, 100);
 		},
 		methods: {
+			onUserPorfileSetting() {
+				this.userProfileSetting = !this.userProfileSetting;
+			},
 			setUser() {
 				if (this.user[0] != undefined) {
 					this.firstName = this.user[0].firstName;
 					this.lastName = this.user[0].lastName;
-					this.bio = this.user[0].bio;
-					this.email = this.user[0].email;
+					this.userBio = this.user[0].bio;
+					this.userEmail = this.user[0].email;
+					this.userJobTitle = this.user[0].jobTitle;
 					this.isAdmin = this.user[0].isAdmin;
 					if (this.user[0].imageUrl != undefined) {
 						this.userImage = this.user[0].imageUrl;
@@ -406,9 +415,16 @@
 				box-shadow: 0px 5px 15px $border-color;
 				position: absolute;	
 				top: -200px;
-				right: 30px;
+				right: 20px;
 				background-color: #fff;
 				border-radius: 15px;
+
+				.cancel-btn {
+					font-size: 1.3rem;
+					top: -15px;
+					left: 0 !important;
+					right: 0 !important;
+				}
 			}
 
 			// user info section

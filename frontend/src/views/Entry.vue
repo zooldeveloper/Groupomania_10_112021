@@ -292,6 +292,7 @@ export default {
 <style lang="scss" scoped>
 
   @import '@/assets/sass/variables.scss';
+  @import '@/assets/sass/mixins.scss';
 
   .container {
     width: 100%;
@@ -437,31 +438,7 @@ export default {
         }
       }
       .spinner { 
-        width: 100%;
-        height: 38vh;
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: $quaternary-color;
-        opacity: 0.9;
-         z-index: 1;
-        &::after {
-          content: '';
-          width: 70px;
-          height: 70px;
-          border-radius: 50%;
-          border: 5px solid transparent;
-          border-top-color: $primary_color;
-          border-bottom-color: $primary_color;
-          z-index: 2;
-          animation: spinner 3s linear forwards;
-        }
-
-        @keyframes spinner {
-          0% { transform: rotate(0turn); }
-          100% { transform: rotate(3turn); }
-        }
+        @include spinner;
       }
       p {
         span {

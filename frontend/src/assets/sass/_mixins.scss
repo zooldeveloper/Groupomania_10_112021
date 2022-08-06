@@ -13,3 +13,32 @@
 	font-family: sans-serif;
 	position: $position;
 }
+
+@mixin spinner($height: 38vh, $position: absolute, $align-items: center) {
+	width: 100%;
+	height: $height;
+	position: $position;
+	display: flex;
+	justify-content: center;
+	align-items: $align-items;
+	background-color: $quaternary-color;
+	opacity: 0.9;
+	z-index: 1;
+
+	&::after {
+		content: '';
+		width: 70px;
+		height: 70px;
+		border-radius: 50%;
+		border: 5px solid transparent;
+		border-top-color: $primary_color;
+		border-bottom-color: $primary_color;
+		z-index: 2;
+		animation: spinner 3s linear forwards;
+	}
+
+	@keyframes spinner {
+		0% { transform: rotate(0turn); }
+		100% { transform: rotate(3turn); }
+	}
+}

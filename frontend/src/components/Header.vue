@@ -1,6 +1,6 @@
 <template>
     <header>
-        <div id="spinner-container"></div>
+        <div class="spinner"></div>
         <nav>
             <div class="logo">
                 <a href=""><img src="../assets/images/icon-left-font-monochrome-gray.svg" alt="company logo"></a>
@@ -66,11 +66,11 @@ export default {
             this.width > 768 ? this.navOpen = false : this.navOpen = true
         },
         logOut() {
-            document.querySelector('#spinner-container').classList.add('spinner');
+            document.querySelector('.spinner').classList.add('show-spinner');
             localStorage.clear()
             VueCookieNext.removeCookie('token')
             setTimeout(()=>{
-                document.querySelector('#spinner-container').classList.remove('spinner')
+                document.querySelector('.spinner').classList.remove('show-spinner')
                 this.$router.push({ name: 'Entry' })
             }, 2000)
         }
@@ -83,13 +83,10 @@ export default {
   @import '@/assets/sass/variables.scss';
   @import '@/assets/sass/mixins.scss';
 
-    #spinner-container {
-        width: 100vw;
-        height: 60vh;
-        position: absolute;
-    }
-
-    .spinner {
+    .show-spinner {
+            width: 100vw;
+            height: 60vh;
+            position: absolute;
             @include spinner(80vh !important, fixed !important);
         }
 

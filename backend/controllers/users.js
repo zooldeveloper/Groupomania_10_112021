@@ -2,15 +2,17 @@
 const db = require('../config/database');
 
 exports.getAllUsers = (req, res) => {
-	// Selects all users data from the database and send them as a response
-	db.query(`SELECT * FROM users`, (err, result) => {
+
+	// Selects all users and subscribers data that matches the conditions
+	db.query(`SELECT users.id, users.firstName, users.lastName, users.email, users.imageUrl, users.bio, users.jobTitle, users.isAdmin,
+			(SELECT COALESCE(COUNT(subscribed_user),0) FROM subscribers WHERE profile_owner = users.id AND subscriber_status = 'true') AS subscribersNum FROM subscribers
+			JOIN users
+			WHERE users.active = 'true'
+			GROUP BY users.id
+			ORDER BY users.id ASC`, (err, result) => {
 		if (err) {
 			return res.status(500).json(err);
 		}
-		for (let i = 0; i < result.length; i++) {
-			delete result[i].password;
-		}
-		
 		res.status(200).json(result);
 	});
 };

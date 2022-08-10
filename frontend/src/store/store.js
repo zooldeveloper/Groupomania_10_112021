@@ -1,8 +1,10 @@
-import { createStore } from 'vuex'
-import axios from 'axios'
-import { VueCookieNext } from 'vue-cookie-next'
+/** @format */
 
-const user = JSON.parse(localStorage.getItem('user'))
+import { createStore } from 'vuex';
+import axios from 'axios';
+import { VueCookieNext } from 'vue-cookie-next';
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 const instance = axios.create({
 	baseURL: 'http://localhost:3001/api',
@@ -20,8 +22,9 @@ export default createStore({
 		posts: {},
 		user: {},
 		likes: {},
-    comments: {},
-    users: {},
+		comments: {},
+		users: {},
+		subscribers: {},
 	},
 	mutations: {
 		SUCCESS_MESSAGE(state, message) {
@@ -49,10 +52,13 @@ export default createStore({
 		},
 		GET_ALL_COMMENTS(state, comments) {
 			state.comments = comments;
-    },
-    GET_ALL_USERS(state, users) {
-      state.users = users;
-    },
+		},
+		GET_ALL_USERS(state, users) {
+			state.users = users;
+		},
+		GET_ALL_SUBSCRIBERS(state, subscribers) {
+			state.subscribers = subscribers;
+		},
 	},
 	actions: {
 		// Makes the post request of the user sign up
@@ -222,7 +228,6 @@ export default createStore({
 				let result = await instance.get('/posts');
 				if (result.status === 200) {
 					commit('GET_ALL_POSTS', result.data);
-					console.log(result);
 				}
 			} catch (err) {
 				console.log(err);
@@ -344,12 +349,41 @@ export default createStore({
 				console.log(err);
 			}
 		},
-		// Makes the get request of all comments
+		// Makes the get request of all users
 		async getAllUsers({ commit }) {
 			try {
 				const result = await instance.get('/users');
 				if (result.status === 200) {
-          commit('GET_ALL_USERS', result.data);
+
+					const data = result.data.map( obj => {
+						if(obj.subscribedUsers !== null ) {
+							return {...obj, subscribedUsers: obj.subscribedUsers.split(',')}
+						}
+						return obj
+					})
+					commit('GET_ALL_USERS', data);
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
+		// Makes the get request of all subscribers
+		async createOrUpdateSubscribers({ commit }, subscriber) {
+			try {
+				const result = await instance.post('/subscribers', subscriber);
+				if (result.status === 201 || result.status === 200) {
+					commit('SUCCESS_MESSAGE', result.data.message);
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
+		// Makes the post request of all subscribers
+		async getAllSubscribers({ commit }) {
+			try {
+				const result = await instance.get('/subscribers');
+				if (result.status === 200) {
+					commit('GET_ALL_SUBSCRIBERS', result.data);
 				}
 			} catch (err) {
 				console.log(err);

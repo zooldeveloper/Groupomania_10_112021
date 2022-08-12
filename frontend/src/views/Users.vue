@@ -33,16 +33,19 @@
 							@trigger-on-subscribe="onSubscribe(this.user[0].id, user.id)"
 							
 						/>
-						<SubscribeBtn
-							v-else-if="user.subscribedUsers.map(subscribedUser => subscribedUser != this.user[0].id)"
-							:icon="'user-plus'"
-							:color="'#F08E8A'"
-							size="lg"
-							@trigger-on-subscribe="onSubscribe(this.user[0].id, user.id)"
-						/>
+						<div v-else-if="user.subscribedUsers.map(subscribedUser => subscribedUser != this.user[0].id)">
+							<SubscribeBtn
+								v-if="user.id !== this.user[0].id"
+								:icon="'user-plus'"
+								:color="'#F08E8A'"
+								size="lg"
+								@trigger-on-subscribe="onSubscribe(this.user[0].id, user.id)"
+							/>
+						</div>
 					</div>
 					<div v-else>
 						<SubscribeBtn
+							v-if="user.id !== this.user[0].id"
 							:icon="'user-plus'"
 							:color="'#F08E8A'"
 							size="lg"

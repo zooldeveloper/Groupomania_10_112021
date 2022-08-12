@@ -3,15 +3,19 @@
 <template>
 	<div class="about">
 		<Header />
+		<ServerMsg
+			 v-if="successResMsg !== null"
+			:successResMsg="successResMsg"
+		/>
 		<h1>Profil</h1>
 		<UserProfile
-			:userImage="userImage"
-			:userFirstName="firstName"
-			:userLastName="lastName"
-			:userJobTitle="userJobTitle"
-			:userSubscribersNum="4"
-			:userEmail="userEmail"
-			:userBio="userBio"
+			:userImage="currentUser.imageUrl ? currentUser.imageUrl : userImage "
+			:userFirstName="currentUser.firstName"
+			:userLastName="currentUser.lastName"
+			:userJobTitle="currentUser.jobTitle"
+			:userSubscribersNum="currentUser.subscribersNum"
+			:userEmail="currentUser.email"
+			:userBio="currentUser.bio"
 			:isAcualUser="true"
 			@trigger-user-prfile-setting="onUserPorfileSetting"
 		/>
@@ -25,7 +29,7 @@
 				<section id="userinfo">
 					<div class="userinfo__user userinfo__user-border">
 						<img
-							:src="userImage"
+							:src="currentUser.imageUrl"
 							alt="photo de compte de l'utilisateur"
 							v-if="myFile == null"
 						/>
@@ -80,8 +84,8 @@
 								/>
 							</button>
 						</form>
-						<p v-if="isAdmin == 'true'">
-							{{ firstName }} {{ lastName }} est
+						<p v-if="currentUser.isAdmin == 'true'">
+							{{ currentUser.firstName }} {{ currentUser.lastName }} est
 							<span>l'Admin</span>
 						</p>
 					</div>
@@ -179,7 +183,7 @@
 						:imageUrl="
 							post.imageUrl !== null
 								? post.imageUrl
-								: require('../assets/images/user-icon.png')
+								: userImage
 						"
 						:post_id="post.post_id"
 						:firstName="post.firstName"
@@ -188,7 +192,7 @@
 						:textualPost="post.textual_post"
 						:isPostIdEqualToUserIdOrIsAdmin="
 							post.id === user[0].id ||
-							user[0].isAdmin == 'true'
+							currentUser.isAdmin == 'true'
 						"
 						:isPostIdEqualToUserId="
 							post.id === user[0].id
@@ -203,6 +207,9 @@
 					/>
 				</div>
 			</section>
+			<div class="alert-message-no-content" v-if="!isUserGotPost">
+                        <p>L'utilisateur n'a rien publié !</p>
+                  </div>
 		</main>
 	</div>
 </template>
@@ -211,6 +218,7 @@
 	import Header from '../components/Header.vue';
 	import Button from '../components/Button.vue';
 	import UserPost from '../components/UserPost.vue';
+	import ServerMsg from '../components/ServerMsg.vue';
 	import CancelBtn from '../components/CancelBtn.vue';
 	import UserProfile from '../components/UserProfile.vue';
 	import ImagePreview from '../components/ImagePreview.vue';
@@ -223,6 +231,7 @@
 			Header,
 			Button,
 			UserPost,
+			ServerMsg,
 			CancelBtn,
 			UserProfile,
 			ImagePreview,
@@ -230,14 +239,10 @@
 		data() {
 			return {
 				// User data to display
+				currentUser: [],
 				userProfileSetting: false,
 				userImage: require('../assets/images/user-icon.png'),
-				firstName: null,
-				lastName: null,
-				userEmail: null,
-				userBio: null,
-				userJobTitle: null,
-				isAdmin: null,
+				isUserGotPost: false,
 				// User data to send
 				myFile: null,
 				imagePreview: null,
@@ -258,6 +263,8 @@
 		watch: {
 			successResMsg: function () {
 				this.$store.dispatch('getOneUser');
+				this.$store.dispatch('getAllUsers');
+				this.$store.dispatch('getAllPosts');
 				setTimeout(() => {
 					this.setUser();
 					this.myFile = null;
@@ -276,6 +283,7 @@
 			...mapState([
 				'posts',
 				'user',
+				'users',
 				'successResMsg',
 				'passwordResMsg',
 			]),
@@ -292,6 +300,7 @@
 				this.$router.push({ name: 'Entry' });
 			}
 			this.$store.dispatch('getOneUser');
+			this.$store.dispatch('getAllUsers');
 			this.$store.dispatch('getAllPosts');
 			setTimeout(() => {
 				this.setUser();
@@ -303,14 +312,17 @@
 			},
 			setUser() {
 				if (this.user[0] != undefined) {
-					this.firstName = this.user[0].firstName;
-					this.lastName = this.user[0].lastName;
-					this.userBio = this.user[0].bio;
-					this.userEmail = this.user[0].email;
-					this.userJobTitle = this.user[0].jobTitle;
-					this.isAdmin = this.user[0].isAdmin;
-					if (this.user[0].imageUrl != undefined) {
-						this.userImage = this.user[0].imageUrl;
+
+					for(let i = 0; i < this.users.length; i++) {
+						if(this.users[i].id === this.user[0].id) {
+							this.currentUser = this.users[i]
+						}
+                         	}
+
+					for(let i = 0; i < this.posts.length; i++) {
+						if(this.posts[i].id === this.user[0].id) {
+							this.isUserGotPost = true;
+						} 
 					}
 				}
 			},
@@ -518,6 +530,7 @@
 						border: 1px solid $border-color;
 						border-radius: 50%;
 						margin-top: 1rem;
+						margin-bottom: 1rem;
 						&:focus {
 							outline: 1px solid $primary_color;
 						}
@@ -609,6 +622,11 @@
 		#userpost {
 			margin: 50px 0;
 			box-shadow: 0px 5px 15px $border-color;
+		}
+		.alert-message-no-content {
+			margin: 1rem;
+			font-size: 1.5rem;
+			font-weight: bold;
 		}
 	}
 </style>

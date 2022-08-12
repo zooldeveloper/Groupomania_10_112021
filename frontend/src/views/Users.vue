@@ -4,47 +4,50 @@
 	<div id="users">
 		<Header />
 		<main>
+			<ServerMsg
+				v-if="successResMsg !== null"
+				:successResMsg="successResMsg"
+			/>
 			<h1>Utilisateurs</h1>
 			<div class="users-container">
-				<div
-					v-for="user in users"
-					:key="user.id"
-					class="user-cart">
-					<a href="">
-						<div class="user-details">
-							<img
-								:src="
-									user.imageUrl != null
-										? user.imageUrl
-										: require('../assets/images/user-icon.png')
-								"
-								alt=""
-							/>
-							<div class="personal-info">
-								<h2>
-									{{ user.firstName }}
-									{{ user.lastName }}
-								</h2>
-								<p>{{ user.jobTitle }}</p>
-								<div class="subscribers-number">
-									<font-awesome-icon
-										icon="users"
-										color="#2b7b85"
-										size="sm"
-									/>
-									<small>3</small>
-								</div>
+				<div v-for="user in users" :key="user.id" class="user-cart">
+					<div class="user-details" @click="takeUserId(user.id)">
+						<img :src=" user.imageUrl != null ? user.imageUrl : require('../assets/images/user-icon.png')" alt="Image de l'utilisateur"/>
+						<div class="personal-info">
+							<h2>{{ user.firstName }} {{ user.lastName }}
+							</h2>
+							<p>{{ user.jobTitle }}</p>
+							<div class="subscribers-number">
+								<font-awesome-icon icon="users" color="#2b7b85" size="sm"/>
+								<small>{{user.subscribersNum}}</small>
 							</div>
 						</div>
-					</a>
-					<div class="add-freind">
-						<button>
-                                          <font-awesome-icon
-							icon="user-plus"
-							color="#F08E8A"
+					</div>
+					
+					<div  v-if="user.subscribedUsers">
+						<SubscribeBtn
+							v-if="user.subscribedUsers.find(subscribedUser => subscribedUser == this.user[0].id)"
+							:icon="'user-check'"
+							:color="'#2b7b85'"
 							size="lg"
+							@trigger-on-subscribe="onSubscribe(this.user[0].id, user.id)"
+							
 						/>
-                                    </button>
+						<SubscribeBtn
+							v-else-if="user.subscribedUsers.map(subscribedUser => subscribedUser != this.user[0].id)"
+							:icon="'user-plus'"
+							:color="'#F08E8A'"
+							size="lg"
+							@trigger-on-subscribe="onSubscribe(this.user[0].id, user.id)"
+						/>
+					</div>
+					<div v-else>
+						<SubscribeBtn
+							:icon="'user-plus'"
+							:color="'#F08E8A'"
+							size="lg"
+							@trigger-on-subscribe="onSubscribe(this.user[0].id, user.id)"
+						/>
 					</div>
 				</div>
 			</div>
@@ -54,20 +57,79 @@
 
 <script>
 	import Header from '../components/Header.vue';
+	import ServerMsg from '../components/ServerMsg.vue';
+	import SubscribeBtn from '../components/SubscribeBtn.vue';
+
 	import { mapState } from 'vuex';
 
 	export default {
 		name: 'Users',
 		components: {
 			Header,
+			ServerMsg,
+			SubscribeBtn,
+		},
+		data() {
+			return {
+				subscriberStatus: null,
+			}
 		},
 		mounted() {
+			this.$store.dispatch('getOneUser');
 			this.$store.dispatch('getAllUsers');
+			this.$store.dispatch('getAllSubscribers');
 		},
 		computed: {
-			...mapState(['users']),
+			...mapState(['users', 'user', 'subscribers', 'successResMsg']),
 		},
-		methods: {},
+		methods: {
+			takeUserId(userId) {
+				if(userId === this.user[0].id ) {
+					 this.$router.push({path:'account'})
+				} else {
+					this.$router.push({path:'profile', query: {id: userId}})
+				}
+			},
+			onSubscribe(currentUser, clickedUser) {
+			
+				let subscribersTable = [];
+
+				this.subscribers.forEach(subscriber => {
+					if(subscriber.profile_owner === clickedUser) {
+						if (subscriber.subscribed_user === currentUser) {
+							subscribersTable.push({subscriber_status: subscriber.subscriber_status})
+						}
+					}
+				});
+
+				if(currentUser === clickedUser) {
+					return ''
+				} else if(subscribersTable.length < 1) {
+					this.subscriberStatus = 'true'
+				} else if(subscribersTable.length > 0) {
+					if (subscribersTable[0].subscriber_status === 'true') {
+						this.subscriberStatus = 'false'
+					} else if(subscribersTable[0].subscriber_status === 'false') {
+						this.subscriberStatus = 'true'
+					}
+				}
+			
+				if (this.subscriberStatus === 'true' || this.subscriberStatus === 'false') {
+					this.$store.dispatch('createOrUpdateSubscribers',
+						{
+							profile_owner: clickedUser,
+							subscribed_user: currentUser,
+							subscriber_status: this.subscriberStatus,
+						}
+					);
+					setTimeout(() => {
+						this.$store.dispatch('getAllUsers');
+						this.$store.dispatch('getAllSubscribers');
+					}, 100);
+					
+				}
+			},
+		},
 	};
 </script>
 
@@ -84,10 +146,7 @@
 			margin-top: 3rem;
 			width: 100%;
 			height: auto;
-                  a {
-                        text-decoration: none;
-                        color: black;
-                  }
+
 			.user-cart {
 				@include flexbox(space-between);
 				width: 250px;
@@ -104,6 +163,7 @@
 
 			.user-details {
 				@include flexbox(space-between);
+				cursor: pointer;
 				img {
 					width: 60px;
 					height: 60px;
@@ -126,13 +186,6 @@
 				small {
 					margin-left: 0.3rem;
 				}
-			}
-			.add-freind {
-                        button {
-                              border: none;
-                              background: none;
-                              cursor:pointer;
-                        }
 			}
 		}
 	}

@@ -6,14 +6,10 @@
 		<h1 v-show="userFirstname !== null">
 			Bienvenu à nouveau {{ userFirstname }} 😊
 		</h1>
-		<p v-if="successResMsg !== null" class="server-response">
-			{{ successResMsg }}
-			<font-awesome-icon
-				icon="check-circle"
-				color="#2ecc71"
-				size="lg"
-			/>
-		</p>
+		<ServerMsg
+			 v-if="successResMsg !== null"
+			:successResMsg="successResMsg"
+		/>
 		<main>
 			<!-- Makepost section -->
 			<section id="makepost">
@@ -111,6 +107,7 @@
 <script>
 	import Header from '../components/Header.vue';
 	import UserPost from '../components/UserPost.vue';
+	import ServerMsg from '../components/ServerMsg.vue';
 	import ImagePreview from '../components/ImagePreview.vue';
 
 	import { mapState } from 'vuex';
@@ -120,6 +117,7 @@
 		components: {
 			Header,
 			UserPost,
+			ServerMsg,
 			ImagePreview,
 		},
 		data() {
@@ -248,15 +246,6 @@
 		}
 		label {
 			cursor: pointer;
-		}
-
-		.server-response {
-			position: fixed;
-			top: 75px;
-			left: 0;
-			right: 0;
-			text-align: center;
-			z-index: 1;
 		}
 
 		// Main section

@@ -1,6 +1,10 @@
 <template>
       <div id="profile">
             <Header />
+            <ServerMsg
+                  v-if="serverMessage !== null"
+                  :successResMsg="serverMessage"
+            />
             <h1>Profil</h1>
             <UserProfile 
                   :userImage="userOnSearchQuery.imageUrl ? 
@@ -9,10 +13,13 @@
 			:userFirstName="userOnSearchQuery.firstName"
 			:userLastName="userOnSearchQuery.lastName"
 			:userJobTitle="userOnSearchQuery.jobTitle"
-			:userSubscribersNum="4"
+			:userSubscribersNum="userOnSearchQuery.subscribersNum"
 			:userEmail="userOnSearchQuery.email"
 			:userBio="userOnSearchQuery.bio"
-			@trigger-user-prfile-setting="onUserPorfileSetting"
+                  :isAcualUser="!acualUserId"
+                  :acualUser="acualUserId"
+                  :subscribedUsers="userOnSearchQuery.subscribedUsers"
+                  @trigger-on-subscribe="onSubscribe(this.user[0].id, userOnSearchQuery.id)"
             />
             <main>
                   <section id="userpost" v-for="post in posts" :key="post.post_id">
@@ -24,8 +31,8 @@
 						:lastName="post.lastName"
 						:postDate="post.creation_date"
 						:textualPost="post.textual_post"
-						:isPostIdEqualToUserIdOrIsAdmin="post.id === user[0].id || user.isAdmin == 'true'"
-						:isPostIdEqualToUserId="post.id === userOnSearchQuery.id"
+						:isPostIdEqualToUserIdOrIsAdmin="post.id === user[0].id || user[0].isAdmin == 'true'"
+                                    :isPostIdEqualToUserId="post.id === user[0].id"
 						:isPostImageUrlNotUndefined="post.image_url != undefined"
 						:postImage="post.image_url"
 						:likes="post.likes"
@@ -44,6 +51,7 @@
 <script>
       import Header from '../components/Header.vue';
       import UserPost from '../components/UserPost.vue';
+      import ServerMsg from '../components/ServerMsg.vue';
       import UserProfile from '../components/UserProfile.vue';
 
       
@@ -53,17 +61,25 @@
       
 		name: 'Profile',
 		components: {
-			Header, UserPost, UserProfile
+			Header, UserPost, ServerMsg, UserProfile,
             },
             data() {
                   return {
 
                         userOnSearchQuery: [],
+                        acualUserId: null,
+                        serverMessage: null,
+                        subscriberStatus: null,
                         isUserGotPost: false,
                   }
-              },
+            },
+            watch: {
+			successResMsg: function () {
+				this.setUser();
+			},
+            },
             computed: {
-			...mapState(['posts', 'user', 'users', 'successResMsg']),
+			...mapState(['posts', 'user', 'users', 'subscribers', 'successResMsg']),
 		},
             mounted() {
                   const user = JSON.parse(localStorage.getItem('user'));
@@ -73,10 +89,15 @@
                   this.$store.dispatch('getOneUser');
                   this.$store.dispatch('getAllUsers');
 			this.$store.dispatch('getAllPosts');
-			setTimeout(()=>{ this.setUser(), 200})                  
+                  this.$store.dispatch('getAllSubscribers');
+			setTimeout(()=>{ this.setUser()}, 100)                  
 		},
             methods: {
                   setUser() {
+                       
+                         this.acualUserId = this.user[0].id;
+                         setTimeout(()=>{this.serverMessage = this.successResMsg}, 800)
+
                         for(let i = 0; i < this.users.length; i++) {
                               if(this.users[i].id == this.$route.query.id) {
                                     this.userOnSearchQuery = this.users[i]
@@ -91,8 +112,44 @@
                               
                          }
                   },
-                  onUserPorfileSetting() {
+                  onSubscribe(currentUser, clickedUser) {
+                        
+                       let subscribersTable = [];
 
+				this.subscribers.forEach(subscriber => {
+					if(subscriber.profile_owner === clickedUser) {
+						if (subscriber.subscribed_user === currentUser) {
+							subscribersTable.push({subscriber_status: subscriber.subscriber_status})
+						}
+					}
+				});
+
+
+				if(currentUser === clickedUser) {
+					return ''
+				} else if(subscribersTable.length < 1) {
+					this.subscriberStatus = 'true'
+				} else if(subscribersTable.length > 0) {
+					if (subscribersTable[0].subscriber_status === 'true') {
+						this.subscriberStatus = 'false'
+					} else if(subscribersTable[0].subscriber_status === 'false') {
+						this.subscriberStatus = 'true'
+					}
+				}
+			
+				if (this.subscriberStatus === 'true' || this.subscriberStatus === 'false') {
+					this.$store.dispatch('createOrUpdateSubscribers',
+						{
+							profile_owner: clickedUser,
+							subscribed_user: currentUser,
+							subscriber_status: this.subscriberStatus,
+						}
+					);
+                              setTimeout(() => {
+						this.$store.dispatch('getAllUsers');
+						this.$store.dispatch('getAllSubscribers');
+					}, 20);				
+				}
                   },
             },
 	};

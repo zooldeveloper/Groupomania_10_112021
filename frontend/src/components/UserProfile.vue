@@ -8,14 +8,37 @@
                               <div class="user-profile__jobtitle-subscribersnumber-email">
                                     <p>{{userJobTitle}}</p>
                                     <font-awesome-icon icon="users" color="#2b7b85" size="sm"/>
-                                    <small>2</small>
+                                    <small>{{userSubscribersNum}}</small>
                                     <p class="email">{{userEmail}}</p>
                               </div>
                         </div>
                         <div class="user-profile__subscribe-setting">
-                              <button class="subscribe-btn">
-                                    <font-awesome-icon icon="user-plus" color="#2b7b85" size="2x"/>
-                              </button>
+                              <div  v-show="!isAcualUser">
+                                    <div v-if="subscribedUsers">
+                                          <SubscribeBtn
+                                                v-if="subscribedUsers.find(subscribedUser => subscribedUser == acualUser)"
+                                                :icon="'user-check'"
+                                                color="#2b7b85"
+                                                size="2x"
+                                                @trigger-on-subscribe="onSubscribe"
+                                          />
+                                          <SubscribeBtn
+                                                v-else
+                                                :icon="'user-plus'"
+                                                color="#F08E8A"
+                                                size="2x"
+                                                @trigger-on-subscribe="onSubscribe"
+                                          />
+                                    </div>
+                                     <div v-else>
+                                          <SubscribeBtn
+                                                :icon="'user-plus'"
+                                                :color="'#F08E8A'"
+                                                size="2x"
+                                                @trigger-on-subscribe="onSubscribe"
+                                          />
+                                    </div>
+                              </div>
                               <button class="setting-btn" v-show="isAcualUser" @click="triggerUserProfileSetting">
                                     <font-awesome-icon icon="sliders-h" color="#2b7b85" size="2x"/>
                               </button>
@@ -32,9 +55,14 @@
       </div>
 </template>
 
-<script>
+<script>  	
+      import SubscribeBtn from './SubscribeBtn.vue';
+
       export default {
             name: 'UserProfile',
+            components: {
+                  SubscribeBtn,
+            },
             props: {
                   userImage: {
                         type: String,
@@ -67,11 +95,22 @@
                   isAcualUser: {
                         type: Boolean,
                         required: true,
+                  },
+                  acualUser: {
+                        type: Number,
+                        required: true,
+                  },
+                  subscribedUsers: {
+                        type: Array,
+                        required: true,
                   }
             },
             methods: {
                   triggerUserProfileSetting() {
                         this.$emit('trigger-user-prfile-setting')
+                  },
+                  onSubscribe() {
+                        this.$emit('trigger-on-subscribe')
                   }
             }
       }
@@ -89,7 +128,7 @@
 
             &__top-background {       
                   height: 85px;
-                  background-color: lighten($secondary_color, 10);
+                  background-color: lighten($secondary_color, 15);
                   position: relative;
              }
 

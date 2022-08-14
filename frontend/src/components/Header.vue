@@ -15,9 +15,9 @@
                     <div class="navbar" v-show="!navOpen">
                         <div class="sidemenu__wrapper">
                             <ul class="sidemenu__list">
-                                <li class="sidemenu__item"><router-link to="/" title="page d'accueil"> <font-awesome-icon icon='home' color='#F08E8A' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/users" title="notifications"> <font-awesome-icon icon='users' color='#F08E8A' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon icon='bell' color='#F08E8A' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/" title="page d'accueil"> <font-awesome-icon icon='home' :color='secondaryColor' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/users" title="notifications"> <font-awesome-icon icon='users' :color='secondaryColor' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon icon='bell' :color='secondaryColor' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="imageUrl" alt="photo de profil"> </router-link></li>
                                 <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
                             </ul>
@@ -31,7 +31,8 @@
 
 
 <script>
-import { VueCookieNext } from 'vue-cookie-next'
+import { VueCookieNext } from 'vue-cookie-next';
+import { mapState } from 'vuex';
 
 export default {
     name: 'Header',
@@ -49,6 +50,7 @@ export default {
         }
     },
     created() {
+        this.$store.dispatch('getOneUser');
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
         setTimeout(()=> {
@@ -59,6 +61,9 @@ export default {
     },
     unmounted() {
         window.removeEventListener('resize', this.handleResize);
+    },
+    computed: {
+        ...mapState(['secondaryColor']),
     },
     methods: {
         handleResize() {

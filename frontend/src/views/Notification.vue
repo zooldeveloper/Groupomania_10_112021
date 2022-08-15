@@ -60,6 +60,12 @@
 		components: {
 			Header,
 		},
+		mounted() {
+			const user = JSON.parse(localStorage.getItem('user'));
+			if (!user) {
+				this.$router.push({ name: 'Entry' });
+			}
+		},
 		computed: {
 			...mapState(['primaryColor', 'secondaryColor']),
 		},
@@ -75,12 +81,12 @@
 		padding: 3rem;
 		width: auto;
 		border-radius: 15px;
-		border: 1px solid black;
+		border: .1px solid black;
 		text-align: center;
 
 		.notif-message-group {
 			@include flexbox();
-			gap: 50px;
+			gap: 80px;
 			
 		p {
 			padding:  .3rem  .7rem;

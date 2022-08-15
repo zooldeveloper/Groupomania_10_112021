@@ -72,7 +72,10 @@ export default {
         },
         logOut() {
             document.querySelector('.spinner').classList.add('show-spinner');
-            localStorage.clear()
+            let keysToRemove = ['user', 'onLoadPage'];
+            keysToRemove.forEach(key => {
+                localStorage.removeItem(key)
+            });
             VueCookieNext.removeCookie('token')
             setTimeout(()=>{
                 document.querySelector('.spinner').classList.remove('show-spinner')

@@ -78,6 +78,11 @@
 			}
 		},
 		mounted() {
+			const user = JSON.parse(localStorage.getItem('user'));
+			if (!user) {
+				this.$router.push({ name: 'Entry' });
+			}
+		
 			this.$store.dispatch('getOneUser');
 			this.$store.dispatch('getAllUsers');
 			this.$store.dispatch('getAllSubscribers');
@@ -129,7 +134,6 @@
 						this.$store.dispatch('getAllUsers');
 						this.$store.dispatch('getAllSubscribers');
 					}, 100);
-					
 				}
 			},
 		},

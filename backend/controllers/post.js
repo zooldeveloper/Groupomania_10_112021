@@ -88,40 +88,29 @@ exports.deletePost = (req, res) => {
             if (err) {
                 return console.log(err)
             };
-            let deleted_posts = [];
-            for (let obj of postResult) {
-                deleted_posts.push(obj);
-            }
-            // Inserts the deleted data into the deleted_posts table
-            db.query(`INSERT INTO deleted_posts (post_id, textual_post, image_url, creation_date, user_id) VALUES (?, ?, ?, ?, ?)`,
-                 [deleted_posts[0].post_id, `${deleted_posts[0].textual_post}`, `${deleted_posts[0].image_url}`, `${deleted_posts[0].creation_date}`, deleted_posts[0].user_id],
-                (err, deletedPostResult) => {
-                    if (err) {
-                        return console.log(err);
-                    };
-                    if(postResult[0].image_ur != null ) {
-                        const filename = postResult[0].image_url.split('/posts/')[1];
-                        fs.unlink(`images/posts/${filename}`, () => {
-                            // Removes all the data from posts table where the id is equal to the id sent by the request
-                            db.query(`DELETE FROM posts WHERE post_id = ?`, req.params.id,
-                                (err, result) => {
-                                    if (err) {
-                                        return res.status(500).json(err);
-                                    }
-                                    res.status(200).json({ message: "Post a été supprimé !" });
-                                }
-                            );
-                        });
-                    } else {
-                        db.query(`DELETE FROM posts WHERE post_id = ?`, req.params.id,
-                            (err, result) => {
-                                if (err) {
-                                    return res.status(500).json(err);
-                                }
-                                res.status(200).json({ message: "Post a été supprimé !" });
+            
+            if(postResult[0].image_ur != null ) {
+                const filename = postResult[0].image_url.split('/posts/')[1];
+                fs.unlink(`images/posts/${filename}`, () => {
+                    // Removes all the data from posts table where the id is equal to the id sent by the request
+                    db.query(`DELETE FROM posts WHERE post_id = ?`, req.params.id,
+                        (err, result) => {
+                            if (err) {
+                                return res.status(500).json(err);
                             }
-                        );
-                    }   
+                            res.status(200).json({ message: "Post a été supprimé !" });
+                        }
+                    );
                 });
+            } else {
+                db.query(`DELETE FROM posts WHERE post_id = ?`, req.params.id,
+                    (err, result) => {
+                        if (err) {
+                            return res.status(500).json(err);
+                        }
+                        res.status(200).json({ message: "Post a été supprimé !" });
+                    }
+                );
+            }   
         });
 }; 

@@ -2,51 +2,19 @@
       <div id="notification">
             <Header />
 		 <h1>Notifications</h1>
-            <main class="notif-wrapper">
-			<div class="notif-message-group">
-				<p>Nadir has reacted to your post !</p>
-				<button>
-					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
-					<small>Remove it</small>
-				</button>
-			</div>
-			<div class="notif-message-group">
-				<p>Nadir has reacted to your post !</p>
-				<button>
-					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
-					<small>Remove it</small>
-				</button>
-			</div>
-			<div class="notif-message-group">
-				<p>Nadir has reacted to your post !</p>
-				<button>
-					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
-					<small>Remove it</small>
-				</button>
-			</div>
-			<div class="notif-message-group">
-				<p>Nadir has reacted to your post !</p>
-				<button>
-					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
-					<small>Remove it</small>
-				</button>
-			</div>
-			<div class="notif-message-group">
-				<p>Nadir has reacted to your post !</p>
-				<button>
-					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
-					<small>Remove it</small>
-				</button>
-			</div>
-			<div class="notif-message-group">
-				<p>Nadir has reacted to your post !</p>
-				<button>
-					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
-					<small>Remove it</small>
-				</button>
+            <main class="notif-wrapper" v-if="userNotifs !== null">
+			<div class="notif-message-group"  v-for="(value, property, index) in userNotifs" :key="index">
+					<p>{{ value }}</p>
+					<button>
+						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
+						<small>Remove it</small>
+					</button>
 			</div>
 			<button class="btn-remove-all">Remove them all</button>
             </main>
+		<div class="zero-notification" v-else>
+			<p>Your have no recent notifications!</p>
+		</div>
       </div>
 </template>
 
@@ -60,14 +28,35 @@
 		components: {
 			Header,
 		},
+		data() {
+			return {
+				userNotifs: null,
+			}
+		},
 		mounted() {
+			this.$store.dispatch('getOneUser');
 			const user = JSON.parse(localStorage.getItem('user'));
+			const notifications = JSON.parse(localStorage.getItem('notifications'))
 			if (!user) {
 				this.$router.push({ name: 'Entry' });
 			}
+			setTimeout(() =>{
+				this.findCurrentUserNotif(notifications);
+				// console.log(notifications)
+			}, 100)
 		},
 		computed: {
-			...mapState(['primaryColor', 'secondaryColor']),
+			...mapState(['user', 'primaryColor', 'secondaryColor']),
+		},
+		methods: {
+			findCurrentUserNotif(notifications) {
+				
+				for(let acualUser in notifications) {
+					if(acualUser == this.user[0].id) {
+						this.userNotifs = notifications[acualUser]
+					}
+				}
+			},
 		},
 	};
 </script>
@@ -85,16 +74,17 @@
 		text-align: center;
 
 		.notif-message-group {
-			@include flexbox();
-			gap: 80px;
+			@include flexbox(space-evenly);
+			gap: 10px;
 			
-		p {
-			padding:  .3rem  .7rem;
-			color: #fff;
-			border-radius: 15px;
-			background-color: rgb($primary_color, 0.7);
-		}
-			
+			p {
+				width: 50%;
+				padding:  .3rem  .7rem;
+				color: #fff;
+				border-radius: 15px;
+				background-color: rgb($primary_color, 0.7);
+				align-self:auto;
+			}
 		}
 
 		button {
@@ -131,19 +121,34 @@
 		}
 
 		@media screen and (max-width: 992px) {
-			margin: 3rem;
+			margin: 1rem;
 		}
 
 		@media screen and (max-width: 576px) {
 			padding: .7rem;
 			border: none;
 			.notif-message-group {
-				gap: 20px;
+				p {
+					width: 75%;
+				}
 
 				small {
 					display: none;
 				}
 			}
+		}
+	}
+	.zero-notification {
+		margin: 0 auto;
+		width:fit-content;
+		
+		p {
+			margin: .5rem;
+			padding: .4rem 2rem ;
+			font-size: 1.5rem;
+			color: #fff;
+			background-color: $secondary_color;
+			border-radius: 15px;
 		}
 	}
 	

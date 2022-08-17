@@ -99,7 +99,7 @@
 									? comment.imageUrl
 									: require('../assets/images/user-icon.png')
 							"
-							alt=""
+							alt="user image"
 						/>
 						<div class="userpost__username-postdate">
 							<h3>
@@ -290,7 +290,7 @@
 			},
 		},
 		computed: {
-			...mapState(['user', 'comments']),
+			...mapState(['user', 'posts', 'comments']),
 		},
 		mounted() {
 			this.$store.dispatch('getLikesAndDislikes');
@@ -300,12 +300,10 @@
 			}, 100);
 		},
 		methods: {
+
 			// Sets user's welcome message and user's image
 			setUserImage() {
-				if (
-					this.user[0].imageUrl != undefined ||
-					this.user.imageUrl != ''
-				) {
+				if (this.user[0].imageUrl != undefined ||nthis.user.imageUrl != '') {
 					this.userImage = this.user[0].imageUrl;
 				}
 			},
@@ -438,6 +436,9 @@
 							user_id: this.user[0].id,
 						}
 					);
+					if(this.like === 1) {
+						this.setUserNotification(postId, `${this.user[0].firstName} ${this.user[0].lastName} reacted to your post!`);
+					}
 					setTimeout(() => {
 						this.$store.dispatch('getAllPosts');
 						this.$store.dispatch('getLikesAndDislikes');
@@ -516,6 +517,9 @@
 							user_id: this.user[0].id,
 						}
 					);
+					if(this.dislike === 1) {
+						this.setUserNotification(postId, `${this.user[0].firstName} ${this.user[0].lastName} reacted to your post!`);
+					}
 					setTimeout(() => {
 						this.$store.dispatch('getAllPosts');
 						this.$store.dispatch('getLikesAndDislikes');
@@ -545,6 +549,7 @@
 							commentForm[i].reset();
 						}
 					}, 100);
+					this.setUserNotification(postId, `${this.user[0].firstName} ${this.user[0].lastName} commented your post!`);
 				}
 			},
 			// Shows the textarea to edit the comment
@@ -568,6 +573,50 @@
 						this.$store.dispatch('getAllComments');
 					}, 100);
 				}
+			},
+
+
+			setUserNotification(postId, whatAction) {
+
+				let notifications = localStorage.getItem(`notifications`);
+				notifications = JSON.parse(notifications)
+
+				let userId ;
+
+				for(let i = 0; i < this.posts.length; i++) {
+					if(this.posts[i].post_id === postId) {
+						userId = this.posts[i].id;
+					}
+				}
+				
+				let notifId = Date.now();
+
+				 if(notifications != null) {
+					if(notifications[userId] == undefined) {
+
+						notifications = {
+							...notifications,
+							[userId]: {
+								[notifId]: whatAction,
+							}
+						}	
+					} else {
+						notifications = {
+							...notifications,
+							[userId]: {
+								...notifications[userId],
+								[notifId]: whatAction,
+							}
+						}
+					}
+				} else {
+					notifications = {
+						[userId]: {
+							[notifId]: whatAction,
+						}
+					}
+				}
+				localStorage.setItem('notifications', JSON.stringify(notifications));
 			},
 		},
 	};

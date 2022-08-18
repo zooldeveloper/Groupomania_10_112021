@@ -3,14 +3,16 @@
             <Header />
 		 <h1>Notifications</h1>
             <main class="notif-wrapper" v-if="userNotifs !== null">
-			<div class="notif-message-group"  v-for="(value, property, index) in userNotifs" :key="index">
-					<p>{{ value }}</p>
-					<button>
-						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg"/>
+			<div v-for="(parentVal, parentPro, index) in userNotifs" :key="index">
+				<div class="notif-message-group" v-for="(childVal, childPro, index) in parentVal" :key="index">
+					<p>{{ childVal }}</p>
+					<button >
+						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(parentPro)"/>
 						<small>Remove it</small>
 					</button>
+				</div>
 			</div>
-			<button class="btn-remove-all">Remove them all</button>
+			<button class="btn-remove-all" @click="removeAllNotifs">Remove them all</button>
             </main>
 		<div class="zero-notification" v-else>
 			<p>Your have no recent notifications!</p>
@@ -30,32 +32,45 @@
 		},
 		data() {
 			return {
+				notifications: JSON.parse(localStorage.getItem('notifications')),
 				userNotifs: null,
 			}
 		},
 		mounted() {
 			this.$store.dispatch('getOneUser');
 			const user = JSON.parse(localStorage.getItem('user'));
-			const notifications = JSON.parse(localStorage.getItem('notifications'))
 			if (!user) {
 				this.$router.push({ name: 'Entry' });
 			}
 			setTimeout(() =>{
-				this.findCurrentUserNotif(notifications);
-				// console.log(notifications)
+				this.findCurrentUserNotif();
 			}, 100)
 		},
 		computed: {
 			...mapState(['user', 'primaryColor', 'secondaryColor']),
 		},
 		methods: {
-			findCurrentUserNotif(notifications) {
+			findCurrentUserNotif() {
 				
-				for(let acualUser in notifications) {
+				for(let acualUser in this.notifications) {
 					if(acualUser == this.user[0].id) {
-						this.userNotifs = notifications[acualUser]
+						this.userNotifs = this.notifications[acualUser]
 					}
 				}
+			},
+			removeOneNotif(parentProAsNotifId) {
+
+					delete this.notifications[this.user[0].id][parentProAsNotifId];
+					if( Object.entries(this.notifications[this.user[0].id]).length === 0) {
+						delete this.notifications[this.user[0].id];
+					}
+				localStorage.setItem('notifications', JSON.stringify(this.notifications));
+				this.findCurrentUserNotif();			
+			},
+			removeAllNotifs() {
+				delete this.notifications[this.user[0].id];
+				localStorage.setItem('notifications', JSON.stringify(this.notifications));
+				location.reload();	
 			},
 		},
 	};

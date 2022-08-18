@@ -527,7 +527,7 @@
 				}
 			},
 			// Creates the comment
-			onCreateComment(postId) {
+			onCreateComment(postId, commentId) {
 				if (this.commentValueToSend !== null) {
 					this.$store.dispatch('createOneComment', {
 						comment: this.commentValueToSend,
@@ -582,6 +582,7 @@
 				notifications = JSON.parse(notifications)
 
 				let userId ;
+				let notifId = Date.now();
 
 				for(let i = 0; i < this.posts.length; i++) {
 					if(this.posts[i].post_id === postId) {
@@ -589,34 +590,40 @@
 					}
 				}
 				
-				let notifId = Date.now();
+				if(userId != this.user[0].id) {
+					if(notifications != null) {
+						if(notifications[userId] == undefined) {
 
-				 if(notifications != null) {
-					if(notifications[userId] == undefined) {
-
-						notifications = {
-							...notifications,
-							[userId]: {
-								[notifId]: whatAction,
+							notifications = {
+								...notifications,
+								[userId]: {
+									[notifId]: {
+										[postId]:  whatAction,
+									},
+								},
+							}	
+						} else {
+							notifications = {
+								...notifications,
+								[userId]: {
+									...notifications[userId],
+									[notifId]: {
+										[postId]:  whatAction,
+									},
+								},
 							}
-						}	
+						}
 					} else {
 						notifications = {
-							...notifications,
 							[userId]: {
-								...notifications[userId],
-								[notifId]: whatAction,
-							}
+								[notifId]: {
+									[postId]:  whatAction,
+								},
+							},
 						}
 					}
-				} else {
-					notifications = {
-						[userId]: {
-							[notifId]: whatAction,
-						}
-					}
+					localStorage.setItem('notifications', JSON.stringify(notifications));
 				}
-				localStorage.setItem('notifications', JSON.stringify(notifications));
 			},
 		},
 	};

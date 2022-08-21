@@ -70,7 +70,7 @@
 			<!-- User post section -->
 			<section
 				id="userpost"
-				v-for="post in posts"
+				v-for="post in usersPosts"
 				:key="post.post_id"
 			>
 				<UserPost
@@ -86,7 +86,7 @@
 					:postDate="post.creation_date"
                               :textualPost="post.textual_post"
 
-                              :isPostIdEqualToUserIdOrIsAdmin="post.id === user[0].id ||user[0].isAdmin == 'true'"
+                              :isPostIdEqualToUserIdOrIsAdmin="post.id === user[0].id || user[0].isAdmin == 'true'"
                               :isPostIdEqualToUserId="post.id === user[0].id"
                         
                               :isPostImageUrlNotUndefined="post.image_url != undefined"
@@ -129,25 +129,27 @@
 				myFile: null,
 				imagePreview: null,
                         nothingAdded: false,
-
+				usersPosts: [],
 			};
 		},
 		computed: {
 			...mapState(['posts', 'user', 'successResMsg']),
+		},
+		created() {
+			this.$store.dispatch('getOneUser');
+			this.$store.dispatch('getAllPosts');
 		},
 		mounted() {
 			const user = JSON.parse(localStorage.getItem('user'));
 			if (!user) {
 				this.$router.push({ name: 'Entry' });
 			}
-			this.$store.dispatch('getOneUser');
-			this.$store.dispatch('getAllPosts');
                   setTimeout(() => {
 				this.setUser();
-			}, 100);
+			}, 200);
 		},
 		methods: {
-			// Sets user's welcome message and user's image
+			// Sets user's welcome message, user's image ans users posts!
 			setUser() {
 				const onLoadPage = JSON.parse(
 					localStorage.getItem('onLoadPage')
@@ -165,6 +167,15 @@
 				if (this.user[0].imageUrl != undefined) {
 					this.userImage = this.user[0].imageUrl;
 				}
+				if(this.$route.query.id) {
+					for(let i = 0; i < this.posts.length; i++) {
+						if(this.posts[i].post_id == this.$route.query.id) {
+							this.usersPosts.push(this.posts[i]);
+						}
+					}
+				} else {
+					this.usersPosts = this.posts
+				}		
 			},
 			onFileChange(event) {
 				let image = event.target.files[0];

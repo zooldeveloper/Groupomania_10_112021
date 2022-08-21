@@ -1,13 +1,17 @@
 <template>
       <div id="notification">
             <Header />
+		<ServerMsg 
+			v-if="alertMsg !== null"
+			:successResMsg="alertMsg"
+		/>
 		 <h1>Notifications</h1>
             <main class="notif-wrapper" v-if="userNotifs !== null">
 			<div v-for="(parentVal, parentPro, index) in userNotifs" :key="index">
 				<div class="notif-message-group" v-for="(childVal, childPro, index) in parentVal" :key="index">
-					<p>{{ childVal }}</p>
+					<p @click="openTargetedPostInNewTap(childPro)" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ childVal }}</p>
 					<button >
-						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(parentPro)"/>
+						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(parentPro)" aria-role="bouton"/>
 						<small>Remove it</small>
 					</button>
 				</div>
@@ -22,6 +26,7 @@
 
 <script>
 	import Header from '../components/Header.vue';
+	import ServerMsg from '../components/ServerMsg.vue';
 
 	import { mapState } from 'vuex';
 
@@ -29,11 +34,13 @@
 		name: 'Notification',
 		components: {
 			Header,
+			ServerMsg,
 		},
 		data() {
 			return {
 				notifications: JSON.parse(localStorage.getItem('notifications')),
 				userNotifs: null,
+				alertMsg: null,
 			}
 		},
 		mounted() {
@@ -54,24 +61,39 @@
 				
 				for(let acualUser in this.notifications) {
 					if(acualUser == this.user[0].id) {
-						this.userNotifs = this.notifications[acualUser]
+						this.userNotifs = this.notifications[acualUser];
 					}
 				}
 			},
 			removeOneNotif(parentProAsNotifId) {
-
-					delete this.notifications[this.user[0].id][parentProAsNotifId];
-					if( Object.entries(this.notifications[this.user[0].id]).length === 0) {
-						delete this.notifications[this.user[0].id];
-					}
+				delete this.notifications[this.user[0].id][parentProAsNotifId];
+				if( Object.entries(this.notifications[this.user[0].id]).length === 0) {
+					delete this.notifications[this.user[0].id];
+				}
 				localStorage.setItem('notifications', JSON.stringify(this.notifications));
-				this.findCurrentUserNotif();			
+				this.findCurrentUserNotif();	
+				setTimeout(() => {
+					this.alertMsg = 'Notifiction has been deleted';
+				}, 800);
+				setTimeout(() => {
+					this.alertMsg = null;
+				}, 4000);			
 			},
 			removeAllNotifs() {
 				delete this.notifications[this.user[0].id];
 				localStorage.setItem('notifications', JSON.stringify(this.notifications));
-				location.reload();	
+				this.userNotifs = null;
+				setTimeout(() => {
+					this.alertMsg = 'All your notifictions have been deleted';
+				}, 800);
+				setTimeout(() => {
+					this.alertMsg = null;
+				}, 4000);	
 			},
+			openTargetedPostInNewTap(childProAsPostId) {
+				const route = this.$router.resolve({path: '/', query: {id: childProAsPostId}})
+				window.open(route.href, '_blank');
+			}
 		},
 	};
 </script>
@@ -99,6 +121,7 @@
 				border-radius: 15px;
 				background-color: rgb($primary_color, 0.7);
 				align-self:auto;
+				cursor: pointer;
 			}
 		}
 

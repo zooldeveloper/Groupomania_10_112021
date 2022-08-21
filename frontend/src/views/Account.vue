@@ -7,7 +7,7 @@
 			 v-if="successResMsg !== null"
 			:successResMsg="successResMsg"
 		/>
-		<h1>Profil</h1>
+		<h1>Account</h1>
 		<UserProfile
 			:userImage="currentUser.imageUrl ? currentUser.imageUrl : userImage "
 			:userFirstName="currentUser.firstName"

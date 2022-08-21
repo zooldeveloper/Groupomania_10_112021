@@ -1,7 +1,5 @@
 <template>
-    <div id="app">
       <router-view/>
-    </div>
 </template>
 
 
@@ -31,4 +29,9 @@ export default {
     max-width: 800px;
     margin: 0 auto;
   }
+
+  #notification {
+		margin-top: 90px;
+	}
+
 </style>

@@ -25,6 +25,8 @@ export default createStore({
 		comments: {},
 		users: {},
 		subscribers: {},
+		primaryColor: '#f08e8a',
+		secondaryColor: '#f08e8a'
 	},
 	mutations: {
 		SUCCESS_MESSAGE(state, message) {
@@ -225,7 +227,7 @@ export default createStore({
 		//Makes the get request of all users posts
 		async getAllPosts({ commit }) {
 			try {
-				let result = await instance.get('/posts');
+				const result = await instance.get('/posts');
 				if (result.status === 200) {
 					commit('GET_ALL_POSTS', result.data);
 				}

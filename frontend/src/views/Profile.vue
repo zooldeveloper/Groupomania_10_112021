@@ -109,7 +109,6 @@
                               if(this.posts[i].id == this.userOnSearchQuery.id) {
                                     this.isUserGotPost = true;
                               } 
-                              
                          }
                   },
                   onSubscribe(currentUser, clickedUser) {

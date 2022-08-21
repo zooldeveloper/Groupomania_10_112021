@@ -5,7 +5,6 @@ const db = require('../config/database');
 exports.createAndUpdateSubscribers = (req, res) => {
     
     const { subscriber_status, profile_owner, subscribed_user } = req.body;
-    console.log(req.body)
     if (subscriber_status === 'true') {
         // Selects the subscriber_status column that matches the conditions
         db.query('SELECT subscriber_status FROM subscribers WHERE profile_owner = ? AND subscribed_user = ?',
@@ -41,7 +40,7 @@ exports.createAndUpdateSubscribers = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: "Vous êtes plus abonné !" });
+            res.status(200).json({ message: "Vous n'êtes plus abonné !" });
         });
     }
     

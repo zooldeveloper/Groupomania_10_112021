@@ -9,7 +9,7 @@
             name: 'SubscribeBtn',
             props: {
                   icon: {
-                        type: Boolean,
+                        type: String,
                         required: true,
                   },
                   color: {

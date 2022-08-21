@@ -57,7 +57,7 @@ export default {
              if(this.$store.state.user[0].imageUrl) {
                 this.imageUrl = this.$store.state.user[0].imageUrl;
             }
-        }, 100)
+        }, 70)
     },
     unmounted() {
         window.removeEventListener('resize', this.handleResize);

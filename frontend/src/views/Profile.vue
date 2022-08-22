@@ -144,6 +144,37 @@
 							subscriber_status: this.subscriberStatus,
 						}
 					);
+                              if(this.subscriberStatus === 'true') {
+                                    
+						let newSubscribedUsers = JSON.parse(localStorage.getItem('newSubscribedUsers'));
+
+						if(newSubscribedUsers != null) {
+							if(newSubscribedUsers[clickedUser] == undefined) {
+								newSubscribedUsers = {
+									...newSubscribedUsers,
+									[clickedUser]: {
+										[currentUser]: `${this.user[0].firstName} ${this.user[0].lastName} subscribed to your account!`,
+									},
+								}
+							} else {
+								newSubscribedUsers = {
+									...newSubscribedUsers,
+									[clickedUser]: {
+										...newSubscribedUsers[clickedUser],
+										[currentUser]: `${this.user[0].firstName} ${this.user[0].lastName} subscribed to your account!`,
+									},
+								}
+							}
+
+						} else {
+							newSubscribedUsers = {
+								[clickedUser]: {
+									[currentUser]: `${this.user[0].firstName} ${this.user[0].lastName} subscribed to your account!`,
+								},
+							}
+						}
+						localStorage.setItem('newSubscribedUsers', JSON.stringify(newSubscribedUsers));
+					}
                               setTimeout(() => {
 						this.$store.dispatch('getAllUsers');
 						this.$store.dispatch('getAllSubscribers');

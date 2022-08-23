@@ -148,6 +148,11 @@
 				this.setUser();
 			}, 200);
 		},
+		watch: {
+			posts: function() {
+				this.setUser();
+			}
+		},
 		methods: {
 			// Sets user's welcome message, user's image ans users posts!
 			setUser() {

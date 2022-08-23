@@ -6,8 +6,8 @@
 			:successResMsg="alertMsg"
 		/>
 		 <h1>Notifications</h1>
-            <main class="notif-wrapper" v-if="userNotifs !== null">
-			<div v-for="(parentVal, parentPro, index) in userNotifs" :key="index">
+            <main class="notif-wrapper" v-if="userPostNotifs !== null || userSubscribersNotifs !== null">
+			<div v-for="(parentVal, parentPro, index) in userPostNotifs" :key="index">
 				<div class="notif-message-group" v-for="(childVal, childPro, index) in parentVal" :key="index">
 					<p @click="openTargetedPostInNewTap(childPro)" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ childVal }}</p>
 					<button >
@@ -16,9 +16,16 @@
 					</button>
 				</div>
 			</div>
+			<div class="notif-message-group"  v-for="(userSubscribersNotif, subscribedUserId, index) in userSubscribersNotifs" :key="index">
+				<p @click="openTargetedPostInNewTap(userSubscribersNotif)" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ userSubscribersNotif }}</p>
+				<button>
+					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(null, subscribedUserId)" aria-role="bouton"/>
+					<small>Remove it</small>
+				</button>
+			</div>
 			<button class="btn-remove-all" @click="removeAllNotifs">Remove them all</button>
             </main>
-		<div class="zero-notification" v-else>
+		<div class="zero-notification" v-else-if="userPostNotifs == null && userSubscribersNotifs == null">
 			<p>Your have no recent notifications!</p>
 		</div>
       </div>
@@ -38,8 +45,10 @@
 		},
 		data() {
 			return {
-				notifications: JSON.parse(localStorage.getItem('notifications')),
-				userNotifs: null,
+				postNotifications: JSON.parse(localStorage.getItem('notifications')),
+				subscriptionNotifications: JSON.parse(localStorage.getItem('newSubscribedUsers')),
+				userPostNotifs: null,
+				userSubscribersNotifs: null,
 				alertMsg: null,
 			}
 		},
@@ -59,18 +68,41 @@
 		methods: {
 			findCurrentUserNotif() {
 				
-				for(let acualUser in this.notifications) {
+				for(let acualUser in this.postNotifications) {
 					if(acualUser == this.user[0].id) {
-						this.userNotifs = this.notifications[acualUser];
+						this.userPostNotifs = this.postNotifications[acualUser];
+					}
+				}
+
+				for(let acualUser in this.subscriptionNotifications) {
+					if(acualUser == this.user[0].id) {
+						this.userSubscribersNotifs = this.subscriptionNotifications[acualUser];
 					}
 				}
 			},
-			removeOneNotif(parentProAsNotifId) {
-				delete this.notifications[this.user[0].id][parentProAsNotifId];
-				if( Object.entries(this.notifications[this.user[0].id]).length === 0) {
-					delete this.notifications[this.user[0].id];
+			removeOneNotif(parentProAsNotifId, subscribedUserId) {
+				if(parentProAsNotifId  !== null) {
+					delete this.postNotifications[this.user[0].id][parentProAsNotifId];
+					if( Object.entries(this.postNotifications[this.user[0].id]).length === 0) {
+						delete this.postNotifications[this.user[0].id];
+					}
+					localStorage.setItem('notifications', JSON.stringify(this.postNotifications));
+					if( Object.entries(this.postNotifications).length === 0) {
+						localStorage.removeItem('notifications');
+						this.userPostNotifs = null;
+					}
+				} else if(parentProAsNotifId === null)  {
+					delete this.subscriptionNotifications[this.user[0].id][subscribedUserId];
+					if( Object.entries(this.subscriptionNotifications[this.user[0].id]).length === 0) {
+						delete this.subscriptionNotifications[this.user[0].id];
+					}
+					localStorage.setItem('newSubscribedUsers', JSON.stringify(this.subscriptionNotifications));
+					if( Object.entries(this.subscriptionNotifications).length === 0) {
+						localStorage.removeItem('newSubscribedUsers');
+						this.userSubscribersNotifs = null;
+					}
 				}
-				localStorage.setItem('notifications', JSON.stringify(this.notifications));
+
 				this.findCurrentUserNotif();	
 				setTimeout(() => {
 					this.alertMsg = 'Notifiction has been deleted';
@@ -80,9 +112,24 @@
 				}, 4000);			
 			},
 			removeAllNotifs() {
-				delete this.notifications[this.user[0].id];
-				localStorage.setItem('notifications', JSON.stringify(this.notifications));
-				this.userNotifs = null;
+				if(this.postNotifications != undefined) {
+					delete this.postNotifications[this.user[0].id];
+					localStorage.setItem('notifications', JSON.stringify(this.subscriptionNotifications));
+					if( Object.entries(this.postNotifications).length === 0) {
+						localStorage.removeItem('notifications');
+					}
+					this.userPostNotifs = null;
+				}
+				
+				if(this.subscriptionNotifications != undefined) {
+					delete this.subscriptionNotifications[this.user[0].id];
+					localStorage.setItem('newSubscribedUsers', JSON.stringify(this.subscriptionNotifications));
+					if( Object.entries(this.subscriptionNotifications).length === 0) {
+						localStorage.removeItem('newSubscribedUsers');
+					}
+					this.userSubscribersNotifs = null;
+				}
+
 				setTimeout(() => {
 					this.alertMsg = 'All your notifictions have been deleted';
 				}, 800);

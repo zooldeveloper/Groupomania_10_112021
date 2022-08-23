@@ -63,12 +63,16 @@
 							@submit.prevent="onSubmit"
 						>
 							<div class="userinfo__formgroupe">
-								<input class="userinfo__input-jobtitle" type="text" placeholder="Votre métier !">
+								<input class="userinfo__input-jobtitle" 
+									  type="text" 
+									  v-model="jobTitleToSave"
+									  placeholder="Votre métier !"
+									  aria-label="A text field for adding or modifying user's job title">
 								<textarea
 									class="userinfo__textarea-bio"
 									placeholder="Votre bio !"
 									v-model="bioToSave"
-									aria-label="un champ de text pour créer un modifier un bio"
+									aria-label="A text field for adding or modifying user's bio"
 								>
 								</textarea>
 							</div>
@@ -248,6 +252,7 @@
 				imagePreview: null,
 				oldPassword: null,
 				newPassword: null,
+				jobTitleToSave: null,
 				bioToSave: null,
 				newEmail: null,
 				// Properties related to errors
@@ -269,6 +274,7 @@
 					this.setUser();
 					this.myFile = null;
 					this.newEmail = null;
+					this.jobTitleToSave = null;
 					this.bioToSave = null;
 					this.oldPassword = null;
 					this.newPassword = null;
@@ -343,8 +349,9 @@
 					this.$store.dispatch('updateOneUser', {
 						file: this.myFile,
 					});
-				} else if (this.bioToSave !== null) {
+				} else if ( this.jobTitleToSave !== null || this.bioToSave !== null) {
 					this.$store.dispatch('updateOneUser', {
+						jobTitle: this.jobTitleToSave,
 						bio: this.bioToSave,
 					});
 				} else if (

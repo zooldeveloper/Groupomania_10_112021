@@ -134,15 +134,39 @@ exports.modifiyOneUser = (req, res) => {
 				);
 			}
 		);
-	} else if (req.body.bio != 'undefined') {
-		// Modifies the user's bio
+	} 
+	else if (req.body.bio != 'undefined' && req.body.bio != 'null' && req.body.jobTitle != 'undefined' && req.body.jobTitle != 'null') {
+		// Upadtes user's job title & user's bio
+		db.query(`UPDATE users SET bio = ?, jobTitle = ? WHERE id = ?`,
+			[`${req.body.bio}`, `${req.body.jobTitle}`, req.params.id],
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(200).json({ message: 'Your bio and job title have been updated!' });
+			}
+		);
+	} else if (req.body.jobTitle != 'undefined' && req.body.jobTitle != 'null' && req.body.bio == 'null') {
+		// Updates user's jobTitle
+		db.query(`UPDATE users SET jobTitle = ? WHERE id = ?`,
+			[`${req.body.jobTitle}`, req.params.id],
+			(err, result) => {
+				if (err) {
+					return res.status(500).json(err);
+				}
+				return res.status(200).json({ message: 'Your job title has been updated!' });
+			}
+		);
+	}
+	else if (req.body.bio != 'undefined' && req.body.bio != 'null' && req.body.jobTitle == 'null') {
+		// Updates user's bio
 		db.query(`UPDATE users SET bio = ? WHERE id = ?`,
 			[`${req.body.bio}`, req.params.id],
 			(err, result) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				return res.status(200).json({ message: 'Votre bio a été mis à jour !' });
+				return res.status(200).json({ message: 'Your bio has been updated!' });
 			}
 		);
 	} else if (req.file) {

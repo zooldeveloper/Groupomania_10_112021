@@ -153,6 +153,7 @@ export default createStore({
 		async updateOneUser({ commit }, userData) {
 			try {
 				const fd = new FormData();
+				fd.append('jobTitle', userData.jobTitle)
 				fd.append('bio', userData.bio);
 				fd.append('newEmail', userData.newEmail);
 				fd.append('profile_image', userData.file);

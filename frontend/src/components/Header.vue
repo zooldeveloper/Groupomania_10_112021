@@ -17,7 +17,10 @@
                             <ul class="sidemenu__list">
                                 <li class="sidemenu__item"><router-link to="/" title="page d'accueil"> <font-awesome-icon icon='home' :color='secondaryColor' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/users" title="notifications"> <font-awesome-icon icon='users' :color='secondaryColor' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon icon='bell' :color='secondaryColor' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item">
+                                    <router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon @click="hideNotifNum" icon='bell' :color='secondaryColor' size="lg"/> 
+                                        <small class="notif-number" v-if="notifNum !== 0">{{ notifNum }}</small>
+                                    </router-link></li>
                                 <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="imageUrl" alt="photo de profil"> </router-link></li>
                                 <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
                             </ul>
@@ -46,7 +49,8 @@ export default {
         return {
             imageUrl:  require('../assets/images/user-icon.png'),
             navOpen: true,
-            width: ''
+            width: '',
+            notifNum: 0,
         }
     },
     created() {
@@ -59,20 +63,51 @@ export default {
             }
         }, 70)
     },
+    mounted() {
+        setTimeout(() => {
+             this.showUserNotifNum();
+        }, 100);
+    },
     unmounted() {
         window.removeEventListener('resize', this.handleResize);
     },
     computed: {
-        ...mapState(['secondaryColor']),
+        ...mapState(['user', 'notifications', 'subscriptionNotifications', 'secondaryColor']),
     },
     methods: {
         handleResize() {
             this.width = window.innerWidth;
             this.width > 768 ? this.navOpen = false : this.navOpen = true
         },
+        showUserNotifNum() {
+             let isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications');
+             JSON.parse(isUserCheckedNotifications);
+
+            if(!isUserCheckedNotifications) {
+               localStorage.setItem('isUserCheckedNotifications', JSON.stringify(false));
+               isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications')
+            } 
+            if(isUserCheckedNotifications == 'false') {
+
+                for(let acualUser in this.notifications) {
+                    if(acualUser == this.user[0].id) {
+                        this.notifNum += Object.entries(this.notifications[acualUser]).length;
+                    }
+                }
+
+                for(let acualUser in this.subscriptionNotifications) {
+                    if(acualUser == this.user[0].id) {
+                            this.notifNum += Object.entries(this.subscriptionNotifications[acualUser]).length;
+                    }
+                }
+            }
+        },
+        hideNotifNum() {
+            localStorage.setItem('isUserCheckedNotifications', JSON.stringify(true));
+        },
         logOut() {
             document.querySelector('.spinner').classList.add('show-spinner');
-            let keysToRemove = ['user', 'onLoadPage'];
+            let keysToRemove = ['user', 'onLoadPage', 'isUserCheckedNotifications'];
             keysToRemove.forEach(key => {
                 localStorage.removeItem(key)
             });
@@ -192,6 +227,20 @@ export default {
                     &__item {
                         cursor: pointer;
                         transition: .4s ease;  
+                        position: relative;
+                        .notif-number {
+                            width: 17px;
+                            height: 17px;
+                            font-size: .8rem;
+                            font-weight: bold;
+                            color: white;
+                            background-color:  darken($secondary-color, 30%);
+                            border-radius: 50%;
+                            position: absolute;
+                            left: 11px;
+                            top: -7px;
+
+                        }
                         button {
                             cursor: pointer;
                         }       

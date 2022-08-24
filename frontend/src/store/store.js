@@ -16,6 +16,8 @@ const instance = axios.create({
 
 export default createStore({
 	state: {
+		notifications:  JSON.parse(localStorage.getItem('notifications')),
+		subscriptionNotifications: JSON.parse(localStorage.getItem('newSubscribedUsers')),
 		successResMsg: null,
 		emailResMsg: null,
 		passwordResMsg: null,

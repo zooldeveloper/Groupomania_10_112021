@@ -9,7 +9,7 @@
             <main class="notif-wrapper" v-if="userPostNotifs !== null || userSubscribersNotifs !== null">
 			<div v-for="(parentVal, parentPro, index) in userPostNotifs" :key="index">
 				<div class="notif-message-group" v-for="(childVal, childPro, index) in parentVal" :key="index">
-					<p @click="openTargetedPostInNewTap(childPro)" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ childVal }}</p>
+					<p @click="this.$router.push({path: '/', query: {id: childPro}})" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ childVal }}</p>
 					<button >
 						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(parentPro)" aria-role="bouton"/>
 						<small>Remove it</small>
@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="notif-message-group"  v-for="(userSubscribersNotif, subscribedUserId, index) in userSubscribersNotifs" :key="index">
-				<p @click="openTargetedPostInNewTap(userSubscribersNotif)" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ userSubscribersNotif }}</p>
+				<p @click="this.$router.push({path: 'profile', query: {id: this.user[0].id}})" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ userSubscribersNotif }}</p>
 				<button>
 					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(null, subscribedUserId)" aria-role="bouton"/>
 					<small>Remove it</small>
@@ -137,10 +137,6 @@
 					this.alertMsg = null;
 				}, 4000);	
 			},
-			openTargetedPostInNewTap(childProAsPostId) {
-				const route = this.$router.resolve({path: '/', query: {id: childProAsPostId}})
-				window.open(route.href, '_blank');
-			}
 		},
 	};
 </script>

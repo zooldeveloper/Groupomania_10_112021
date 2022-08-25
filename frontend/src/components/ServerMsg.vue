@@ -2,6 +2,7 @@
       <div class="server-response">
             {{ successResMsg }}
             <font-awesome-icon
+                  v-if="isSuccessMsg !== null"
                   icon="check-circle"
                   color="white"
                   size="lg"
@@ -18,7 +19,11 @@ export default {
             successResMsg: {
                   type: String,
                   required: false,
-            }
+            }, 
+            isSuccessMsg: {
+                  type: String,
+                  required: true,
+            },
       },
 }
 </script>

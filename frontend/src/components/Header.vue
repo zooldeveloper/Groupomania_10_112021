@@ -21,7 +21,7 @@
                                     <router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon @click="hideNotifNum" icon='bell' :color='secondaryColor' size="lg"/> 
                                         <small class="notif-number" v-if="this.$store.state.notifNum !== 0">{{ this.$store.state.notifNum }}</small>
                                     </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="$store.getters.setUserImage" alt="Image of the actual user"> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="this.imageUrl" alt="Image of the actual user"> </router-link></li>
                                 <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
                             </ul>
                         </div>
@@ -65,7 +65,7 @@ export default {
         window.removeEventListener('resize', this.handleResize);
     },
     computed: {
-        ...mapState(['user', 'notifications', 'subscriptionNotifications', 'secondaryColor']),
+        ...mapState(['imageUrl', 'user', 'notifications', 'subscriptionNotifications', 'secondaryColor']),
     },
     methods: {
         handleResize() {

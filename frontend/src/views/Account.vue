@@ -15,7 +15,7 @@
 				<CancelBtn classes="cancel-btn" class="cancel-btn" @trigger-on-cancel="onUserPorfileSetting" />
 				<section id="userinfo">
 					<div class="userinfo__user userinfo__user-border">
-						<img :src="$store.getters.setUserImage" alt="User's account image"
+						<img :src="this.imageUrl" alt="User's account image"
 							v-if="myFile == null" />
 						<label for="userimage" v-if="myFile == null">Change your image <input id="userimage"
 								type="file" @change="onFileChange" />
@@ -105,7 +105,7 @@
 				</div>
 			</section>
 			<div class="alert-message-no-content" v-if="!isUserGotPost">
-				<p>User hasn't posted yet !</p>
+				<p>You haven't posted yet!</p>
 			</div>
 		</main>
 	</div>
@@ -180,6 +180,7 @@ export default {
 	},
 	computed: {
 		...mapState([
+			"imageUrl",
 			"posts",
 			"user",
 			"users",

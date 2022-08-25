@@ -5,7 +5,7 @@
 		<Header />
 		<ServerMsg
 			 v-if="successResMsg !== null || userFirstname !== null"
-			:successResMsg="successResMsg || `Welcome again ${userFirstname} 😊`"
+			:successResMsg="successResMsg || `Welcome ${userFirstname} 😊`"
 			:isSuccessMsg="successResMsg"
 			class="server-alert-message"
 		/>
@@ -15,7 +15,7 @@
 				<form>
 					<div class="makepost__div">
 						<img
-							:src="$store.getters.setUserImage"
+							:src="this.imageUrl"
 							alt="image of the actual user"
 						/>
 						<textarea
@@ -131,7 +131,7 @@
 			};
 		},
 		computed: {
-			...mapState(['posts', 'user', 'successResMsg']),
+			...mapState(['imageUrl', 'posts', 'user', 'successResMsg']),
 		},
 		watch: {
 			posts: function() {

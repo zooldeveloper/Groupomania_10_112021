@@ -39,13 +39,18 @@ export default createStore({
 			}, 1000);
 			setTimeout(() => {
 				state.successResMsg = null;
-			}, 3000);
+			}, 4000);
 		},
 		EMAIL_ERROR_MESSAGE(state, message) {
 			state.emailResMsg = message;
 		},
 		PASSWORD_ERROR_MESSAGE(state, message) {
-			state.passwordResMsg = message;
+			setTimeout(() => {
+				state.passwordResMsg = message;
+			}, 1000);
+			setTimeout(() => {
+				state.passwordResMsg = null;
+			}, 4000);
 		},
 		GET_ALL_POSTS(state, posts) {
 			state.posts = posts;

@@ -19,9 +19,9 @@
                                 <li class="sidemenu__item"><router-link to="/users" title="notifications"> <font-awesome-icon icon='users' :color='secondaryColor' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item">
                                     <router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon @click="hideNotifNum" icon='bell' :color='secondaryColor' size="lg"/> 
-                                        <small class="notif-number" v-if="notifNum !== 0">{{ notifNum }}</small>
+                                        <small class="notif-number" v-if="this.$store.state.notifNum !== 0">{{ this.$store.state.notifNum }}</small>
                                     </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="imageUrl" alt="photo de profil"> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="$store.getters.setUserImage" alt="Image of the actual user"> </router-link></li>
                                 <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
                             </ul>
                         </div>
@@ -47,7 +47,6 @@ export default {
     },
     data() {
         return {
-            imageUrl:  require('../assets/images/user-icon.png'),
             navOpen: true,
             width: '',
             notifNum: 0,
@@ -57,16 +56,10 @@ export default {
         this.$store.dispatch('getOneUser');
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
-        setTimeout(()=> {
-             if(this.$store.state.user[0].imageUrl) {
-                this.imageUrl = this.$store.state.user[0].imageUrl;
-            }
-        }, 70)
     },
     mounted() {
-        setTimeout(() => {
-             this.showUserNotifNum();
-        }, 100);
+         this.$store.getters.setUserImgae;
+         this.$store.getters.showUserNotifNum;
     },
     unmounted() {
         window.removeEventListener('resize', this.handleResize);
@@ -78,29 +71,6 @@ export default {
         handleResize() {
             this.width = window.innerWidth;
             this.width > 768 ? this.navOpen = false : this.navOpen = true
-        },
-        showUserNotifNum() {
-             let isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications');
-             JSON.parse(isUserCheckedNotifications);
-
-            if(!isUserCheckedNotifications) {
-               localStorage.setItem('isUserCheckedNotifications', JSON.stringify(false));
-               isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications')
-            } 
-            if(isUserCheckedNotifications == 'false') {
-
-                for(let acualUser in this.notifications) {
-                    if(acualUser == this.user[0].id) {
-                        this.notifNum += Object.entries(this.notifications[acualUser]).length;
-                    }
-                }
-
-                for(let acualUser in this.subscriptionNotifications) {
-                    if(acualUser == this.user[0].id) {
-                            this.notifNum += Object.entries(this.subscriptionNotifications[acualUser]).length;
-                    }
-                }
-            }
         },
         hideNotifNum() {
             localStorage.setItem('isUserCheckedNotifications', JSON.stringify(true));

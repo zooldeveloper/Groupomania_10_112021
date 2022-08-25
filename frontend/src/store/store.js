@@ -16,8 +16,10 @@ const instance = axios.create({
 
 export default createStore({
 	state: {
+		imageUrl:  require('../assets/images/user-icon.png'),
 		notifications:  JSON.parse(localStorage.getItem('notifications')),
 		subscriptionNotifications: JSON.parse(localStorage.getItem('newSubscribedUsers')),
+		notifNum: 0,
 		successResMsg: null,
 		emailResMsg: null,
 		passwordResMsg: null,
@@ -34,7 +36,7 @@ export default createStore({
 		SUCCESS_MESSAGE(state, message) {
 			setTimeout(() => {
 				state.successResMsg = message;
-			}, 700);
+			}, 1000);
 			setTimeout(() => {
 				state.successResMsg = null;
 			}, 3000);
@@ -63,6 +65,41 @@ export default createStore({
 		GET_ALL_SUBSCRIBERS(state, subscribers) {
 			state.subscribers = subscribers;
 		},
+	},
+	getters: {
+		setUserImage(state) {
+			
+			if(state.user[0].imageUrl != undefined) {
+				return state.imageUrl = state.user[0].imageUrl;
+			} else {
+				return state.imageUrl;
+			}
+		},
+		showUserNotifNum(state) {
+			state.notifNum = 0;
+			let isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications');
+			JSON.parse(isUserCheckedNotifications);
+     
+		     if(!isUserCheckedNotifications) {
+			  localStorage.setItem('isUserCheckedNotifications', JSON.stringify(false));
+			  isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications')
+		     } 
+		     if(isUserCheckedNotifications == 'false') {
+     
+			   for(let acualUser in state.notifications) {
+				 if(acualUser == state.user[0].id) {
+					state.notifNum += Object.entries(state.notifications[acualUser]).length;
+				 }
+			   }
+     
+			   for(let acualUser in state.subscriptionNotifications) {
+				 if(acualUser == state.user[0].id) {
+					state.notifNum += Object.entries(state.subscriptionNotifications[acualUser]).length;
+				 }
+			   }
+		     }
+		     return state.notifNum;
+		},     
 	},
 	actions: {
 		// Makes the post request of the user sign up

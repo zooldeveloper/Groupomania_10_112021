@@ -3,12 +3,11 @@
 <template>
 	<div class="home">
 		<Header />
-		<h1 v-show="userFirstname !== null">
-			Bienvenu à nouveau {{ userFirstname }} 😊
-		</h1>
 		<ServerMsg
-			 v-if="successResMsg !== null"
-			:successResMsg="successResMsg"
+			 v-if="successResMsg !== null || userFirstname !== null"
+			:successResMsg="successResMsg || `Welcome again ${userFirstname} 😊`"
+			:isSuccessMsg="successResMsg"
+			class="server-alert-message"
 		/>
 		<main>
 			<!-- Makepost section -->
@@ -16,14 +15,14 @@
 				<form>
 					<div class="makepost__div">
 						<img
-							:src="userImage"
-							alt="photo de l'utilisateur actuel"
+							:src="$store.getters.setUserImage"
+							alt="image of the actual user"
 						/>
 						<textarea
 							class="makepost__posttextarea"
 							v-model="myText"
-							placeholder="Que voulez-vous partager ?"
-							aria-label="un champ de text pour créer un post"
+							placeholder="Whate would you like to share?"
+							aria-label="A text field to create a post"
 						></textarea>
 					</div>
 					<small
@@ -31,7 +30,7 @@
 							makepost__displaybloc: nothingAdded,
 							makepost__displaynone: !nothingAdded,
 						}"
-						>Rien n'est ajouté !</small
+						>There is nothing added!</small
 					>
 					<ImagePreview
 						v-if="myFile !== null"
@@ -40,7 +39,7 @@
 					/>
 					<div class="makepost__div makepost__fileinput">
 						<label for="myImage"
-							>Télécharger un fichier
+							>Upload a file
 							<font-awesome-icon
 								icon="image"
 								color="#2b7b85"
@@ -57,7 +56,7 @@
 							type="submit"
 							@click.prevent="onSubmitForm"
 						>
-							Publier
+							Post it
 							<font-awesome-icon
 								icon="paper-plane"
 								color="#2b7b85"
@@ -123,7 +122,6 @@
 		data() {
 			return {
 				// Properties that have common purposes
-				userImage: require('../assets/images/user-icon.png'),
 				userFirstname: null,
 				myText: null,
 				myFile: null,
@@ -134,6 +132,11 @@
 		},
 		computed: {
 			...mapState(['posts', 'user', 'successResMsg']),
+		},
+		watch: {
+			posts: function() {
+				this.setUser();
+			}
 		},
 		created() {
 			this.$store.dispatch('getOneUser');
@@ -148,29 +151,24 @@
 				this.setUser();
 			}, 200);
 		},
-		watch: {
-			posts: function() {
-				this.setUser();
-			}
-		},
 		methods: {
-			// Sets user's welcome message, user's image ans users posts!
+			// Sets user's welcome message and users posts!
 			setUser() {
 				const onLoadPage = JSON.parse(
 					localStorage.getItem('onLoadPage')
 				);
 
 				if (!onLoadPage) {
-					this.userFirstname = this.user[0].firstName;
+					setTimeout(() => {
+						this.userFirstname = this.user[0].firstName;
+					}, 1000)
+					
 					setTimeout(() => {
 						this.userFirstname = null;
 						localStorage.setItem('onLoadPage', true);
 					}, 5000);
 				} else {
 					this.userFirstname = null;
-				}
-				if (this.user[0].imageUrl != undefined) {
-					this.userImage = this.user[0].imageUrl;
 				}
 				if(this.$route.query.id) {
 					for(let i = 0; i < this.posts.length; i++) {
@@ -206,7 +204,11 @@
 						textual_post: this.myText,
 						image_post: this.myFile,
 					});
-					location.reload();
+					setTimeout(() => {
+						this.$store.dispatch('getAllPosts');
+					}, 100)
+					this.myText = null;
+					this.myFile = null;
 				}
 			},
 		},
@@ -221,8 +223,8 @@
 		margin-top: 130px;
 		position: relative;
 
-		h1 {
-			font-size: 1.4rem;
+		.server-alert-message {
+			margin-top: 0rem !important;
 		}
 		// Common rules
 		section {

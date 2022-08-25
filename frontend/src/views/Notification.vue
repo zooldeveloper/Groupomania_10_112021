@@ -9,7 +9,7 @@
             <main class="notif-wrapper" v-if="userPostNotifs !== null || userSubscribersNotifs !== null">
 			<div v-for="(parentVal, parentPro, index) in userPostNotifs" :key="index">
 				<div class="notif-message-group" v-for="(childVal, childPro, index) in parentVal" :key="index">
-					<p @click="this.$router.push({path: '/', query: {id: childPro}})" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ childVal }}</p>
+					<p @click="openTargetedPostInNewTab(childPro)" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ childVal }}</p>
 					<button >
 						<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(parentPro)" aria-role="bouton"/>
 						<small>Remove it</small>
@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="notif-message-group"  v-for="(userSubscribersNotif, subscribedUserId, index) in userSubscribersNotifs" :key="index">
-				<p @click="this.$router.push({path: 'profile', query: {id: this.user[0].id}})" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ userSubscribersNotif }}</p>
+				<p @click="openTargetedUserNotifInNewTab()" aria-label="click to go to the reacted or commented post" aria-role="bouton">{{ userSubscribersNotif }}</p>
 				<button>
 					<font-awesome-icon icon="trash-alt" :color="secondaryColor" size="lg" @click="removeOneNotif(null, subscribedUserId)" aria-role="bouton"/>
 					<small>Remove it</small>
@@ -45,8 +45,6 @@
 		},
 		data() {
 			return {
-				postNotifications: JSON.parse(localStorage.getItem('notifications')),
-				subscriptionNotifications: JSON.parse(localStorage.getItem('newSubscribedUsers')),
 				userPostNotifs: null,
 				userSubscribersNotifs: null,
 				alertMsg: null,
@@ -63,14 +61,14 @@
 			}, 100)
 		},
 		computed: {
-			...mapState(['user', 'primaryColor', 'secondaryColor']),
+			...mapState(['user', 'notifications', 'subscriptionNotifications', 'primaryColor', 'secondaryColor']),
 		},
 		methods: {
 			findCurrentUserNotif() {
 				
-				for(let acualUser in this.postNotifications) {
+				for(let acualUser in this.notifications) {
 					if(acualUser == this.user[0].id) {
-						this.userPostNotifs = this.postNotifications[acualUser];
+						this.userPostNotifs = this.notifications[acualUser];
 					}
 				}
 
@@ -82,12 +80,12 @@
 			},
 			removeOneNotif(parentProAsNotifId, subscribedUserId) {
 				if(parentProAsNotifId  !== null) {
-					delete this.postNotifications[this.user[0].id][parentProAsNotifId];
-					if( Object.entries(this.postNotifications[this.user[0].id]).length === 0) {
-						delete this.postNotifications[this.user[0].id];
+					delete this.notifications[this.user[0].id][parentProAsNotifId];
+					if( Object.entries(this.notifications[this.user[0].id]).length === 0) {
+						delete this.notifications[this.user[0].id];
 					}
-					localStorage.setItem('notifications', JSON.stringify(this.postNotifications));
-					if( Object.entries(this.postNotifications).length === 0) {
+					localStorage.setItem('notifications', JSON.stringify(this.notifications));
+					if( Object.entries(this.notifications).length === 0) {
 						localStorage.removeItem('notifications');
 						this.userPostNotifs = null;
 					}
@@ -112,10 +110,10 @@
 				}, 4000);			
 			},
 			removeAllNotifs() {
-				if(this.postNotifications != undefined) {
-					delete this.postNotifications[this.user[0].id];
+				if(this.notifications != undefined) {
+					delete this.notifications[this.user[0].id];
 					localStorage.setItem('notifications', JSON.stringify(this.subscriptionNotifications));
-					if( Object.entries(this.postNotifications).length === 0) {
+					if( Object.entries(this.notifications).length === 0) {
 						localStorage.removeItem('notifications');
 					}
 					this.userPostNotifs = null;
@@ -136,6 +134,14 @@
 				setTimeout(() => {
 					this.alertMsg = null;
 				}, 4000);	
+			},
+			openTargetedPostInNewTab(childProAsPostId) {
+				console.log(childProAsPostId)
+				const route = this.$router.resolve({path: '/', query: {id: childProAsPostId}});
+				window.open(route.href, '_blank');
+			},
+			openTargetedUserNotifInNewTab() {
+				this.$router.push({path: 'account'});
 			},
 		},
 	};

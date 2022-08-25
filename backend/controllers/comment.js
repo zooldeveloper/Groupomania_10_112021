@@ -7,14 +7,14 @@ exports.createComment = (req, res) => {
     const { comment, post_id, user_id } = req.body;
     const event = new Date(Date.now());
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const timestamp = event.toLocaleDateString('fr-FR', options);
+    const timestamp = event.toLocaleDateString('en-Us', options);
     // Inserts the specified data into the comments table
     db.query('INSERT INTO comments (comment, post_id, user_id, creation_date) VALUES (?, ?, ?, ?)',
         [`${comment}`, post_id, user_id, timestamp], (err, result) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(201).json({ message: 'Commentaire ajouté !' });
+            res.status(201).json({ message: 'Comment added!' });
         });
 };
 
@@ -27,7 +27,7 @@ exports.getComment = (req, res) => {
                 JOIN posts ON comments.post_id = posts.post_id
                 JOIN users ON comments.user_id = users.id
                 WHERE users.active = 'true'
-                ORDER BY comments.creation_date DESC`,
+                ORDER BY comments.creation_date ASC`,
         (err, result) => {
             if (err) {
                 return res.status(500).send(err);
@@ -43,14 +43,14 @@ exports.updateComment = (req, res) => {
     const { comment } = req.body;
     const event = new Date(Date.now());
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const timestamp = event.toLocaleDateString('fr-FR', options);
+    const timestamp = event.toLocaleDateString('en-US', options);
     // Updates the comment & creation_date columns that matches the condition
     db.query('UPDATE comments SET comment = ?, creation_date = ?  WHERE comment_id = ?',
         [`${comment}`, timestamp, req.params.id], (err, result) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: 'Commentaire modifié !' });
+            res.status(200).json({ message: 'Comment updated!' });
         });
 };
 
@@ -63,7 +63,7 @@ exports.deleteComment = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: 'Commentaire supprimé !' });
+            res.status(200).json({ message: 'Comment deleted!' });
         });
     
 };

@@ -30,11 +30,11 @@
 					<div class="userinfo__user userinfo__user-border">
 						<img
 							:src="currentUser.imageUrl"
-							alt="photo de compte de l'utilisateur"
+							alt="User's account image"
 							v-if="myFile == null"
 						/>
 						<label for="userimage" v-if="myFile == null"
-							>Changer votre photo
+							>Change your image
 							<input
 								id="userimage"
 								type="file"
@@ -52,7 +52,7 @@
 						/>
 						<Button
 							v-if="myFile !== null"
-							name="Envoyer"
+							name="Send It"
 							class="user-profile-image-btn"
 							@click="onSubmit"
 						/>
@@ -66,11 +66,11 @@
 								<input class="userinfo__input-jobtitle" 
 									  type="text" 
 									  v-model="jobTitleToSave"
-									  placeholder="Votre métier !"
+									  placeholder="Your job title!"
 									  aria-label="A text field for adding or modifying user's job title">
 								<textarea
 									class="userinfo__textarea-bio"
-									placeholder="Votre bio !"
+									placeholder="Your bio!"
 									v-model="bioToSave"
 									aria-label="A text field for adding or modifying user's bio"
 								>
@@ -79,7 +79,7 @@
 							<button
 								class="userinfo__btn"
 								type="submit"
-								aria-label="envoyer votre bio"
+								aria-label="Send your bio"
 							>
 								<font-awesome-icon
 									icon="paper-plane"
@@ -89,8 +89,8 @@
 							</button>
 						</form>
 						<p v-if="currentUser.isAdmin == 'true'">
-							{{ currentUser.firstName }} {{ currentUser.lastName }} est
-							<span>l'Admin</span>
+							{{ currentUser.firstName }} {{ currentUser.lastName }} is
+							<span>the Admin</span>
 						</p>
 					</div>
 				</section>
@@ -101,7 +101,7 @@
 					]"
 				>
 					<div class="usersetting__setting">
-						<h2>Changer votre mot de passe</h2>
+						<h2>Change your password</h2>
 						<form @submit.prevent="onSubmit">
 							<div class="usersetting__form-group">
 								<span>
@@ -113,9 +113,9 @@
 								</span>
 								<input
 									type="password"
-									placeholder="Votre ancien mot de passe"
+									placeholder="Your old password"
 									v-model="oldPassword"
-									aria-label="champ de text pour saisir l'ancien mot de passe"
+									aria-label="Text field to enter the old password"
 								/>
 								<small
 									v-if="checkOldPassword"
@@ -134,9 +134,9 @@
 								</span>
 								<input
 									type="password"
-									placeholder="Votre nouveau mot de passe"
+									placeholder="Your new password"
 									v-model="newPassword"
-									aria-label="champ de text pour saisir le nouveau mot de passe"
+									aria-label="Text field to enter the new password"
 								/>
 								<small
 									v-if="checkNewPassword"
@@ -146,20 +146,20 @@
 								>
 							</div>
 							<Button
-								name="Envoyer"
+								name="Submit"
 								classes="btn"
 							/>
 						</form>
 					</div>
 					<div class="usersetting__setting">
-						<h2>Supprimer votre compte</h2>
+						<h2>Delete your account</h2>
 						<Button
-							name="Supprimer"
+							name="Delete"
 							classes="btn custom-btn"
 							@click="onDeleteAccount"
 						/>
 						<Button
-							name="Je confirme"
+							name="I confirm"
 							classes="btn custom-btn"
 							:class="[
 								deleteAccount
@@ -212,7 +212,7 @@
 				</div>
 			</section>
 			<div class="alert-message-no-content" v-if="!isUserGotPost">
-                        <p>L'utilisateur n'a rien publié !</p>
+                        <p>User hasn't posted yet !</p>
                   </div>
 		</main>
 	</div>

@@ -15,7 +15,7 @@
 				class="userpost__text-btn"
 				v-if="post_id !== postToUpdate"
 			>
-				<p>{{ textualPost }}</p>
+				<p>{{ textualPost != 'null' ? textualPost : '' }}</p>
 				<EditDelete
 					v-if="isPostIdEqualToUserIdOrIsAdmin"
 					:isAdmin="isPostIdEqualToUserId"
@@ -50,7 +50,7 @@
 				v-if="isPostImageUrlNotUndefined"
 				class="userpost__imagepost"
 				:src="postImage"
-				alt="Image du post"
+				alt="Post image"
 			/>
 		</div>
 		<!-- Likes section -->
@@ -107,7 +107,7 @@
 								{{ comment.lastName }}
 							</h3>
 							<small
-								>Publié le
+								>Posted on
 								{{ comment.creation_date }}
 							</small>
 						</div>
@@ -147,7 +147,7 @@
 								commentId === comment.comment_id
 							"
 							:key="comment.comment_id"
-							titles="commentaire"
+							titles="commnet"
 						/>
 					</div>
 					<!-- Edit form comments -->
@@ -158,8 +158,8 @@
 						@trigger-on-edit-text="onEditComment"
 						:textareaValue="comment.comment"
 						@trigger-text-to-edit="setCommentValue"
-						textareaAriaAttribute="Champ de text pour modifer un commentaire"
-						buttonAriaAttribute="button pour envoyer le commentaire à modifier"
+						textareaAriaAttribute="Text field to midify a comment"
+						buttonAriaAttribute="Button to send the comment to modify"
 						>>
 						<template v-slot:cancelBtn>
 							<CancelBtn
@@ -173,20 +173,20 @@
 			<form class="userpost__commentsform">
 				<img
 					class="userpost__userimage"
-					:src="userImage"
-					alt="photo de l'utilisateur actuel"
+					:src="$store.getters.setUserImage"
+					alt="Image of the actual user"
 				/>
 				<textarea
 					class="userpost__commenttextarea"
 					@input="commentValueToSend = $event.target.value"
-					placeholder="Votre commentaire !"
-					aria-label="un champ de text pour créer un commentaire"
+					placeholder="Your comment goes here!"
+					aria-label="Text field to create the commnet"
 				></textarea>
 				<button
 					class="userpost__btn"
 					type="submit"
 					@click.prevent="onCreateComment(post_id)"
-					aria-label="button pour envoyer un commentaire"
+					aria-label="Button to send the comment"
 				>
 					<font-awesome-icon
 						icon="paper-plane"
@@ -303,7 +303,7 @@
 
 			// Sets user's welcome message and user's image
 			setUserImage() {
-				if (this.user[0].imageUrl != undefined ||nthis.user.imageUrl != '') {
+				if (this.user[0].imageUrl != undefined || this.user.imageUrl != '') {
 					this.userImage = this.user[0].imageUrl;
 				}
 			},
@@ -328,7 +328,8 @@
 						postId: this.postToUpdate,
 						textual_post: this.postValueToSend,
 					});
-					location.reload();
+					this.$store.dispatch('getAllPosts');
+					this.postToUpdate = null;
 				}
 			},
 			// Shows the delete confirm button on both posts & comments
@@ -350,7 +351,7 @@
 					);
 					this.postId = null;
 					setTimeout(() => {
-						location.reload();
+						this.$store.dispatch('getAllPosts');
 					}, 50);
 				} else if (this.commentId !== null) {
 					this.$store.dispatch(
@@ -442,7 +443,7 @@
 					setTimeout(() => {
 						this.$store.dispatch('getAllPosts');
 						this.$store.dispatch('getLikesAndDislikes');
-					}, 100);
+					}, 200);
 				}
 			},
 			// Sets & update dislikes

@@ -9,7 +9,7 @@
 		/>
 		<div class="userpost__username-postdate">
 			<h2>{{ firstName }} {{ lastName }}</h2>
-			<small>Publié le {{ postDate }} </small>
+			<small>Posted on {{ postDate }} </small>
 		</div>
 	</div>
 </template>

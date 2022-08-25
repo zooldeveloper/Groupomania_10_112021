@@ -19,7 +19,7 @@ exports.createAndUpdateSubscribers = (req, res) => {
                         if (err) {
                             return res.status(500).send(err);
                         }
-                        res.status(200).json({ message: "Vous êtes de nouveau abonné !" });
+                        res.status(200).json({ message: "Your are subscribed again!" });
                     });
         
             } else {
@@ -29,7 +29,7 @@ exports.createAndUpdateSubscribers = (req, res) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
-                    res.status(201).json({ message: "Vous êtes désormais abonné !" });
+                    res.status(201).json({ message: "You are now subscribed !" });
                 });
             }
         })        
@@ -40,7 +40,7 @@ exports.createAndUpdateSubscribers = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: "Vous n'êtes plus abonné !" });
+            res.status(200).json({ message: "Your are no longer subscribed!" });
         });
     }
     

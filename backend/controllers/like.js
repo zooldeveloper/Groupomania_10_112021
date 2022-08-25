@@ -20,7 +20,15 @@ exports.createAndUpdateLikes = (req, res) => {
                         if (err) {
                             return res.status(500).send(err);
                         }
-                        res.status(200).json({ message: "Like ajouté !" });
+                        // Upadtes user's notifications
+                        // db.query('UPDATE notifications SET action = ? WHER post_id = ? AND user_id = ?', 
+                        // ["reacted to your post !", post_id, user_id], (error, data) => {
+                        //     if (error) {
+                        //         return res.status(500).send(error);
+                        //     }
+                            // console.log(data)
+                            res.status(200).json({ message: "Added a like!" });
+                        // });
                     });
         
             } else {
@@ -30,7 +38,7 @@ exports.createAndUpdateLikes = (req, res) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
-                    res.status(201).json({ message: "Like ajouté !" });
+                    res.status(201).json({ message: "Added a like!" });
                 });
             }
         })        
@@ -41,7 +49,7 @@ exports.createAndUpdateLikes = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: "Like retiré !" });
+            res.status(200).json({ message: "Like removed!" });
         });
     }
     
@@ -49,7 +57,7 @@ exports.createAndUpdateLikes = (req, res) => {
         // Selects the dislikes column that matches the conditions
         db.query('SELECT dislikes FROM post_likes WHERE post_id = ? AND users_disliked = ?',
         [post_id, user_id], (err, result) => {
-            if (err) {
+            if (err) { 
                 return res.status(500).send(err);
             }
             if (result.length > 0) {
@@ -59,7 +67,15 @@ exports.createAndUpdateLikes = (req, res) => {
                         if (err) {
                             return res.status(500).send(err);
                         }
-                        res.status(200).json({ message: "Dislike ajouté !" });
+                        // Upadtes user's notifications
+                        // db.query('UPDATE notifications SET action = ? WHER post_id = ? AND user_id = ?', 
+                        // ["reacted to your post !", post_id, user_id], (error, data) => {
+                        //     if (error) {
+                        //         return res.status(500).send(error);
+                        //     }
+                        //     console.log(data)
+                        // });
+                        res.status(200).json({ message: "Added a dislike!" });
                 });
             } else {
                 // Inserts dislike, post id and user id to the post_likes table
@@ -68,7 +84,15 @@ exports.createAndUpdateLikes = (req, res) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
-                    res.status(201).json({ message: "Dislike ajouté !" });
+                    // Sets user's notification
+                    // db.query('INSERT INTO notifications (post_id, user_id, action) VALUES (?, ?, ?)',
+                    // [post_id, user_id, "reacted to your post !"], (error, data) => {
+                    //     if (error) {
+                    //         return res.status(500).send(error);
+                    //     }
+                    //     console.log(data)
+                    // });
+                    res.status(201).json({ message: "Added a dislike!" });
                 });
             }
         });
@@ -80,7 +104,14 @@ exports.createAndUpdateLikes = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).json({ message: "Dislike retiré !" });
+            // db.query('UPDATE notifications SET action = ? WHER post_id = ? AND user_id = ?', 
+            // [null, post_id, user_id], (error, data) => {
+            //     if (error) {
+            //         return res.status(500).send(error);
+            //     }
+            //     console.log(data)
+            // });
+            res.status(200).json({ message: "Dislike removed!" });
         });
     }
 };

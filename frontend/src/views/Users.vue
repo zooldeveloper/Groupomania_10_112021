@@ -8,11 +8,11 @@
 				v-if="successResMsg !== null"
 				:successResMsg="successResMsg"
 			/>
-			<h1>Utilisateurs</h1>
+			<h1>Users</h1>
 			<div class="users-container">
 				<div v-for="user in users" :key="user.id" class="user-cart">
 					<div class="user-details" @click="takeUserId(user.id)">
-						<img :src=" user.imageUrl != null ? user.imageUrl : require('../assets/images/user-icon.png')" alt="Image de l'utilisateur"/>
+						<img :src=" user.imageUrl != null ? user.imageUrl : require('../assets/images/user-icon.png')" alt="User's image"/>
 						<div class="personal-info">
 							<h2>{{ user.firstName }} {{ user.lastName }}
 							</h2>

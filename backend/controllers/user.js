@@ -29,7 +29,7 @@ exports.addDataToUserProfile = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				return res.status(201).json({ message: "Les donées de profile de l'utilisateru ont été enregistrés !" });
+				return res.status(201).json({ message: "User profile data has been saved!" });
 			}
 		);
     }
@@ -41,7 +41,7 @@ exports.addDataToUserProfile = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				return res.status(201).json({ message: "Votre bio a été enregistré" });
+				return res.status(201).json({ message: "Your bio has been saved!" });
 			}
 		);
     }
@@ -54,12 +54,12 @@ exports.addDataToUserProfile = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				return res.status(201).json({ message: "Votre image de profile a été enregistré" });
+				return res.status(201).json({ message: "Your image has been saved!" });
 			}
 		);
     }
     else {
-		return res.status(403).json({ message: 'Rien n\'est envoyé!' });
+		return res.status(403).json({ message: 'Nothing has been sent!' });
 	}
 };
 
@@ -94,7 +94,7 @@ exports.modifiyOneUser = (req, res) => {
 				bcrypt.compare(oldPassword, result[0].password)
 					.then(valid => {
 						if (!valid) {
-							return res.status(401).json({ message: 'Mot de passe est incorrect !' });
+							return res.status(401).json({ message: 'Password is not correct!' });
 						}
 						bcrypt.hash(newPassword, 8)
 							.then(hash => {
@@ -103,7 +103,7 @@ exports.modifiyOneUser = (req, res) => {
 										if (err) {
 											return res.status(500).json(err);
 										}
-										return res.status(200).json({ message: 'Votre mot de pass a été mis à jour !' });
+										return res.status(200).json({ message: 'Your password has been updated!' });
 									}
 								);
 							})
@@ -121,7 +121,7 @@ exports.modifiyOneUser = (req, res) => {
 					return res.status(500).json(err);
 				}
 				if (resulat.length > 0) {
-					return res.status(409).json({ message: 'Email est déjà utilisé !' })
+					return res.status(409).json({ message: 'Email is already in use!' })
 				}
 				db.query(`UPDATE users SET email = ? WHERE id = ?`,
 					[`${newEmail}`, req.params.id],
@@ -129,7 +129,7 @@ exports.modifiyOneUser = (req, res) => {
 						if (err) {
 							return res.status(500).json(err);
 						}
-						return res.status(200).json({ message: 'Votre email a été mis à jour !' });
+						return res.status(200).json({ message: 'Your email has been updated!' });
 					}
 				);
 			}
@@ -178,7 +178,7 @@ exports.modifiyOneUser = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				return res.status(200).json({ message: 'Votre image a été mis à jour!' });
+				return res.status(200).json({ message: 'Your profile image has been updated!' });
 			}
 		);
 	}
@@ -227,7 +227,7 @@ exports.deleteOneUser = (req, res) => {
 				if (err) {
 					return res.status(500).json(err);
 				}
-				res.status(200).json({ message: 'Votre compte a été définitivement supprimé !' });
+				res.status(200).json({ message: 'Your account has been permanently deleted!!' });
 			}
 		);
 	// }

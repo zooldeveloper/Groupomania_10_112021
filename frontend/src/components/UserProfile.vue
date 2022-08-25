@@ -3,7 +3,7 @@
             <div class="user-profile__top-background">   
                   <div class="user-profile__absolute-position">
                         <div class="user-profile__user-info">
-                              <img :src="userImage" alt="image de l'utilisateur">
+                              <img :src="userImage" alt="User's image">
                               <h2>{{userFirstName}} {{userLastName}}</h2>
                               <div class="user-profile__jobtitle-subscribersnumber-email">
                                     <p>{{userJobTitle}}</p>

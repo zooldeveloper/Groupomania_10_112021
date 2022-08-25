@@ -5,7 +5,7 @@
                   v-if="serverMessage !== null"
                   :successResMsg="serverMessage"
             />
-            <h1>Profil</h1>
+            <h1>Profile</h1>
             <UserProfile 
                   :userImage="userOnSearchQuery.imageUrl ? 
                   userOnSearchQuery.imageUrl : 
@@ -42,7 +42,7 @@
                         </div>
                   </section>
                   <div class="alert-message-no-content" v-if="!isUserGotPost">
-                        <p>L'utilisateur n'a rien publié !</p>
+                        <p>User hasn't posted yet!</p>
                   </div>
             </main>
       </div>

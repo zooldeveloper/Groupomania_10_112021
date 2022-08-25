@@ -3,11 +3,11 @@
         <span><font-awesome-icon icon='ellipsis-h' color='#71838F' size="lg"/></span>
         <div class="userpost__edit-delete">
             <div class="userpost__edit" v-if="isAdmin">
-                <small>Modifier</small>
+                <small>Edit</small>
                 <span @click="editPost"><font-awesome-icon icon='edit' color='#2b7b85' size="lx"/></span>
             </div>
             <div class="userpost__wrapper">
-                <small>Supprimer</small>
+                <small>Delete</small>
                 <span @click="deletePost"><font-awesome-icon icon='trash-alt' color='#c7201a' size="lx"/></span>
             </div>
         </div>
@@ -70,6 +70,7 @@ export default {
             @include flexbox;
             flex-direction: column;
             position: relative;
+            margin-bottom: 1rem;
             &:hover .userpost__edit-delete {
                 display: block !important;
             }

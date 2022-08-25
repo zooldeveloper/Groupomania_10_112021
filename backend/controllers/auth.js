@@ -26,9 +26,9 @@ exports.signup = (req, res) => {
                 }
                 if (result.length > 0) {
                     if (result[0].active === 'false') {
-                        return res.status(402).json({ message: 'Ce compte a été désactivé !'})
+                        return res.status(402).json({ message: 'This account has been disabled!'})
                     }
-                    return res.status(409).json({ message: 'Email est déjà utilisé !' })
+                    return res.status(409).json({ message: 'Email is already in use!' })
                 } else {
                     // Inserting the expected values to the users table
                     db.query('INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
@@ -37,7 +37,7 @@ exports.signup = (req, res) => {
                             if (err) {
                                 return res.status(500).json(err);
                             } else {
-                                res.status(201).json({ message: 'Utilisateur créé !' });
+                                res.status(201).json({ message: 'User is created!' });
                             }
                         } 
                     );
@@ -62,14 +62,14 @@ exports.login = (req, res) => {
             }
             // Checks if the email is already exist or not
             if (result.length < 1) {
-                return res.status(403).json({ message: 'Email n\'existe pas !'})
+                return res.status(403).json({ message: 'Email do not exist!'})
             } else if (email === result[0].email) {
                 // Checks if the user's account is active or not
                 if (result[0].active === 'true') {
                     bcrypt.compare(password, result[0].password)
                     .then(valid => {
                         if (!valid) {
-                            return res.status(401).json({ message: 'Mot de passe est incorrect !' });
+                            return res.status(401).json({ message: 'Password is incorrect!' });
                         }
                         delete result[0].password
                         res.status(200).json({
@@ -83,7 +83,7 @@ exports.login = (req, res) => {
                     })
                     .catch(err => res.status(500).json(err));
                 } else {
-                    return res.status(403).json({ message: "Votre compte a été supprimé !" })
+                    return res.status(403).json({ message: "Your account has been deleted!" })
                 }
             }
         }

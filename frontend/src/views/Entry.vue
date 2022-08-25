@@ -1,34 +1,34 @@
 <template>
     <div class="container">
         <div id="banner">
-          <img src="../assets/images/icon-left-font-monochrome-white.svg" alt="icône Groupomania">
-          <h1>Parce que nous nous soucions de vos besoins</h1>
+          <img src="../assets/images/icon-left-font-monochrome-white.svg" alt="Groupomania icon">
+          <h1>Because we care about your needs</h1>
         </div>
         <div id="signup">
           <main>
-            <h2 v-if="mode === 'sign up'">Inscription</h2>
-            <h2 v-else>Connexion</h2> 
+            <h2 v-if="mode === 'sign up'">Sign Up</h2>
+            <h2 v-else>Log In</h2> 
             <div class="thisClassNameIsNotUsed"></div>
             <form action="" method="post">
                 <div class="form-group" v-if="mode === 'sign up'">
                     <div class="fullname fullname__firstname">
                         <span><font-awesome-icon icon="user-circle" size="lx"/></span>
                         <input class="fullname__field" 
-                                :class="{success : checkFirstname === false , error: checkFirstname === true}" aria-label="votre prénom" 
-                                type="text" name="firstname" v-model="firstname" placeholder="Votre prénom">
+                                :class="{success : checkFirstname === false , error: checkFirstname === true}" aria-label="Your first name" 
+                                type="text" name="firstname" v-model="firstname" placeholder="First name">
                         <small v-if="checkFirstname">{{ errors.firstname.errMsg }}</small>
                     </div>
                     <div class="fullname">
                         <span><font-awesome-icon icon="user-circle" size="lx"/></span>
                         <input class="fullname__field" 
-                               :class="{success : checkLastname === false, error: checkLastname === true}" aria-label="votre nom"
-                               type="text" name="lastname" v-model="lastname" placeholder="Votre nom">
+                               :class="{success : checkLastname === false, error: checkLastname === true}" aria-label="Your last name"
+                               type="text" name="lastname" v-model="lastname" placeholder="Last name">
                         <small v-if="checkLastname">{{ errors.lastname.errMsg }}</small>
                     </div>
                 </div>
                 <div class="form-group" :class="[mode === 'log in' ? 'emailContainer' : '']">
                     <span><font-awesome-icon icon="envelope" size="lx"/></span>
-                    <input :class="{success : checkEmail === false, error: checkEmail === true}" aria-label="votre email"
+                    <input :class="{success : checkEmail === false, error: checkEmail === true}" aria-label="Your email"
                            type="text" name="email" v-model="email" placeholder="E-mail: example@gmail.com">
                     <small v-if="errors.email.errMsg !== null">{{ errors.email.errMsg }}</small>
                     <small v-else-if="errors.email.reseErrMsg !== null">{{ errors.email.resErrMsg }}</small>
@@ -37,14 +37,14 @@
                     <div class="password password__first-field" v-if="mode === 'sign up'">
                         <span><font-awesome-icon icon="unlock" size="lx"/></span>
                         <input class="password__field" 
-                               :class="{success : checkPassword === false, error: checkPassword === true}" aria-label="votre mot de passe"
-                               type="password" name="password" v-model="password" placeholder="Votre mot de passe">
+                               :class="{success : checkPassword === false, error: checkPassword === true}" aria-label="Your password"
+                               type="password" name="password" v-model="password" placeholder="Your password">
                         <small class="password__bottom" v-if="checkPassword">{{ errors.password.errMsg }}</small>
                     </div>
                     <div  class="password" :class="[checkPassword === true ? 'password__second-field' : '']">
                         <span><font-awesome-icon icon="lock" size="lx"/></span>
                         <input class="password__field" 
-                               :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" aria-label="confirmer votre mot de passe"
+                               :class="{success : checkPasswordConfirm === false, error: checkPasswordConfirm === true}" aria-label="Confirm your password"
                                type="password" name="passwordConfirm" v-model="passwordConfirm" :placeholder="placeholderValue()">
                         <small v-if="checkPasswordConfirm">{{ errors.passwordConfirm.errMsg }}</small>
                     </div>
@@ -52,14 +52,14 @@
                 <div class="form-input terms" v-if="mode === 'sign up'">
                   <input @click="isBoxChecked" v-model="terms" aria-label="case à cocher"
                          type="checkbox" name="terms-of-use" value="read and agreed">
-                  <span>J'ai lu et j'accepte les termes et conditions</span>
+                  <span>I have read and agree to the terms of use</span>
                   <small v-if="!checkTerms" style="color: #C15806; display:block">{{ errors.terms.errMsg }}</small>
                 </div>
-                <button type="submit" v-if="mode === 'sign up'" @click.prevent="signUp">Créer votre compte</button>
-                <button type="submit" v-else @click.prevent="logIn"> Se connecter</button>
+                <button type="submit" v-if="mode === 'sign up'" @click.prevent="signUp">Create your account</button>
+                <button type="submit" v-else @click.prevent="logIn">Log in</button>
             </form>
-            <p v-if="mode === 'sign up'">Vous avez déjà un compte ? <router-link to="entry"><span @click='switchToLogIn()'>Se connecter</span></router-link></p>
-            <p v-else>Pas encore de compte ? <router-link to="entry"><span @click='switchToSignUp()'>Créer un compte</span></router-link></p>
+            <p v-if="mode === 'sign up'">Already have an account? <router-link to="entry"><span @click='switchToLogIn()'>Log in</span></router-link></p>
+            <p v-else>No account yet ? <router-link to="entry"><span @click='switchToSignUp()'>Sign up</span></router-link></p>
           </main>
         </div>
     </div>
@@ -141,52 +141,52 @@ export default {
       },
       placeholderValue() {
         if(this.mode === 'sign up') {
-           return this.placeholder = 'Confirmer le mot de passe';
+           return this.placeholder = 'Confirm your password';
         } else {
-           return this.placeholder = 'Saisissez votre mot de passe'
+           return this.placeholder = 'Inter your password'
         }
       }, 
       signUp () {
         if (this.firstname === null || !this.isUserValid(this.firstname)) {
-          this.errors.firstname.errMsg = 'Au moins 3 caractères !'
+          this.errors.firstname.errMsg = 'At least 3 characters!'
           this.errors.firstname.isNotValid = true
         } else if(this.firstname !== null && this.isUserValid(this.firstname)) { 
           this.errors.firstname.errMsg = null
           this.errors.firstname.isNotValid = false
           }
         if (this.lastname === null || !this.isUserValid(this.lastname)) {
-          this.errors.lastname.errMsg = 'Au moins 3 caractères !'
+          this.errors.lastname.errMsg = 'At least 3 characters!'
           this.errors.lastname.isNotValid = true
         } else { 
           this.errors.lastname.errMsg = null 
           this.errors.lastname.isNotValid = false
         }
         if(this.email === null || !this.isEmailValid(this.email)) {
-          this.errors.email.errMsg = 'Email valide requis !'
+          this.errors.email.errMsg = 'Valid email required!'
           this.errors.email.isNotValid = true
         } else {
           this.errors.email.errMsg = null 
           this.errors.email.isNotValid = false
         }
         if(this.password === null || !this.isPasswordValid(this.password)) {
-          this.errors.password.errMsg = 'Minimum 8 caractères: au moins 1 chiffre, 1 majuscule & miniscle lettere !'
+          this.errors.password.errMsg = 'Minimum 8 characters: at least 1 digit, 1 upper and lower case letters!'
           this.errors.password.isNotValid = true
         } else { 
           this.errors.password.errMsg = null 
           this.errors.password.isNotValid = false
         }
         if(this.passwordConfirm === null) {
-          this.errors.passwordConfirm.errMsg = 'Resaisissez votre mot de passe !'
+          this.errors.passwordConfirm.errMsg = 'Re-enter your password!'
           this.errors.passwordConfirm.isNotValid = true
         } else if(this.passwordConfirm !== null && this.passwordConfirm !== this.password) {
-          this.errors.passwordConfirm.errMsg = 'Mots de passe ne correspondent pas !'
+          this.errors.passwordConfirm.errMsg = 'Passwords do not match!'
           this.errors.passwordConfirm.isNotValid = true
         } else { 
           this.errors.passwordConfirm.errMsg = null 
           this.errors.passwordConfirm.isNotValid = false
         }
         if(this.terms === false) {
-          this.errors.terms.errMsg = 'Vous devez accepter les termes et conditions !'
+          this.errors.terms.errMsg = 'You should accept the terms of use!'
           this.errors.terms.isChecked = false
         } else {
           this.errors.terms.errMsg = null
@@ -213,7 +213,7 @@ export default {
             } else {
               this.errors.email.resErrMsg = null
               this.errors.email.isNotValid = false
-              setTimeout(()=> alert(`Bravo 👏 ${this.successResMsg}`), 100)
+              setTimeout(()=> alert(`Congrats 👏 ${this.successResMsg}`), 100)
               setTimeout(()=> this.switchToLogIn(), 3000)
             }
            document.querySelector('.thisClassNameIsNotUsed').classList.remove('spinner')
@@ -222,14 +222,14 @@ export default {
       },
       logIn(){
         if(this.email === null || !this.isEmailValid(this.email)) {
-          this.errors.email.errMsg = 'Email valide requis !'
+          this.errors.email.errMsg = 'Valid email required!'
           this.errors.email.isNotValid = true
         } else {
           this.errors.email.errMsg = null 
           this.errors.email.isNotValid = false
         }
         if(this.passwordConfirm === null || !this.isPasswordValid(this.passwordConfirm)) {
-          this.errors.passwordConfirm.errMsg = 'Mot de passe doit comporter au moins 8 caractères !'
+          this.errors.passwordConfirm.errMsg = 'Password should contain at least 8 characters!'
           this.errors.passwordConfirm.isNotValid = true
         } else { 
           this.errors.passwordConfirm.errMsg = null 

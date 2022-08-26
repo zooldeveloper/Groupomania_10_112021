@@ -6,7 +6,7 @@ exports.createComment = (req, res) => {
 
     const { comment, post_id, user_id } = req.body;
     const event = new Date(Date.now());
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const timestamp = event.toLocaleDateString('en-Us', options);
     // Inserts the specified data into the comments table
     db.query('INSERT INTO comments (comment, post_id, user_id, creation_date) VALUES (?, ?, ?, ?)',
@@ -27,7 +27,7 @@ exports.getComment = (req, res) => {
                 JOIN posts ON comments.post_id = posts.post_id
                 JOIN users ON comments.user_id = users.id
                 WHERE users.active = 'true'
-                ORDER BY comments.creation_date ASC`,
+                ORDER BY comments.comment_id ASC`,
         (err, result) => {
             if (err) {
                 return res.status(500).send(err);
@@ -41,12 +41,9 @@ exports.getComment = (req, res) => {
 exports.updateComment = (req, res) => {
 
     const { comment } = req.body;
-    const event = new Date(Date.now());
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const timestamp = event.toLocaleDateString('en-US', options);
     // Updates the comment & creation_date columns that matches the condition
-    db.query('UPDATE comments SET comment = ?, creation_date = ?  WHERE comment_id = ?',
-        [`${comment}`, timestamp, req.params.id], (err, result) => {
+    db.query('UPDATE comments SET comment = ?  WHERE comment_id = ?',
+        [`${comment}`, req.params.id], (err, result) => {
             if (err) {
                 return res.status(500).send(err);
             }

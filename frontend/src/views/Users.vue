@@ -9,13 +9,16 @@
 				:successResMsg="successResMsg"
 			/>
 			<h1>Users</h1>
+			<div class="form-group">
+				<label for="input"><font-awesome-icon id="search" for="input" icon="search" color="#2b7b85" size="lg"/></label>
+				<input @keyup="showMatchedUsers" v-model="inputValue" id="input" type="text" placeholder="Serach for a user">
+			</div>
 			<div class="users-container">
-				<div v-for="user in users" :key="user.id" class="user-cart">
+				<div v-for="user in users" :key="user.id" class="user-card">
 					<div class="user-details" @click="takeUserId(user.id)">
 						<img :src=" user.imageUrl != null ? user.imageUrl : require('../assets/images/user-icon.png')" alt="User's image"/>
 						<div class="personal-info">
-							<h2>{{ user.firstName }} {{ user.lastName }}
-							</h2>
+							<h2>{{ user.firstName }} {{ user.lastName }}</h2>
 							<p>{{ user.jobTitle }}</p>
 							<div class="subscribers-number">
 								<font-awesome-icon icon="users" color="#2b7b85" size="sm"/>
@@ -64,6 +67,7 @@
 	import SubscribeBtn from '../components/SubscribeBtn.vue';
 
 	import { mapState } from 'vuex';
+import { h } from '@vue/runtime-core';
 
 	export default {
 		name: 'Users',
@@ -74,6 +78,7 @@
 		},
 		data() {
 			return {
+				inputValue: null,
 				subscriberStatus: null,
 			}
 		},
@@ -167,6 +172,22 @@
 					}, 100);
 				}
 			},
+			showMatchedUsers() {
+				let filter, userCard, personalInfo, h2, textValue;
+				filter = this.inputValue.toUpperCase();
+				userCard = document.getElementsByClassName('user-card');
+				personalInfo = document.getElementsByClassName('personal-info');
+				
+				for(let i = 0; i < personalInfo.length; i++) {
+					h2 = personalInfo[i].getElementsByTagName('h2')[0];
+					textValue = h2.textContent || h2.innerText;
+					if(textValue.toUpperCase().indexOf(filter) > -1) {
+						userCard[i].style.display = "";
+					} else {
+						userCard[i].style.display = "none"
+					}
+				}
+			}
 		},
 	};
 </script>
@@ -178,14 +199,39 @@
 	main {
 		margin-top: 7rem;
 		max-width: 1000px !important;
+
+		.form-group {
+			margin: 0 auto;
+			position: relative;
+			width: fit-content;
+			#input {
+				min-width: 400px;
+				height: 30px;
+				padding: 6px;
+				font-size: 1rem;
+				border-radius: 10px;
+				outline: none;
+				border: 2px solid $border-color;
+
+				&:focus {
+					border: 2px solid $secondary_color;
+				}
+			}
+			#search {
+				position: absolute;
+				top: 12px;
+				right: 12px;
+			}
+
+		}
 		.users-container {
 			@include flexbox();
 			flex-wrap: wrap;
-			margin-top: 3rem;
+			margin-top: 1rem;
 			width: 100%;
 			height: auto;
 
-			.user-cart {
+			.user-card {
 				@include flexbox(space-between);
 				width: 250px;
 				height: 70px;
@@ -223,6 +269,14 @@
 				}
 				small {
 					margin-left: 0.3rem;
+				}
+			}
+		}
+
+		@media screen and (max-width: 768px) {
+			.form-group {
+				#input {
+					min-width: 250px;
 				}
 			}
 		}

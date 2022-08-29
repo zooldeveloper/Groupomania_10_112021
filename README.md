@@ -2,9 +2,9 @@
 
 ![Groupomania logo](./frontend/src/assets/images/icon-left-font-monochrome-gray.svg);
 
-Groupomania is an internal social network for Groupomania's employees that I've developed as the last project of my remote training at OpenClassrooms. The aim of this project is to allow employees to interact with each other by creating personal acccounts, posting stories that they care about, being able to interact to stories that others share and the presence of an admin that must be able to manage users content.
+Groupomania is an internal social network for Groupomania's employees that I've developed as the last project of my remote training at OpenClassrooms. The aim of this project is to allow employees to interact with each other by creating personal acccounts, posting stories, being able to interact to stories that others share and the presence of an admin that must be able to manage users content.
 
-The frontend of the app was developed with Vue, Node.js & express for its API and MySql for the database. For the desgin part, there are no specific requirements in terms of graphic assepects, so the design of the app was free choice.
+The frontend of the app was developed with Vue3, Node.js for its API and MySql for the database. For the desgin part, there are no specific requirements in terms of graphic assepects, so the design of the app was free choice.
 
 ## Prerequisites : ##
 

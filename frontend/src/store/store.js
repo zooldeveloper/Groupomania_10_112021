@@ -90,19 +90,19 @@ export default createStore({
 			  isUserCheckedNotifications = localStorage.getItem('isUserCheckedNotifications')
 		     } 
 		     if(isUserCheckedNotifications == 'false') {
-     
-			   for(let acualUser in state.notifications) {
-				 if(acualUser == state.user[0].id) {
+
+			for(let acualUser in state.notifications) {
+				if(acualUser == state.user[0].id) {
 					state.notifNum += Object.entries(state.notifications[acualUser]).length;
-				 }
-			   }
-     
-			   for(let acualUser in state.subscriptionNotifications) {
-				 if(acualUser == state.user[0].id) {
-					state.notifNum += Object.entries(state.subscriptionNotifications[acualUser]).length;
-				 }
-			   }
-		     }
+				}
+			}
+
+				for(let acualUser in state.subscriptionNotifications) {
+					if(acualUser == state.user[0].id) {
+						state.notifNum += Object.entries(state.subscriptionNotifications[acualUser]).length;
+					}
+				}
+			}
 		     return state.notifNum;
 		},     
 	},

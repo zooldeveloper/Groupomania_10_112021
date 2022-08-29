@@ -15,14 +15,14 @@
                     <div class="navbar" v-show="!navOpen">
                         <div class="sidemenu__wrapper">
                             <ul class="sidemenu__list">
-                                <li class="sidemenu__item"><router-link to="/" title="page d'accueil"> <font-awesome-icon icon='home' :color='secondaryColor' size="lg"/> </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/users" title="notifications"> <font-awesome-icon icon='users' :color='secondaryColor' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/" title="Home"> <font-awesome-icon icon='home' :color='secondaryColor' size="lg"/> </router-link></li>
+                                <li class="sidemenu__item"><router-link to="/users" title="Users list"> <font-awesome-icon icon='users' :color='secondaryColor' size="lg"/> </router-link></li>
                                 <li class="sidemenu__item">
-                                    <router-link to="/notification" title="List des utilisateurs"> <font-awesome-icon @click="hideNotifNum" icon='bell' :color='secondaryColor' size="lg"/> 
+                                    <router-link to="/notification" title="Notifications"> <font-awesome-icon @click="hideNotifNum" icon='bell' :color='secondaryColor' size="lg"/> 
                                         <small class="notif-number" v-if="this.$store.state.notifNum !== 0">{{ this.$store.state.notifNum }}</small>
                                     </router-link></li>
-                                <li class="sidemenu__item"><router-link to="/account" title="compte d'utilisateur"> <img :src="this.imageUrl" alt="Image of the actual user"> </router-link></li>
-                                <li class="sidemenu__item"><button @click="logOut" title="button de déconnexion"><font-awesome-icon icon='power-off'/></button></li>
+                                <li class="sidemenu__item"><router-link to="/account" title="User Account"> <img :src="this.imageUrl" alt="Image of the actual user"> </router-link></li>
+                                <li class="sidemenu__item"><button @click="logOut" title="Sign out button"><font-awesome-icon icon='power-off'/></button></li>
                             </ul>
                         </div>
                     </div>
@@ -58,8 +58,10 @@ export default {
         this.handleResize();
     },
     mounted() {
-         this.$store.getters.setUserImgae;
-         this.$store.getters.showUserNotifNum;
+        setTimeout(() => {
+            this.$store.getters.setUserImgae;
+            this.$store.getters.showUserNotifNum;
+        }, 200);
     },
     unmounted() {
         window.removeEventListener('resize', this.handleResize);

@@ -1,6 +1,7 @@
 # Project Name: Groupomania #
 
-![Groupomania logo](./frontend/src/assets/images/icon-left-font-monochrome-gray.svg)
+<img src="./frontend/src/assets/images/groupomania.png" alt="Groupomania Project" width="80%" />
+
 
 Groupomania is an internal social network for Groupomania's employees that I've developed as the last project of my remote training at OpenClassrooms. The aim of this project is to allow employees to interact with each other by creating personal acccounts, posting stories, being able to interact to stories that others share and the presence of an admin that must be able to manage users content.
 
